@@ -5,7 +5,12 @@ dist/
 .env.*
 !.env.example
 
-# Connect IQ build output
+# Connect IQ build output.
+#
+# The whole build/ directory is generated: signed binaries, per-device settings
+# JSON, and intermediate MIR that embeds absolute paths from the machine that
+# produced it.
+build/
 *.prg
 *.prg.debug.xml
 *.iq
