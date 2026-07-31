@@ -1,0 +1,59 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug bridge server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/packages/server/src/index.ts",
+      "runtimeArgs": ["--experimental-strip-types"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true
+    },
+    {
+      "name": "Debug current test file",
+      "type": "node",
+      "request": "launch",
+      "program": "${file}",
+      "runtimeArgs": ["--test", "--experimental-strip-types"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Debug all server tests",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/packages/server/test",
+      "runtimeArgs": ["--test", "--experimental-strip-types"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Run Edge app in simulator",
+      "type": "monkeyC",
+      "request": "launch",
+      "device": "edge540",
+      "stopAtLaunch": false
+    },
+    {
+      "name": "Debug Edge app in simulator",
+      "type": "monkeyC",
+      "request": "launch",
+      "device": "edge540",
+      "stopAtLaunch": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full stack: server + simulator",
+      "//": "Starts the bridge, then the device app pointed at it — the setup you want when changing the protocol on both sides at once.",
+      "configurations": ["Debug bridge server", "Run Edge app in simulator"],
+      "stopAll": true
+    }
+  ]
+}

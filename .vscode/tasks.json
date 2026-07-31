@@ -1,0 +1,120 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev: bridge server",
+      "detail": "Run the bridge with hot reload against a local tmux session",
+      "type": "shell",
+      "command": "pnpm dev",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^(.*)\\((\\d+),(\\d+)\\): (error|warning) (TS\\d+): (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "code": 5,
+          "message": 6
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Restarting",
+          "endsPattern": "bridge ready"
+        }
+      },
+      "presentation": { "group": "dev", "panel": "dedicated" }
+    },
+    {
+      "label": "dev: docker compose",
+      "detail": "Bring up the full stack (bridge + demo tmux) with hot reload",
+      "type": "shell",
+      "command": "docker compose -f docker/compose.dev.yaml up --build",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "group": "dev", "panel": "dedicated" }
+    },
+    {
+      "label": "test: all",
+      "detail": "Run every test in the workspace",
+      "type": "shell",
+      "command": "pnpm test",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "check: typecheck + lint + test",
+      "detail": "The same gate CI runs",
+      "type": "shell",
+      "command": "pnpm check",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "edge: build (Edge 540)",
+      "detail": "Compile the Connect IQ app for the primary target device",
+      "type": "shell",
+      "command": "./scripts/build-edge.sh edge540",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": {
+        "owner": "monkeyc",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^ERROR: \\w+: (.*):(\\d+),(\\d+): (.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
+        }
+      }
+    },
+    {
+      "label": "edge: build all devices",
+      "detail": "Compile for every supported Edge, as CI does",
+      "type": "shell",
+      "command": "./scripts/build-edge.sh --all",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "edge: run in simulator",
+      "detail": "Build and launch the app in the Connect IQ simulator",
+      "type": "shell",
+      "command": "./scripts/run-simulator.sh ${input:edgeDevice}",
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "group": "dev", "panel": "dedicated" }
+    },
+    {
+      "label": "demo: paint a Claude Code screen",
+      "detail": "Fill the demo tmux session with a realistic prompt to mirror",
+      "type": "shell",
+      "command": "./scripts/demo-session.sh ${input:demoScreen}",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "edgeDevice",
+      "type": "pickString",
+      "description": "Which Edge to simulate",
+      "default": "edge540",
+      "options": ["edge540", "edge840", "edge1040", "edge1050", "edge530", "edge550"]
+    },
+    {
+      "id": "demoScreen",
+      "type": "pickString",
+      "description": "Which Claude Code screen to paint",
+      "default": "prompt",
+      "options": ["prompt", "bash", "vertical", "working", "idle"]
+    }
+  ]
+}

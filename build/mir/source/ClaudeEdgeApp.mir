@@ -1,0 +1,144 @@
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 1; @symbol_importdef<0> = [Toybox,1,7,13]; @symbol_importdef<1> = [Application,1,14,25]; ]
+import Toybox.Application;
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 2; @symbol_importdef<0> = [Toybox,2,7,13]; @symbol_importdef<1> = [Lang,2,14,18]; ]
+import Toybox.Lang;
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 3; @symbol_importdef<0> = [Toybox,3,7,13]; @symbol_importdef<1> = [WatchUi,3,14,21]; ]
+import Toybox.WatchUi;
+//! Application entry point.
+//!
+//! Responsibilities are deliberately thin: own the view, and react to settings
+//! changes pushed from Garmin Connect Mobile. Everything else lives in the
+//! view, the client, or the model, so that this class stays readable.
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 10; @symbol_classdef = [ClaudeEdgeApp,10,6,19]; @symbol_extends<0> = [Application,10,28,39]; @symbol_extends<1> = [AppBase,10,40,47]; ]
+class ClaudeEdgeApp extends Application.AppBase {
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 10; ]
+    <init> {
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 10; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 12; @position = 16; @symbol_vardef = [_view,12,16,21]; @symbol_type<0> = [TerminalView,12,25,37]; ]
+    private
+    var _view as TerminalView or Null;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 14; @symbol_functiondef = [initialize,14,20,30]; ]
+    public
+    function initialize() as Void {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_14_33_16_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc" 15 8 ]
+        symbol [ AppBase %tmp.2 15 8 15 ];
+        %tmp.2 = getv ? :AppBase;
+        symbol [ initialize %tmp.3 15 16 26 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_14_33_16_4_stop:
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 18; @symbol_functiondef = [onStart,18,20,27]; @symbol_param<0> = [state,18,28,33]; @symbol_param<0>_type<0> = [Dictionary,18,37,47]; ]
+    public
+    function onStart(state as Dictionary or Null) as Void {
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 21; @symbol_functiondef = [onStop,21,20,26]; @symbol_param<0> = [state,21,27,32]; @symbol_param<0>_type<0> = [Dictionary,21,36,46]; ]
+    public
+    function onStop(state as Dictionary or Null) as Void {
+    }
+    //! Build the initial view and its delegate.
+    //!
+    //! The delegate is given the view rather than the reverse: input arrives at
+    //! the delegate and must reach the view, but the view never needs to call
+    //! back into input handling.
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 29; @symbol_functiondef = [getInitialView,29,20,34]; @symbol_return<0> = [Views,29,41,46]; @symbol_return<1> = [Views,29,52,57]; @symbol_return<2> = [InputDelegates,29,59,73]; ]
+    public
+    function getInitialView() as [Views] or [Views, InputDelegates] {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_29_75_33_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc" 30 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_29_75_33_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_29_75_33_4_stop" ]
+        %view.1 = local;
+        symbol [ view %view.1 30 12 16 ];
+        symbol [ TerminalView %tmp.4 30 23 35 ];
+        %tmp.4 = getv ? :TerminalView;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %view.1 %tmp.1;
+        symbol [ view %view.1 30 12 16 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc" 31 8 ]
+        %tmp.5 = lgetv %view.1;
+        symbol [ view %tmp.5 31 16 20 ];
+        symbol [ _view ? 31 8 13 ];
+        putv self :_view %tmp.5;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc" 32 8 ]
+        %tmp.6 = newa 2;
+        %tmp.7 = lgetv %view.1;
+        symbol [ view %tmp.7 32 16 20 ];
+        %tmp.8 = dup %tmp.6;
+        %tmp.9 = aputv %tmp.8 0 %tmp.7;
+        symbol [ TerminalDelegate %tmp.13 32 26 42 ];
+        %tmp.13 = getv ? :TerminalDelegate;
+        %tmp.14 = lgetv %view.1;
+        symbol [ view %tmp.14 32 43 47 ];
+        %tmp.10 = newc %tmp.13 (%tmp.14);
+        %tmp.15 = dup %tmp.9;
+        %tmp.16 = aputv %tmp.15 1 %tmp.10;
+        ret %tmp.16;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_29_75_33_4_stop:
+    }
+    //! Called when settings are edited in Garmin Connect Mobile while the app
+    //! is running. Re-reading immediately means a corrected URL or token takes
+    //! effect without the rider having to restart the app mid-ride.
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 38; @symbol_functiondef = [onSettingsChanged,38,20,37]; ]
+    public
+    function onSettingsChanged() as Void {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_38_48_44_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc" 39 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_38_48_44_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_38_48_44_4_stop" ]
+        %view.1 = local;
+        symbol [ view %view.1 39 12 16 ];
+        symbol [ _view %tmp.2 39 19 24 ];
+        %tmp.2 = getv ? :_view;
+        lputv %view.1 %tmp.2;
+        symbol [ view %view.1 39 12 16 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc" 40 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_40_8_42_8_if_stmt:
+        %tmp.3 = lgetv %view.1;
+        symbol [ view %tmp.3 40 12 16 ];
+        %tmp.4 = null;
+        %tmp.5 = ne %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_40_8_42_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_40_8_42_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_40_26_42_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc" 41 12 ]
+        %tmp.6 = lgetv %view.1;
+        symbol [ view %tmp.6 41 12 16 ];
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ onSettingsChanged %tmp.8 41 17 34 ];
+        %tmp.8 = getv function %tmp.7 :onSettingsChanged;
+        invoke %tmp.7 %tmp.8();
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_40_26_42_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_40_8_42_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_40_8_42_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc" 43 8 ]
+        symbol [ WatchUi %tmp.9 43 8 15 ];
+        %tmp.9 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.10 43 16 29 ];
+        %tmp.10 = getv function %tmp.9 :requestUpdate;
+        invoke %tmp.9 %tmp.10();
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_38_48_44_4_stop:
+    }
+}
+//! Global accessor used by the view and delegate.
+//! Monkey C has no dependency injection; this is the idiomatic pattern.
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 49; @symbol_functiondef = [getApp,49,9,15]; @symbol_return<0> = [ClaudeEdgeApp,49,21,34]; ]
+function getApp() as ClaudeEdgeApp {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_49_35_51_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc" 50 4 ]
+    symbol [ Application %tmp.1 50 11 22 ];
+    %tmp.1 = getm $.Toybox.Application;
+    symbol [ getApp %tmp.2 50 23 29 ];
+    %tmp.2 = getv function %tmp.1 :getApp;
+    %tmp.3 = invoke %tmp.1 %tmp.2();
+    %tmp.4 = as %tmp.3 ClaudeEdgeApp;
+    symbol [ ClaudeEdgeApp %tmp.4 50 35 48 ];
+    ret %tmp.4;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_ClaudeEdgeApp_mc_49_35_51_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/ClaudeEdgeApp.mc"; @line = 1; ]
+<init> {
+}

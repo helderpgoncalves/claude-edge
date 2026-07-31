@@ -2,6 +2,8 @@ import { describe, it, before, after, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { rm } from 'node:fs/promises';
+import { join } from 'node:path';
 import { randomBytes } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 
@@ -19,7 +21,9 @@ const execFileAsync = promisify(execFile);
  * are exactly the ones a mocked tmux would happily confirm while the real
  * system failed. So these drive an actual pane.
  */
-const SOCKET = 'claude-edge-api-test';
+// Unique per process: the test runner executes files in parallel, and a
+// shared socket means one file's kill-server lands mid-capture in another.
+const SOCKET = `ce-api-${randomBytes(4).toString('hex')}`;
 const SESSION = 'apitest';
 
 const READ_TOKEN = randomBytes(32).toString('base64url');
@@ -70,6 +74,12 @@ after(async () => {
   if (!tmuxAvailable) return;
   await tmuxRaw(['kill-session', '-t', SESSION]).catch(() => undefined);
   await tmuxRaw(['kill-server']).catch(() => undefined);
+
+  // kill-server stops the server but leaves its socket file on disk. Left
+  // alone these accumulate one per test run, so remove the one we created.
+  await rm(join(process.env['TMUX_TMPDIR'] ?? `/tmp/tmux-${process.getuid?.() ?? 0}`, SOCKET), {
+    force: true,
+  }).catch(() => undefined);
 });
 
 const readAuth = { authorization: `Bearer ${READ_TOKEN}` };

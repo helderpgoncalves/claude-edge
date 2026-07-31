@@ -1,0 +1,47 @@
+# syntax=docker/dockerfile:1.7
+
+# Development image: hot reload, dev dependencies, and a tmux server inside the
+# container so the stack is self-contained.
+#
+# Kept separate from the production Dockerfile rather than folded in behind a
+# build argument. The two images want opposite things — this one keeps the
+# compiler and the source mounted and runs as a user who can write to the
+# workspace; the production one deliberately has none of that — and expressing
+# both in one file makes each harder to read and easier to get wrong.
+
+FROM node:22-alpine
+
+# tmux to host the demo session, bash for the helper scripts, git because the
+# workspace is a repository and some tooling looks for it.
+RUN apk add --no-cache tmux bash git tini
+
+RUN corepack enable
+
+ENV NODE_ENV=development \
+    HOST=0.0.0.0 \
+    PORT=8787 \
+    TMUX_TMPDIR=/tmp/tmux
+
+WORKDIR /app
+
+# Dependencies are installed at image build time so a fresh `up` does not spend
+# a minute on pnpm install. The source itself arrives as a bind mount, which is
+# what makes reload instant.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/shared/package.json packages/shared/
+COPY packages/server/package.json packages/server/
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm config set store-dir /pnpm/store && \
+    pnpm install --frozen-lockfile
+
+RUN mkdir -p /tmp/tmux && chmod 700 /tmp/tmux
+
+EXPOSE 8787
+
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# `node --watch` restarts on any change under the working directory, and
+# --experimental-strip-types runs the TypeScript sources directly, so there is
+# no compile step between saving a file and seeing the result.
+CMD ["node", "--watch", "--experimental-strip-types", "packages/server/src/index.ts"]

@@ -1,0 +1,67 @@
+# Caddy configuration for the bridge.
+#
+# Caddy obtains and renews a Let's Encrypt certificate for {$DOMAIN} on its own,
+# which is what makes the endpoint usable from a Garmin device at all: Connect
+# IQ rejects both plain HTTP and self-signed certificates.
+
+{
+	email {$ACME_EMAIL}
+
+	# Every response is JSON for a device or a small PWA; there is nothing to
+	# gain from advertising the server software.
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+{$DOMAIN} {
+	# --- Security headers.
+	#
+	# The Edge ignores all of these — Connect IQ is not a browser. They matter
+	# for the PWA and for anyone who opens the URL by hand.
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+
+	# --- Health, unauthenticated by design so an uptime monitor needs no
+	# credential. It reveals nothing about the session.
+	handle /health {
+		reverse_proxy bridge:8787
+	}
+
+	# --- API.
+	handle /api/* {
+		reverse_proxy bridge:8787 {
+			# The bridge rate-limits per token, but it needs a truthful client
+			# address for the fallback path and for its logs.
+			header_up X-Real-IP {remote_host}
+
+			# A poll should fail fast rather than hang: the device has its own
+			# timeout, and a request still open after 30s has already been
+			# retried on the other end.
+			transport http {
+				dial_timeout 5s
+				response_header_timeout 30s
+			}
+		}
+	}
+
+	# --- Everything else.
+	#
+	# Returning 404 rather than proxying means an unrecognised path never
+	# reaches the bridge, and the response says nothing about what does exist.
+	handle {
+		respond "Not found" 404
+	}
+
+	log {
+		output stdout
+		format json
+		# Authorization headers must never reach a log file.
+		level INFO
+	}
+}

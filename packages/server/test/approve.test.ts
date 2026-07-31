@@ -2,6 +2,8 @@ import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { rm } from 'node:fs/promises';
+import { join } from 'node:path';
 import { randomBytes } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 
@@ -24,7 +26,9 @@ const execFileAsync = promisify(execFile);
  * runs `cat -v`, which echoes control characters visibly, so a Right arrow
  * shows up as `^[[C` and can be asserted on directly.
  */
-const SOCKET = 'claude-edge-approve-test';
+// Unique per process: the test runner executes files in parallel, and a
+// shared socket means one file's kill-server lands mid-capture in another.
+const SOCKET = `ce-approve-${randomBytes(4).toString('hex')}`;
 const SESSION = 'approvetest';
 
 const TOKEN = randomBytes(32).toString('base64url');
@@ -86,6 +90,12 @@ after(async () => {
   await tmuxRaw(['send-keys', '-t', SESSION, 'C-c']).catch(() => undefined);
   await tmuxRaw(['kill-session', '-t', SESSION]).catch(() => undefined);
   await tmuxRaw(['kill-server']).catch(() => undefined);
+
+  // kill-server stops the server but leaves its socket file on disk. Left
+  // alone these accumulate one per test run, so remove the one we created.
+  await rm(join(process.env['TMUX_TMPDIR'] ?? `/tmp/tmux-${process.getuid?.() ?? 0}`, SOCKET), {
+    force: true,
+  }).catch(() => undefined);
 });
 
 function nonce(): string {

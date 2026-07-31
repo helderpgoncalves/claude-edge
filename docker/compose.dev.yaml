@@ -1,0 +1,119 @@
+# Development stack.
+#
+#   docker compose -f docker/compose.dev.yaml up
+#
+# Brings up the bridge with hot reload plus a tmux server holding a demo Claude
+# Code screen, so the whole thing is exercisable without a real session and
+# without installing tmux or Node on the host.
+#
+# The bridge is published on 127.0.0.1 only. It is HTTP here — Connect IQ
+# requires HTTPS with a publicly trusted certificate, so a real device cannot
+# talk to this directly. Development is done against the simulator, which has no
+# such restriction, or through a tunnel (see docs/deployment.md).
+
+name: claude-edge-dev
+
+services:
+  bridge:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    init: true
+
+    ports:
+      # Bound to loopback deliberately: this listener has development
+      # credentials and no TLS, and must not be reachable from the network.
+      - "127.0.0.1:8787:8787"
+
+    environment:
+      # Development-only tokens. Long enough to satisfy the minimum-entropy
+      # check, and obviously fake so nobody mistakes one for a real secret.
+      READ_TOKEN: "dev-read-token-dev-read-token-dev-read"
+      WRITE_TOKEN: "dev-write-token-dev-write-token-dev-wr"
+
+      TMUX_SESSION: claude
+      TMUX_SOCKET: claude-edge
+      TMUX_TMPDIR: /tmp/tmux
+
+      # Both are enabled here so the whole surface can be exercised. Both
+      # default to off in production, and for good reason — see docs/security.md.
+      ALLOW_FREE_TEXT: "true"
+      ALLOW_DESTRUCTIVE: "true"
+
+      LOG_LEVEL: debug
+      NODE_ENV: development
+
+    volumes:
+      # Source is mounted so `node --watch` sees edits immediately.
+      - ../packages:/app/packages:cached
+      - ../scripts:/app/scripts:ro
+
+      # node_modules stays in the image. Without these anonymous volumes the
+      # host's directory would shadow it, and on macOS the host's binaries are
+      # the wrong architecture for the container.
+      - /app/node_modules
+      - /app/packages/server/node_modules
+      - /app/packages/shared/node_modules
+
+      # The tmux socket directory, shared with the demo service so both talk to
+      # one server.
+      - tmux-socket:/tmp/tmux
+
+    depends_on:
+      demo-session:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:8787/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # A tmux server holding a demo Claude Code screen.
+  #
+  # This exists so `up` produces something the device app can actually display.
+  # Point the bridge at a host socket instead (see the commented volume in
+  # compose.yaml) once you want to mirror a real session.
+  demo-session:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    init: true
+
+    environment:
+      TMUX_TMPDIR: /tmp/tmux
+
+    volumes:
+      - ../scripts:/app/scripts:ro
+      - tmux-socket:/tmp/tmux
+
+    # Start a session, paint a prompt into it, then idle. `tail -f /dev/null`
+    # keeps the container alive without a busy loop; the tmux server it started
+    # goes on running in the background.
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        tmux -L claude-edge new-session -d -s claude -x 100 -y 30
+        sleep 1
+        /app/scripts/demo-session.sh prompt
+        echo "demo session ready"
+        tail -f /dev/null
+
+    healthcheck:
+      # Ready means the session exists, not merely that the container is up:
+      # the bridge fails its first poll if it starts before tmux is listening.
+      test: ["CMD", "tmux", "-L", "claude-edge", "has-session", "-t", "claude"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  tmux-socket:

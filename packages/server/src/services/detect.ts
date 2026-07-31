@@ -239,26 +239,60 @@ function extractOptions(
  */
 function extractQuestion(lines: readonly string[], cursorLine: number): string {
   const start = Math.max(0, cursorLine - QUESTION_LOOKBACK);
-  const candidates: string[] = [];
 
+  // First pass: look for an actual question, scanning upwards.
+  //
+  // This is done as a distinct pass rather than as part of the general
+  // "collect the lines above the cursor" walk, because Claude Code puts
+  // *context* between the question and the options — a diff, a command, a file
+  // path. Simply taking the nearest non-blank lines picks up that context and
+  // presents it as the question, so the rider is asked to approve something
+  // whose wording never mentions what is being approved.
   for (let i = cursorLine - 1; i >= start; i--) {
-    const raw = (lines[i] ?? '').trim();
-    if (raw === '') {
-      // A blank line ends the question block once we have something.
+    const cleaned = stripBoxDrawing(lines[i] ?? '');
+    if (cleaned.endsWith('?')) {
+      return cleaned.slice(0, 200);
+    }
+  }
+
+  // Second pass: no question mark anywhere. Fall back to the nearest
+  // meaningful line, skipping the context block if we can recognise it.
+  const candidates: string[] = [];
+  for (let i = cursorLine - 1; i >= start; i--) {
+    const cleaned = stripBoxDrawing(lines[i] ?? '');
+    if (cleaned === '') {
       if (candidates.length > 0) break;
       continue;
     }
-    // Skip pure box-drawing rules but keep framed text.
-    const withoutBox = raw.replace(/[─-╿]/g, '').trim();
-    if (withoutBox === '') continue;
-
-    candidates.unshift(withoutBox);
-
-    // A line ending in '?' is almost certainly the whole question.
-    if (withoutBox.endsWith('?')) break;
+    if (looksLikeContext(cleaned)) {
+      // Reached the diff or command block; anything further up is not the
+      // question either, so stop rather than absorbing it.
+      if (candidates.length > 0) break;
+      continue;
+    }
+    candidates.unshift(cleaned);
+    if (candidates.length >= 2) break;
   }
 
   return candidates.join(' ').slice(0, 200);
+}
+
+/** Remove box-drawing characters and surrounding whitespace from a line. */
+function stripBoxDrawing(line: string): string {
+  return line.replace(/[─-╿]/g, '').trim();
+}
+
+/**
+ * Does this line look like context Claude Code renders alongside a prompt —
+ * a diff hunk, a file path, an indented command — rather than the question?
+ */
+function looksLikeContext(line: string): boolean {
+  return (
+    /^\d+\s+[+-]/.test(line) || // diff line with a line number
+    /^[+-]\s/.test(line) || // plain diff line
+    /^[~/.]?[\w./-]+\.\w+$/.test(line) || // a bare file path
+    /^\$\s/.test(line) // a shell command
+  );
 }
 
 /** Identify the tool named in the prompt, when one is named. */

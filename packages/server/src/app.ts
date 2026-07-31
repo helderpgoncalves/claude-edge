@@ -50,6 +50,16 @@ export async function buildApp({ config, logger }: BuildAppOptions): Promise<Fas
     bodyLimit: BODY_LIMIT_BYTES,
     // Trust the reverse proxy for client IPs, which rate limiting keys on.
     trustProxy: true,
+
+    // Suppress the per-request access log in production. The device polls every
+    // few seconds around the clock, so two lines per request is a great deal of
+    // noise for no signal; the entries that matter — failed authentication and
+    // every executed write — are logged explicitly where they happen.
+    //
+    // Fastify 5 deprecates this in favour of `logController`, but that option
+    // requires supplying the entire controller interface (ten members) to change
+    // one boolean, and re-implementing Fastify's request logging to turn part of
+    // it off is a poor trade. Revisit when Fastify 6 removes this.
     disableRequestLogging: config.NODE_ENV === 'production',
   });
 

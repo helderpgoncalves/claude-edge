@@ -1,0 +1,1015 @@
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 1; @symbol_importdef<0> = [Toybox,1,7,13]; @symbol_importdef<1> = [Communications,1,14,28]; ]
+import Toybox.Communications;
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 2; @symbol_importdef<0> = [Toybox,2,7,13]; @symbol_importdef<1> = [Lang,2,14,18]; ]
+import Toybox.Lang;
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 3; @symbol_importdef<0> = [Toybox,3,7,13]; @symbol_importdef<1> = [System,3,14,20]; ]
+import Toybox.System;
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 4; @symbol_importdef<0> = [Toybox,4,7,13]; @symbol_importdef<1> = [WatchUi,4,14,21]; ]
+import Toybox.WatchUi;
+//! HTTP client for the bridge server.
+//!
+//! ONE REQUEST AT A TIME
+//! ---------------------
+//! Connect IQ caps concurrent requests platform-wide and returns
+//! BLE_QUEUE_FULL (-101) when that cap is exceeded. A polling app that fires on
+//! a timer regardless of whether the previous response arrived will hit this
+//! within seconds on a slow link, so the client tracks an in-flight flag and
+//! drops ticks rather than queueing them. A skipped poll is invisible; a queue
+//! full error is a broken screen.
+//!
+//! ERROR CODES ARE THE INTERFACE
+//! -----------------------------
+//! Every failure surfaces as a negative response code, and several of them are
+//! ordinary conditions rather than faults — a phone out of Bluetooth range mid
+//! ride is expected, not exceptional. They are translated to sentences here so
+//! the view never has to render a number the rider cannot act on.
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 23; @symbol_classdef = [BridgeClient,23,6,18]; ]
+class BridgeClient {
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 23; ]
+    <init> {
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 23; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 27; @position = 18; @symbol_constdef = [ERR_BLE_HOST_TIMEOUT,27,18,38]; ]
+    private
+    const ERR_BLE_HOST_TIMEOUT = -2;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 28; @position = 18; @symbol_constdef = [ERR_BLE_QUEUE_FULL,28,18,36]; ]
+    private
+    const ERR_BLE_QUEUE_FULL = -101;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 29; @position = 18; @symbol_constdef = [ERR_BLE_REQUEST_TOO_LARGE,29,18,43]; ]
+    private
+    const ERR_BLE_REQUEST_TOO_LARGE = -102;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 30; @position = 18; @symbol_constdef = [ERR_BLE_UNAVAILABLE,30,18,37]; ]
+    private
+    const ERR_BLE_UNAVAILABLE = -104;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 31; @position = 18; @symbol_constdef = [ERR_TIMED_OUT,31,18,31]; ]
+    private
+    const ERR_TIMED_OUT = -300;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 32; @position = 18; @symbol_constdef = [ERR_RESPONSE_TOO_LARGE,32,18,40]; ]
+    private
+    const ERR_RESPONSE_TOO_LARGE = -402;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 33; @position = 18; @symbol_constdef = [ERR_OUT_OF_MEMORY,33,18,35]; ]
+    private
+    const ERR_OUT_OF_MEMORY = -403;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 34; @position = 18; @symbol_constdef = [ERR_SECURE_REQUIRED,34,18,37]; ]
+    private
+    const ERR_SECURE_REQUIRED = -1001;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 35; @position = 18; @symbol_constdef = [ERR_UNSUPPORTED_TYPE,35,18,38]; ]
+    private
+    const ERR_UNSUPPORTED_TYPE = -1002;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 37; @position = 16; @symbol_vardef = [_settings,37,16,25]; @symbol_type<0> = [Config,37,29,35]; @symbol_type<1> = [Settings,37,36,44]; ]
+    private
+    var _settings as Config.Settings;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 38; @position = 16; @symbol_vardef = [_inFlight,38,16,25]; @symbol_type<0> = [Boolean,38,29,36]; ]
+    private
+    var _inFlight as Boolean = false;
+    //! Invoked with (success, data, message).
+    //! `data` is the parsed JSON body on success, null otherwise.
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 42; @position = 16; @symbol_vardef = [_onSession,42,16,26]; @symbol_type<0> = [success,42,37,44]; @symbol_type<1> = [Boolean,42,48,55]; @symbol_type<2> = [data,42,57,61]; @symbol_type<3> = [Dictionary,42,65,75]; @symbol_type<4> = [message,42,78,85]; @symbol_type<5> = [String,42,89,95]; ]
+    private
+    var _onSession as (callback(success as Boolean, data as Dictionary or Null, message as String or Null) as Void);
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 44; @symbol_functiondef = [initialize,44,20,30]; @symbol_param<0> = [settings,45,8,16]; @symbol_param<0>_type<0> = [Config,45,20,26]; @symbol_param<0>_type<1> = [Settings,45,27,35]; @symbol_param<1> = [onSession,46,8,17]; @symbol_param<1>_type<0> = [success,46,28,35]; @symbol_param<1>_type<1> = [Boolean,46,39,46]; @symbol_param<1>_type<2> = [data,46,48,52]; @symbol_param<1>_type<3> = [Dictionary,46,56,66]; @symbol_param<1>_type<4> = [message,46,69,76]; @symbol_param<1>_type<5> = [String,46,80,86]; ]
+    public
+    function initialize(settings as Config.Settings, onSession as (callback(success as Boolean, data as Dictionary or Null, message as String or Null) as Void)) as Void {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_47_6_50_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 48 8 ]
+        %tmp.1 = lgetv %settings;
+        symbol [ settings %tmp.1 48 20 28 ];
+        symbol [ _settings ? 48 8 17 ];
+        putv self :_settings %tmp.1;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 49 8 ]
+        %tmp.2 = lgetv %onSession;
+        symbol [ onSession %tmp.2 49 21 30 ];
+        symbol [ _onSession ? 49 8 18 ];
+        putv self :_onSession %tmp.2;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_47_6_50_4_stop:
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 52; @symbol_functiondef = [setSettings,52,20,31]; @symbol_param<0> = [settings,52,32,40]; @symbol_param<0>_type<0> = [Config,52,44,50]; @symbol_param<0>_type<1> = [Settings,52,51,59]; ]
+    public
+    function setSettings(settings as Config.Settings) as Void {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_52_69_54_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 53 8 ]
+        %tmp.1 = lgetv %settings;
+        symbol [ settings %tmp.1 53 20 28 ];
+        symbol [ _settings ? 53 8 17 ];
+        putv self :_settings %tmp.1;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_52_69_54_4_stop:
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 56; @symbol_functiondef = [isBusy,56,20,26]; @symbol_return<0> = [Boolean,56,32,39]; ]
+    public
+    function isBusy() as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_56_40_58_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 57 8 ]
+        symbol [ _inFlight %tmp.2 57 15 24 ];
+        %tmp.2 = getv ? :_inFlight;
+        ret %tmp.2;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_56_40_58_4_stop:
+    }
+    //! Fetch the current session state.
+    //!
+    //! @param lines  Rows the device can draw, so the server truncates to fit.
+    //! @param width  Columns the device can draw, so the server wraps for us.
+    //! @param offset Scrollback offset; 0 is the live tail.
+    //! @param etag   Last known content hash, for a 304 short-circuit.
+    //! @return false when a request was already in flight and this was dropped.
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 67; @symbol_functiondef = [fetchSession,67,20,32]; @symbol_param<0> = [lines,68,8,13]; @symbol_param<0>_type<0> = [Number,68,17,23]; @symbol_param<1> = [width,69,8,13]; @symbol_param<1>_type<0> = [Number,69,17,23]; @symbol_param<2> = [offset,70,8,14]; @symbol_param<2>_type<0> = [Number,70,18,24]; @symbol_param<3> = [etag,71,8,12]; @symbol_param<3>_type<0> = [String,71,16,22]; @symbol_return<0> = [Boolean,72,9,16]; ]
+    public
+    function fetchSession(lines as Number, width as Number, offset as Number, etag as String or Null) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_72_17_112_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 73 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_73_8_75_8_if_stmt:
+        symbol [ _inFlight %tmp.2 73 12 21 ];
+        %tmp.2 = getv ? :_inFlight;
+        bf %tmp.2 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_73_8_75_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_73_8_75_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_73_23_75_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 74 12 ]
+        %tmp.3 = false;
+        ret %tmp.3;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_73_23_75_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_73_8_75_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_73_8_75_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 76 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_76_8_79_8_if_stmt:
+        symbol [ _settings %tmp.5 76 13 22 ];
+        %tmp.5 = getv ? :_settings;
+        symbol [ isUsable %tmp.6 76 23 31 ];
+        %tmp.6 = getv function %tmp.5 :isUsable;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = not %tmp.7;
+        bf %tmp.8 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_76_8_79_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_76_8_79_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_76_35_79_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 77 12 ]
+        symbol [ _onSession %tmp.10 77 12 22 ];
+        %tmp.10 = getv ? :_onSession;
+        symbol [ invoke %tmp.11 77 23 29 ];
+        %tmp.11 = getv function %tmp.10 :invoke;
+        %tmp.12 = false;
+        %tmp.13 = null;
+        symbol [ _settings %tmp.15 77 43 52 ];
+        %tmp.15 = getv ? :_settings;
+        symbol [ error %tmp.16 77 53 58 ];
+        %tmp.16 = getv %tmp.15 :error;
+        invoke %tmp.10 %tmp.11(%tmp.12, %tmp.13, %tmp.16);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 78 12 ]
+        %tmp.17 = false;
+        ret %tmp.17;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_76_35_79_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_76_8_79_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_76_8_79_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 81 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_72_17_112_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_72_17_112_4_stop" ]
+        %params.1 = local;
+        symbol [ params %params.1 81 12 18 ];
+        %tmp.18 = newd 3;
+        %tmp.19 = "lines";
+        %tmp.20 = lgetv %lines;
+        symbol [ lines %tmp.20 82 23 28 ];
+        %tmp.21 = dup %tmp.18;
+        %tmp.22 = aputv %tmp.21 %tmp.19 %tmp.20;
+        %tmp.23 = "width";
+        %tmp.24 = lgetv %width;
+        symbol [ width %tmp.24 83 23 28 ];
+        %tmp.25 = dup %tmp.22;
+        %tmp.26 = aputv %tmp.25 %tmp.23 %tmp.24;
+        %tmp.27 = "offset";
+        %tmp.28 = lgetv %offset;
+        symbol [ offset %tmp.28 84 24 30 ];
+        %tmp.29 = dup %tmp.26;
+        %tmp.30 = aputv %tmp.29 %tmp.27 %tmp.28;
+        lputv %params.1 %tmp.30;
+        symbol [ params %params.1 81 12 18 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 86 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_86_8_88_8_if_stmt:
+        %tmp.31 = lgetv %etag;
+        symbol [ etag %tmp.31 86 12 16 ];
+        %tmp.32 = null;
+        %tmp.33 = ne %tmp.31 %tmp.32;
+        bf %tmp.33 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_86_8_88_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_86_8_88_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_86_26_88_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 87 12 ]
+        %tmp.34 = lgetv %params.1;
+        symbol [ params %tmp.34 87 12 18 ];
+        %tmp.35 = lgetv %etag;
+        symbol [ etag %tmp.35 87 29 33 ];
+        %tmp.36 = as %tmp.35 { (!Null) };
+        %tmp.37 = "etag";
+        aputv %tmp.34 %tmp.37 %tmp.36;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_86_26_88_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_86_8_88_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_86_8_88_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 89 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_89_8_91_8_if_stmt:
+        symbol [ _settings %tmp.39 89 12 21 ];
+        %tmp.39 = getv ? :_settings;
+        symbol [ sessionName %tmp.40 89 22 33 ];
+        %tmp.40 = getv %tmp.39 :sessionName;
+        symbol [ length %tmp.41 89 34 40 ];
+        %tmp.41 = getv function %tmp.40 :length;
+        %tmp.42 = invoke %tmp.40 %tmp.41();
+        %tmp.43 = 0;
+        %tmp.44 = gt %tmp.42 %tmp.43;
+        bf %tmp.44 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_89_8_91_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_89_8_91_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_89_48_91_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 90 12 ]
+        %tmp.45 = lgetv %params.1;
+        symbol [ params %tmp.45 90 12 18 ];
+        symbol [ _settings %tmp.47 90 32 41 ];
+        %tmp.47 = getv ? :_settings;
+        symbol [ sessionName %tmp.48 90 42 53 ];
+        %tmp.48 = getv %tmp.47 :sessionName;
+        %tmp.49 = "session";
+        aputv %tmp.45 %tmp.49 %tmp.48;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_89_48_91_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_89_8_91_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_89_8_91_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 93 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_72_17_112_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_72_17_112_4_stop" ]
+        %options.2 = local;
+        symbol [ options %options.2 93 12 19 ];
+        %tmp.50 = newd 3;
+        %tmp.52 = const :method;
+        symbol [ method %tmp.52 94 13 19 const ];
+        symbol [ Communications %tmp.53 94 23 37 ];
+        %tmp.53 = getm $.Toybox.Communications;
+        symbol [ HTTP_REQUEST_METHOD_GET %tmp.54 94 38 61 ];
+        %tmp.54 = getv %tmp.53 :HTTP_REQUEST_METHOD_GET;
+        %tmp.55 = dup %tmp.50;
+        %tmp.56 = aputv %tmp.55 %tmp.52 %tmp.54;
+        %tmp.58 = const :headers;
+        symbol [ headers %tmp.58 95 13 20 const ];
+        %tmp.59 = newd 1;
+        %tmp.60 = "Authorization";
+        %tmp.61 = "Bearer ";
+        symbol [ _settings %tmp.63 96 47 56 ];
+        %tmp.63 = getv ? :_settings;
+        symbol [ authToken %tmp.64 96 57 66 ];
+        %tmp.64 = getv %tmp.63 :authToken;
+        %tmp.65 = add %tmp.61 %tmp.64;
+        %tmp.66 = dup %tmp.59;
+        %tmp.67 = aputv %tmp.66 %tmp.60 %tmp.65;
+        %tmp.68 = dup %tmp.56;
+        %tmp.69 = aputv %tmp.68 %tmp.58 %tmp.67;
+        %tmp.71 = const :responseType;
+        symbol [ responseType %tmp.71 101 13 25 const ];
+        symbol [ Communications %tmp.72 101 29 43 ];
+        %tmp.72 = getm $.Toybox.Communications;
+        symbol [ HTTP_RESPONSE_CONTENT_TYPE_JSON %tmp.73 101 44 75 ];
+        %tmp.73 = getv %tmp.72 :HTTP_RESPONSE_CONTENT_TYPE_JSON;
+        %tmp.74 = dup %tmp.69;
+        %tmp.75 = aputv %tmp.74 %tmp.71 %tmp.73;
+        lputv %options.2 %tmp.75;
+        symbol [ options %options.2 93 12 19 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 104 8 ]
+        %tmp.76 = true;
+        symbol [ _inFlight ? 104 8 17 ];
+        putv self :_inFlight %tmp.76;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 105 8 ]
+        symbol [ Communications %tmp.77 105 8 22 ];
+        %tmp.77 = getm $.Toybox.Communications;
+        symbol [ makeWebRequest %tmp.78 105 23 37 ];
+        %tmp.78 = getv function %tmp.77 :makeWebRequest;
+        symbol [ _settings %tmp.80 106 12 21 ];
+        %tmp.80 = getv ? :_settings;
+        symbol [ serverUrl %tmp.81 106 22 31 ];
+        %tmp.81 = getv %tmp.80 :serverUrl;
+        %tmp.82 = "/api/v1/session";
+        %tmp.83 = add %tmp.81 %tmp.82;
+        %tmp.84 = lgetv %params.1;
+        symbol [ params %tmp.84 107 12 18 ];
+        %tmp.85 = lgetv %options.2;
+        symbol [ options %tmp.85 108 12 19 ];
+        %tmp.86 = self;
+        symbol [ method %tmp.87 109 12 18 ];
+        %tmp.87 = getv function %tmp.86 :method;
+        %tmp.89 = const :onSessionResponse;
+        symbol [ onSessionResponse %tmp.89 109 20 37 const ];
+        %tmp.90 = invoke %tmp.86 %tmp.87(%tmp.89);
+        invoke %tmp.77 %tmp.78(%tmp.83, %tmp.84, %tmp.85, %tmp.90);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 111 8 ]
+        %tmp.91 = true;
+        ret %tmp.91;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_72_17_112_4_stop:
+    }
+    //! Send an allowlisted action.
+    //!
+    //! @param actionId One of the ids the server advertised in /meta.
+    //! @param nonce    Unique per user intent, so a retry is not a second press.
+    //! @param expect   Hash of the screen the rider was looking at. The server
+    //!                 refuses the action if the pane has moved on, which is
+    //!                 what stops an approval landing on the wrong prompt.
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 121; @symbol_functiondef = [sendAction,121,20,30]; @symbol_param<0> = [actionId,122,8,16]; @symbol_param<0>_type<0> = [String,122,20,26]; @symbol_param<1> = [nonce,123,8,13]; @symbol_param<1>_type<0> = [String,123,17,23]; @symbol_param<2> = [expect,124,8,14]; @symbol_param<2>_type<0> = [String,124,18,24]; @symbol_param<3> = [callback,125,8,16]; @symbol_param<3>_type<0> = [success,125,27,34]; @symbol_param<3>_type<1> = [Boolean,125,38,45]; @symbol_param<3>_type<2> = [message,125,47,54]; @symbol_param<3>_type<3> = [String,125,58,64]; @symbol_return<0> = [Boolean,126,9,16]; ]
+    public
+    function sendAction(actionId as String, nonce as String, expect as String or Null, callback as (callback(success as Boolean, message as String or Null) as Void)) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_126_17_164_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 127 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_127_8_129_8_if_stmt:
+        symbol [ _inFlight %tmp.2 127 12 21 ];
+        %tmp.2 = getv ? :_inFlight;
+        bf %tmp.2 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_127_8_129_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_127_8_129_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_127_23_129_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 128 12 ]
+        %tmp.3 = false;
+        ret %tmp.3;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_127_23_129_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_127_8_129_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_127_8_129_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 130 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_130_8_133_8_if_stmt:
+        symbol [ _settings %tmp.5 130 13 22 ];
+        %tmp.5 = getv ? :_settings;
+        symbol [ isUsable %tmp.6 130 23 31 ];
+        %tmp.6 = getv function %tmp.5 :isUsable;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = not %tmp.7;
+        bf %tmp.8 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_130_8_133_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_130_8_133_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_130_35_133_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 131 12 ]
+        %tmp.9 = lgetv %callback;
+        symbol [ callback %tmp.9 131 12 20 ];
+        symbol [ invoke %tmp.10 131 21 27 ];
+        %tmp.10 = getv function %tmp.9 :invoke;
+        %tmp.11 = false;
+        symbol [ _settings %tmp.13 131 35 44 ];
+        %tmp.13 = getv ? :_settings;
+        symbol [ error %tmp.14 131 45 50 ];
+        %tmp.14 = getv %tmp.13 :error;
+        invoke %tmp.9 %tmp.10(%tmp.11, %tmp.14);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 132 12 ]
+        %tmp.15 = false;
+        ret %tmp.15;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_130_35_133_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_130_8_133_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_130_8_133_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 135 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_126_17_164_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_126_17_164_4_stop" ]
+        %body.1 = local;
+        symbol [ body %body.1 135 12 16 ];
+        %tmp.16 = newd 2;
+        %tmp.17 = "action";
+        %tmp.18 = lgetv %actionId;
+        symbol [ actionId %tmp.18 136 24 32 ];
+        %tmp.19 = dup %tmp.16;
+        %tmp.20 = aputv %tmp.19 %tmp.17 %tmp.18;
+        %tmp.21 = "nonce";
+        %tmp.22 = lgetv %nonce;
+        symbol [ nonce %tmp.22 137 23 28 ];
+        %tmp.23 = dup %tmp.20;
+        %tmp.24 = aputv %tmp.23 %tmp.21 %tmp.22;
+        lputv %body.1 %tmp.24;
+        symbol [ body %body.1 135 12 16 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 139 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_139_8_141_8_if_stmt:
+        %tmp.25 = lgetv %expect;
+        symbol [ expect %tmp.25 139 12 18 ];
+        %tmp.26 = null;
+        %tmp.27 = ne %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_139_8_141_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_139_8_141_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_139_28_141_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 140 12 ]
+        %tmp.28 = lgetv %body.1;
+        symbol [ body %tmp.28 140 12 16 ];
+        %tmp.29 = lgetv %expect;
+        symbol [ expect %tmp.29 140 29 35 ];
+        %tmp.30 = as %tmp.29 { (!Null) };
+        %tmp.31 = "expect";
+        aputv %tmp.28 %tmp.31 %tmp.30;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_139_28_141_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_139_8_141_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_139_8_141_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 142 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_142_8_144_8_if_stmt:
+        symbol [ _settings %tmp.33 142 12 21 ];
+        %tmp.33 = getv ? :_settings;
+        symbol [ sessionName %tmp.34 142 22 33 ];
+        %tmp.34 = getv %tmp.33 :sessionName;
+        symbol [ length %tmp.35 142 34 40 ];
+        %tmp.35 = getv function %tmp.34 :length;
+        %tmp.36 = invoke %tmp.34 %tmp.35();
+        %tmp.37 = 0;
+        %tmp.38 = gt %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_142_8_144_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_142_8_144_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_142_48_144_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 143 12 ]
+        %tmp.39 = lgetv %body.1;
+        symbol [ body %tmp.39 143 12 16 ];
+        symbol [ _settings %tmp.41 143 30 39 ];
+        %tmp.41 = getv ? :_settings;
+        symbol [ sessionName %tmp.42 143 40 51 ];
+        %tmp.42 = getv %tmp.41 :sessionName;
+        %tmp.43 = "session";
+        aputv %tmp.39 %tmp.43 %tmp.42;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_142_48_144_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_142_8_144_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_142_8_144_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 146 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_126_17_164_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_126_17_164_4_stop" ]
+        %options.2 = local;
+        symbol [ options %options.2 146 12 19 ];
+        %tmp.44 = newd 3;
+        %tmp.46 = const :method;
+        symbol [ method %tmp.46 147 13 19 const ];
+        symbol [ Communications %tmp.47 147 23 37 ];
+        %tmp.47 = getm $.Toybox.Communications;
+        symbol [ HTTP_REQUEST_METHOD_POST %tmp.48 147 38 62 ];
+        %tmp.48 = getv %tmp.47 :HTTP_REQUEST_METHOD_POST;
+        %tmp.49 = dup %tmp.44;
+        %tmp.50 = aputv %tmp.49 %tmp.46 %tmp.48;
+        %tmp.52 = const :headers;
+        symbol [ headers %tmp.52 148 13 20 const ];
+        %tmp.53 = newd 2;
+        %tmp.54 = "Authorization";
+        %tmp.55 = "Bearer ";
+        symbol [ _settings %tmp.57 149 47 56 ];
+        %tmp.57 = getv ? :_settings;
+        symbol [ authToken %tmp.58 149 57 66 ];
+        %tmp.58 = getv %tmp.57 :authToken;
+        %tmp.59 = add %tmp.55 %tmp.58;
+        %tmp.60 = dup %tmp.53;
+        %tmp.61 = aputv %tmp.60 %tmp.54 %tmp.59;
+        %tmp.62 = "Content-Type";
+        symbol [ Communications %tmp.63 150 34 48 ];
+        %tmp.63 = getm $.Toybox.Communications;
+        symbol [ REQUEST_CONTENT_TYPE_JSON %tmp.64 150 49 74 ];
+        %tmp.64 = getv %tmp.63 :REQUEST_CONTENT_TYPE_JSON;
+        %tmp.65 = dup %tmp.61;
+        %tmp.66 = aputv %tmp.65 %tmp.62 %tmp.64;
+        %tmp.67 = dup %tmp.50;
+        %tmp.68 = aputv %tmp.67 %tmp.52 %tmp.66;
+        %tmp.70 = const :responseType;
+        symbol [ responseType %tmp.70 152 13 25 const ];
+        symbol [ Communications %tmp.71 152 29 43 ];
+        %tmp.71 = getm $.Toybox.Communications;
+        symbol [ HTTP_RESPONSE_CONTENT_TYPE_JSON %tmp.72 152 44 75 ];
+        %tmp.72 = getv %tmp.71 :HTTP_RESPONSE_CONTENT_TYPE_JSON;
+        %tmp.73 = dup %tmp.68;
+        %tmp.74 = aputv %tmp.73 %tmp.70 %tmp.72;
+        lputv %options.2 %tmp.74;
+        symbol [ options %options.2 146 12 19 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 155 8 ]
+        %tmp.75 = lgetv %callback;
+        symbol [ callback %tmp.75 155 26 34 ];
+        symbol [ _actionCallback ? 155 8 23 ];
+        putv self :_actionCallback %tmp.75;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 156 8 ]
+        %tmp.76 = true;
+        symbol [ _inFlight ? 156 8 17 ];
+        putv self :_inFlight %tmp.76;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 157 8 ]
+        symbol [ Communications %tmp.77 157 8 22 ];
+        %tmp.77 = getm $.Toybox.Communications;
+        symbol [ makeWebRequest %tmp.78 157 23 37 ];
+        %tmp.78 = getv function %tmp.77 :makeWebRequest;
+        symbol [ _settings %tmp.80 158 12 21 ];
+        %tmp.80 = getv ? :_settings;
+        symbol [ serverUrl %tmp.81 158 22 31 ];
+        %tmp.81 = getv %tmp.80 :serverUrl;
+        %tmp.82 = "/api/v1/action";
+        %tmp.83 = add %tmp.81 %tmp.82;
+        %tmp.84 = lgetv %body.1;
+        symbol [ body %tmp.84 159 12 16 ];
+        %tmp.85 = lgetv %options.2;
+        symbol [ options %tmp.85 160 12 19 ];
+        %tmp.86 = self;
+        symbol [ method %tmp.87 161 12 18 ];
+        %tmp.87 = getv function %tmp.86 :method;
+        %tmp.89 = const :onActionResponse;
+        symbol [ onActionResponse %tmp.89 161 20 36 const ];
+        %tmp.90 = invoke %tmp.86 %tmp.87(%tmp.89);
+        invoke %tmp.77 %tmp.78(%tmp.83, %tmp.84, %tmp.85, %tmp.90);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 163 8 ]
+        %tmp.91 = true;
+        ret %tmp.91;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_126_17_164_4_stop:
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 166; @position = 16; @symbol_vardef = [_actionCallback,166,16,31]; @symbol_type<0> = [success,166,42,49]; @symbol_type<1> = [Boolean,166,53,60]; @symbol_type<2> = [message,166,62,69]; @symbol_type<3> = [String,166,73,79]; ]
+    private
+    var _actionCallback as (callback(success as Boolean, message as String or Null) as Void) or Null;
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 168; @symbol_functiondef = [onSessionResponse,168,20,37]; @symbol_param<0> = [code,168,38,42]; @symbol_param<0>_type<0> = [Number,168,46,52]; @symbol_param<1> = [data,168,54,58]; @symbol_param<1>_type<0> = [Dictionary,168,62,72]; @symbol_param<1>_type<1> = [String,168,76,82]; ]
+    public
+    function onSessionResponse(code as Number, data as Dictionary or String or Null) as Void {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_168_100_185_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 169 8 ]
+        %tmp.1 = false;
+        symbol [ _inFlight ? 169 8 17 ];
+        putv self :_inFlight %tmp.1;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 171 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_8_174_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_12_171_43_begin:
+        %tmp.2 = lgetv %code;
+        symbol [ code %tmp.2 171 12 16 ];
+        %tmp.3 = 200;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_8_174_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_27_171_43_true:
+        %tmp.5 = lgetv %data;
+        symbol [ data %tmp.5 171 27 31 ];
+        symbol [ Dictionary %tmp.7 171 43 53 ];
+        %tmp.7 = getv ? :Dictionary;
+        %tmp.8 = isa %tmp.5 %tmp.7;
+        push %tmp.8;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_27_171_43_end:
+        %tmp.9 = phi [%tmp.4 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_12_171_43_begin] [%tmp.8 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_27_171_43_true] [%tmp.9 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_27_171_43_end];
+        bf %tmp.9 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_8_174_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_8_174_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_55_174_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 172 12 ]
+        symbol [ _onSession %tmp.11 172 12 22 ];
+        %tmp.11 = getv ? :_onSession;
+        symbol [ invoke %tmp.12 172 23 29 ];
+        %tmp.12 = getv function %tmp.11 :invoke;
+        %tmp.13 = true;
+        %tmp.14 = lgetv %data;
+        symbol [ data %tmp.14 172 36 40 ];
+        %tmp.15 = as %tmp.14 { (Dictionary) };
+        %tmp.16 = as %tmp.15 Dictionary;
+        symbol [ Dictionary %tmp.16 172 44 54 ];
+        %tmp.17 = null;
+        invoke %tmp.11 %tmp.12(%tmp.13, %tmp.16, %tmp.17);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 173 12 ]
+        ret ?;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_55_174_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_8_174_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_171_8_174_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 179 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_179_8_182_8_if_stmt:
+        %tmp.18 = lgetv %code;
+        symbol [ code %tmp.18 179 12 16 ];
+        %tmp.19 = 304;
+        %tmp.20 = eq %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_179_8_182_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_179_8_182_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_179_25_182_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 180 12 ]
+        symbol [ _onSession %tmp.22 180 12 22 ];
+        %tmp.22 = getv ? :_onSession;
+        symbol [ invoke %tmp.23 180 23 29 ];
+        %tmp.23 = getv function %tmp.22 :invoke;
+        %tmp.24 = true;
+        %tmp.25 = null;
+        %tmp.26 = null;
+        invoke %tmp.22 %tmp.23(%tmp.24, %tmp.25, %tmp.26);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 181 12 ]
+        ret ?;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_179_25_182_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_179_8_182_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_179_8_182_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 184 8 ]
+        symbol [ _onSession %tmp.28 184 8 18 ];
+        %tmp.28 = getv ? :_onSession;
+        symbol [ invoke %tmp.29 184 19 25 ];
+        %tmp.29 = getv function %tmp.28 :invoke;
+        %tmp.30 = false;
+        %tmp.31 = null;
+        %tmp.32 = self;
+        symbol [ describeError %tmp.33 184 39 52 ];
+        %tmp.33 = getv function %tmp.32 :describeError;
+        %tmp.34 = lgetv %code;
+        symbol [ code %tmp.34 184 53 57 ];
+        %tmp.35 = invoke %tmp.32 %tmp.33(%tmp.34);
+        invoke %tmp.28 %tmp.29(%tmp.30, %tmp.31, %tmp.35);
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_168_100_185_4_stop:
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 187; @symbol_functiondef = [onActionResponse,187,20,36]; @symbol_param<0> = [code,187,37,41]; @symbol_param<0>_type<0> = [Number,187,45,51]; @symbol_param<1> = [data,187,53,57]; @symbol_param<1>_type<0> = [Dictionary,187,61,71]; @symbol_param<1>_type<1> = [String,187,75,81]; ]
+    public
+    function onActionResponse(code as Number, data as Dictionary or String or Null) as Void {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_187_99_213_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 188 8 ]
+        %tmp.1 = false;
+        symbol [ _inFlight ? 188 8 17 ];
+        putv self :_inFlight %tmp.1;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 190 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_187_99_213_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_187_99_213_4_stop" ]
+        %callback.1 = local;
+        symbol [ callback %callback.1 190 12 20 ];
+        symbol [ _actionCallback %tmp.3 190 23 38 ];
+        %tmp.3 = getv ? :_actionCallback;
+        lputv %callback.1 %tmp.3;
+        symbol [ callback %callback.1 190 12 20 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 191 8 ]
+        %tmp.4 = null;
+        symbol [ _actionCallback ? 191 8 23 ];
+        putv self :_actionCallback %tmp.4;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 192 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_192_8_194_8_if_stmt:
+        %tmp.5 = lgetv %callback.1;
+        symbol [ callback %tmp.5 192 12 20 ];
+        %tmp.6 = null;
+        %tmp.7 = eq %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_192_8_194_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_192_8_194_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_192_30_194_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 193 12 ]
+        ret ?;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_192_30_194_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_192_8_194_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_192_8_194_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 196 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_196_8_199_8_if_stmt:
+        %tmp.8 = lgetv %code;
+        symbol [ code %tmp.8 196 12 16 ];
+        %tmp.9 = 200;
+        %tmp.10 = eq %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_196_8_199_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_196_8_199_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_196_25_199_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 197 12 ]
+        %tmp.11 = lgetv %callback.1;
+        symbol [ callback %tmp.11 197 12 20 ];
+        symbol [ invoke %tmp.12 197 21 27 ];
+        %tmp.12 = getv function %tmp.11 :invoke;
+        %tmp.13 = true;
+        %tmp.14 = null;
+        invoke %tmp.11 %tmp.12(%tmp.13, %tmp.14);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 198 12 ]
+        ret ?;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_196_25_199_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_196_8_199_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_196_8_199_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 204 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_8_210_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_12_204_43_begin:
+        %tmp.15 = lgetv %code;
+        symbol [ code %tmp.15 204 12 16 ];
+        %tmp.16 = 409;
+        %tmp.17 = eq %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_8_210_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_27_204_43_true:
+        %tmp.18 = lgetv %data;
+        symbol [ data %tmp.18 204 27 31 ];
+        symbol [ Dictionary %tmp.20 204 43 53 ];
+        %tmp.20 = getv ? :Dictionary;
+        %tmp.21 = isa %tmp.18 %tmp.20;
+        push %tmp.21;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_27_204_43_end:
+        %tmp.22 = phi [%tmp.17 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_12_204_43_begin] [%tmp.21 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_27_204_43_true] [%tmp.22 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_27_204_43_end];
+        bf %tmp.22 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_8_210_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_8_210_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_55_210_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 205 12 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_55_210_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_55_210_8_stop" ]
+        %message.2 = local;
+        symbol [ message %message.2 205 16 23 ];
+        %tmp.23 = lgetv %data;
+        symbol [ data %tmp.23 205 27 31 ];
+        %tmp.24 = as %tmp.23 { (Dictionary) };
+        %tmp.25 = as %tmp.24 Dictionary;
+        symbol [ Dictionary %tmp.25 205 35 45 ];
+        symbol [ get %tmp.26 205 47 50 ];
+        %tmp.26 = getv function %tmp.25 :get;
+        %tmp.27 = "m";
+        %tmp.28 = invoke %tmp.25 %tmp.26(%tmp.27);
+        lputv %message.2 %tmp.28;
+        symbol [ message %message.2 205 16 23 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 206 12 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_206_12_209_12_if_stmt:
+        %tmp.29 = lgetv %message.2;
+        symbol [ message %tmp.29 206 16 23 ];
+        symbol [ String %tmp.31 206 35 41 ];
+        %tmp.31 = getv ? :String;
+        %tmp.32 = isa %tmp.29 %tmp.31;
+        bf %tmp.32 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_206_12_209_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_206_12_209_12_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_206_43_209_12_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 207 16 ]
+        %tmp.33 = lgetv %callback.1;
+        symbol [ callback %tmp.33 207 16 24 ];
+        symbol [ invoke %tmp.34 207 25 31 ];
+        %tmp.34 = getv function %tmp.33 :invoke;
+        %tmp.35 = false;
+        %tmp.36 = lgetv %message.2;
+        symbol [ message %tmp.36 207 39 46 ];
+        %tmp.37 = as %tmp.36 { (String) };
+        %tmp.38 = as %tmp.37 String;
+        symbol [ String %tmp.38 207 50 56 ];
+        invoke %tmp.33 %tmp.34(%tmp.35, %tmp.38);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 208 16 ]
+        ret ?;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_206_43_209_12_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_206_12_209_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_206_12_209_12_if_end:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_55_210_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_8_210_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_204_8_210_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 212 8 ]
+        %tmp.39 = lgetv %callback.1;
+        symbol [ callback %tmp.39 212 8 16 ];
+        symbol [ invoke %tmp.40 212 17 23 ];
+        %tmp.40 = getv function %tmp.39 :invoke;
+        %tmp.41 = false;
+        %tmp.42 = self;
+        symbol [ describeError %tmp.43 212 31 44 ];
+        %tmp.43 = getv function %tmp.42 :describeError;
+        %tmp.44 = lgetv %code;
+        symbol [ code %tmp.44 212 45 49 ];
+        %tmp.45 = invoke %tmp.42 %tmp.43(%tmp.44);
+        invoke %tmp.39 %tmp.40(%tmp.41, %tmp.45);
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_187_99_213_4_stop:
+    }
+    //! Turn a response code into something a rider can act on.
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 216; @symbol_functiondef = [describeError,216,20,33]; @symbol_param<0> = [code,216,34,38]; @symbol_param<0>_type<0> = [Number,216,42,48]; @symbol_return<0> = [String,216,53,59]; ]
+    public
+    function describeError(code as Number) as String {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_216_60_256_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 217 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_8_219_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_12_217_35_begin:
+        %tmp.1 = lgetv %code;
+        symbol [ code %tmp.1 217 12 16 ];
+        %tmp.2 = 401;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bt %tmp.3 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_8_219_8_if_true;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_27_217_35_false:
+        %tmp.4 = lgetv %code;
+        symbol [ code %tmp.4 217 27 31 ];
+        %tmp.5 = 403;
+        %tmp.6 = eq %tmp.4 %tmp.5;
+        push %tmp.6;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_27_217_35_end:
+        %tmp.7 = phi [%tmp.3 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_12_217_35_begin] [%tmp.6 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_27_217_35_false] [%tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_27_217_35_end];
+        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_8_219_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_8_219_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_40_219_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 218 12 ]
+        symbol [ WatchUi %tmp.8 218 19 26 ];
+        %tmp.8 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.9 218 27 39 ];
+        %tmp.9 = getv function %tmp.8 :loadResource;
+        symbol [ Rez %tmp.11 218 40 43 ];
+        %tmp.11 = getv ? :Rez;
+        symbol [ Strings %tmp.12 218 44 51 ];
+        %tmp.12 = getv %tmp.11 :Strings;
+        symbol [ ErrAuth %tmp.13 218 52 59 ];
+        %tmp.13 = getv %tmp.12 :ErrAuth;
+        %tmp.14 = invoke %tmp.8 %tmp.9(%tmp.13);
+        %tmp.15 = as %tmp.14 String;
+        symbol [ String %tmp.15 218 64 70 ];
+        ret %tmp.15;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_40_219_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_8_219_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_217_8_219_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 220 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_220_8_222_8_if_stmt:
+        %tmp.16 = lgetv %code;
+        symbol [ code %tmp.16 220 12 16 ];
+        %tmp.17 = 429;
+        %tmp.18 = eq %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_220_8_222_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_220_8_222_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_220_25_222_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 221 12 ]
+        symbol [ WatchUi %tmp.19 221 19 26 ];
+        %tmp.19 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.20 221 27 39 ];
+        %tmp.20 = getv function %tmp.19 :loadResource;
+        symbol [ Rez %tmp.22 221 40 43 ];
+        %tmp.22 = getv ? :Rez;
+        symbol [ Strings %tmp.23 221 44 51 ];
+        %tmp.23 = getv %tmp.22 :Strings;
+        symbol [ ErrServer %tmp.24 221 52 61 ];
+        %tmp.24 = getv %tmp.23 :ErrServer;
+        %tmp.25 = invoke %tmp.19 %tmp.20(%tmp.24);
+        %tmp.26 = as %tmp.25 String;
+        symbol [ String %tmp.26 221 66 72 ];
+        ret %tmp.26;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_220_25_222_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_220_8_222_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_220_8_222_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 224 8 ]
+        %tmp.27 = lgetv %code;
+        symbol [ code %tmp.27 224 16 20 ];
+        push %tmp.27;
+        switch %tmp.27 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_224_8_250_8_switchStmtEnd;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_224_8_250_8_switchStmtBegin:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 225 12 ]
+        %tmp.28 = dup %tmp.27;
+        symbol [ ERR_BLE_UNAVAILABLE %tmp.30 225 17 36 ];
+        %tmp.30 = getv ? :ERR_BLE_UNAVAILABLE;
+        %tmp.31 = getv function %tmp.28 :equals;
+        %tmp.32 = invoke %tmp.28 %tmp.31 (%tmp.30);
+        bt %tmp.32 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_225_12_225_36_switchCase;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 226 12 ]
+        %tmp.33 = dup %tmp.27;
+        symbol [ ERR_BLE_HOST_TIMEOUT %tmp.35 226 17 37 ];
+        %tmp.35 = getv ? :ERR_BLE_HOST_TIMEOUT;
+        %tmp.36 = getv function %tmp.33 :equals;
+        %tmp.37 = invoke %tmp.33 %tmp.36 (%tmp.35);
+        bt %tmp.37 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_226_12_229_77_switchCase;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 231 12 ]
+        %tmp.38 = dup %tmp.27;
+        symbol [ ERR_TIMED_OUT %tmp.40 231 17 30 ];
+        %tmp.40 = getv ? :ERR_TIMED_OUT;
+        %tmp.41 = getv function %tmp.38 :equals;
+        %tmp.42 = invoke %tmp.38 %tmp.41 (%tmp.40);
+        bt %tmp.42 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_231_12_232_77_switchCase;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 234 12 ]
+        %tmp.43 = dup %tmp.27;
+        symbol [ ERR_SECURE_REQUIRED %tmp.45 234 17 36 ];
+        %tmp.45 = getv ? :ERR_SECURE_REQUIRED;
+        %tmp.46 = getv function %tmp.43 :equals;
+        %tmp.47 = invoke %tmp.43 %tmp.46 (%tmp.45);
+        bt %tmp.47 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_234_12_235_75_switchCase;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 237 12 ]
+        %tmp.48 = dup %tmp.27;
+        symbol [ ERR_RESPONSE_TOO_LARGE %tmp.50 237 17 39 ];
+        %tmp.50 = getv ? :ERR_RESPONSE_TOO_LARGE;
+        %tmp.51 = getv function %tmp.48 :equals;
+        %tmp.52 = invoke %tmp.48 %tmp.51 (%tmp.50);
+        bt %tmp.52 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_237_12_237_39_switchCase;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 238 12 ]
+        %tmp.53 = dup %tmp.27;
+        symbol [ ERR_OUT_OF_MEMORY %tmp.55 238 17 34 ];
+        %tmp.55 = getv ? :ERR_OUT_OF_MEMORY;
+        %tmp.56 = getv function %tmp.53 :equals;
+        %tmp.57 = invoke %tmp.53 %tmp.56 (%tmp.55);
+        bt %tmp.57 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_238_12_238_34_switchCase;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 239 12 ]
+        %tmp.58 = dup %tmp.27;
+        symbol [ ERR_BLE_REQUEST_TOO_LARGE %tmp.60 239 17 42 ];
+        %tmp.60 = getv ? :ERR_BLE_REQUEST_TOO_LARGE;
+        %tmp.61 = getv function %tmp.58 :equals;
+        %tmp.62 = invoke %tmp.58 %tmp.61 (%tmp.60);
+        bt %tmp.62 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_239_12_242_76_switchCase;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 244 12 ]
+        %tmp.63 = dup %tmp.27;
+        symbol [ ERR_BLE_QUEUE_FULL %tmp.65 244 17 35 ];
+        %tmp.65 = getv ? :ERR_BLE_QUEUE_FULL;
+        %tmp.66 = getv function %tmp.63 :equals;
+        %tmp.67 = invoke %tmp.63 %tmp.66 (%tmp.65);
+        bt %tmp.67 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_244_12_246_77_switchCase;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 248 12 ]
+        %tmp.68 = dup %tmp.27;
+        symbol [ ERR_UNSUPPORTED_TYPE %tmp.70 248 17 37 ];
+        %tmp.70 = getv ? :ERR_UNSUPPORTED_TYPE;
+        %tmp.71 = getv function %tmp.68 :equals;
+        %tmp.72 = invoke %tmp.68 %tmp.71 (%tmp.70);
+        bt %tmp.72 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_248_12_249_76_switchCase;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_224_8_250_8_switchStmtDefault:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_224_8_250_8_defaultCodeBegin;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_225_12_225_36_switchCase:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_226_12_229_77_switchCase:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 229 16 ]
+        symbol [ WatchUi %tmp.73 229 23 30 ];
+        %tmp.73 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.74 229 31 43 ];
+        %tmp.74 = getv function %tmp.73 :loadResource;
+        symbol [ Rez %tmp.76 229 44 47 ];
+        %tmp.76 = getv ? :Rez;
+        symbol [ Strings %tmp.77 229 48 55 ];
+        %tmp.77 = getv %tmp.76 :Strings;
+        symbol [ ErrNoPhone %tmp.78 229 56 66 ];
+        %tmp.78 = getv %tmp.77 :ErrNoPhone;
+        %tmp.79 = invoke %tmp.73 %tmp.74(%tmp.78);
+        %tmp.80 = as %tmp.79 String;
+        symbol [ String %tmp.80 229 71 77 ];
+        ret %tmp.80;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_231_12_232_77_switchCase:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 232 16 ]
+        symbol [ WatchUi %tmp.81 232 23 30 ];
+        %tmp.81 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.82 232 31 43 ];
+        %tmp.82 = getv function %tmp.81 :loadResource;
+        symbol [ Rez %tmp.84 232 44 47 ];
+        %tmp.84 = getv ? :Rez;
+        symbol [ Strings %tmp.85 232 48 55 ];
+        %tmp.85 = getv %tmp.84 :Strings;
+        symbol [ ErrTimeout %tmp.86 232 56 66 ];
+        %tmp.86 = getv %tmp.85 :ErrTimeout;
+        %tmp.87 = invoke %tmp.81 %tmp.82(%tmp.86);
+        %tmp.88 = as %tmp.87 String;
+        symbol [ String %tmp.88 232 71 77 ];
+        ret %tmp.88;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_234_12_235_75_switchCase:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 235 16 ]
+        symbol [ WatchUi %tmp.89 235 23 30 ];
+        %tmp.89 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.90 235 31 43 ];
+        %tmp.90 = getv function %tmp.89 :loadResource;
+        symbol [ Rez %tmp.92 235 44 47 ];
+        %tmp.92 = getv ? :Rez;
+        symbol [ Strings %tmp.93 235 48 55 ];
+        %tmp.93 = getv %tmp.92 :Strings;
+        symbol [ ErrHttps %tmp.94 235 56 64 ];
+        %tmp.94 = getv %tmp.93 :ErrHttps;
+        %tmp.95 = invoke %tmp.89 %tmp.90(%tmp.94);
+        %tmp.96 = as %tmp.95 String;
+        symbol [ String %tmp.96 235 69 75 ];
+        ret %tmp.96;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_237_12_237_39_switchCase:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_238_12_238_34_switchCase:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_239_12_242_76_switchCase:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 242 16 ]
+        symbol [ WatchUi %tmp.97 242 23 30 ];
+        %tmp.97 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.98 242 31 43 ];
+        %tmp.98 = getv function %tmp.97 :loadResource;
+        symbol [ Rez %tmp.100 242 44 47 ];
+        %tmp.100 = getv ? :Rez;
+        symbol [ Strings %tmp.101 242 48 55 ];
+        %tmp.101 = getv %tmp.100 :Strings;
+        symbol [ ErrTooBig %tmp.102 242 56 65 ];
+        %tmp.102 = getv %tmp.101 :ErrTooBig;
+        %tmp.103 = invoke %tmp.97 %tmp.98(%tmp.102);
+        %tmp.104 = as %tmp.103 String;
+        symbol [ String %tmp.104 242 70 76 ];
+        ret %tmp.104;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_244_12_246_77_switchCase:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 246 16 ]
+        symbol [ WatchUi %tmp.105 246 23 30 ];
+        %tmp.105 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.106 246 31 43 ];
+        %tmp.106 = getv function %tmp.105 :loadResource;
+        symbol [ Rez %tmp.108 246 44 47 ];
+        %tmp.108 = getv ? :Rez;
+        symbol [ Strings %tmp.109 246 48 55 ];
+        %tmp.109 = getv %tmp.108 :Strings;
+        symbol [ ErrTimeout %tmp.110 246 56 66 ];
+        %tmp.110 = getv %tmp.109 :ErrTimeout;
+        %tmp.111 = invoke %tmp.105 %tmp.106(%tmp.110);
+        %tmp.112 = as %tmp.111 String;
+        symbol [ String %tmp.112 246 71 77 ];
+        ret %tmp.112;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_248_12_249_76_switchCase:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 249 16 ]
+        symbol [ WatchUi %tmp.113 249 23 30 ];
+        %tmp.113 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.114 249 31 43 ];
+        %tmp.114 = getv function %tmp.113 :loadResource;
+        symbol [ Rez %tmp.116 249 44 47 ];
+        %tmp.116 = getv ? :Rez;
+        symbol [ Strings %tmp.117 249 48 55 ];
+        %tmp.117 = getv %tmp.116 :Strings;
+        symbol [ ErrServer %tmp.118 249 56 65 ];
+        %tmp.118 = getv %tmp.117 :ErrServer;
+        %tmp.119 = invoke %tmp.113 %tmp.114(%tmp.118);
+        %tmp.120 = as %tmp.119 String;
+        symbol [ String %tmp.120 249 70 76 ];
+        ret %tmp.120;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_224_8_250_8_defaultCodeBegin:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_224_8_250_8_switchStmtEnd:
+        pop;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 252 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_252_8_254_8_if_stmt:
+        %tmp.121 = lgetv %code;
+        symbol [ code %tmp.121 252 12 16 ];
+        %tmp.122 = 500;
+        %tmp.123 = gte %tmp.121 %tmp.122;
+        bf %tmp.123 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_252_8_254_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_252_8_254_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_252_25_254_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 253 12 ]
+        symbol [ WatchUi %tmp.124 253 19 26 ];
+        %tmp.124 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.125 253 27 39 ];
+        %tmp.125 = getv function %tmp.124 :loadResource;
+        symbol [ Rez %tmp.127 253 40 43 ];
+        %tmp.127 = getv ? :Rez;
+        symbol [ Strings %tmp.128 253 44 51 ];
+        %tmp.128 = getv %tmp.127 :Strings;
+        symbol [ ErrServer %tmp.129 253 52 61 ];
+        %tmp.129 = getv %tmp.128 :ErrServer;
+        %tmp.130 = invoke %tmp.124 %tmp.125(%tmp.129);
+        %tmp.131 = as %tmp.130 String;
+        symbol [ String %tmp.131 253 66 72 ];
+        ret %tmp.131;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_252_25_254_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_252_8_254_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_252_8_254_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc" 255 8 ]
+        symbol [ WatchUi %tmp.132 255 16 23 ];
+        %tmp.132 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.133 255 24 36 ];
+        %tmp.133 = getv function %tmp.132 :loadResource;
+        symbol [ Rez %tmp.135 255 37 40 ];
+        %tmp.135 = getv ? :Rez;
+        symbol [ Strings %tmp.136 255 41 48 ];
+        %tmp.136 = getv %tmp.135 :Strings;
+        symbol [ ErrServer %tmp.137 255 49 58 ];
+        %tmp.137 = getv %tmp.136 :ErrServer;
+        %tmp.138 = invoke %tmp.132 %tmp.133(%tmp.137);
+        %tmp.139 = as %tmp.138 String;
+        symbol [ String %tmp.139 255 63 69 ];
+        %tmp.140 = " ";
+        %tmp.141 = add %tmp.139 %tmp.140;
+        %tmp.142 = lgetv %code;
+        symbol [ code %tmp.142 255 79 83 ];
+        symbol [ toString %tmp.143 255 84 92 ];
+        %tmp.143 = getv function %tmp.142 :toString;
+        %tmp.144 = invoke %tmp.142 %tmp.143();
+        %tmp.145 = add %tmp.141 %tmp.144;
+        ret %tmp.145;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_BridgeClient_mc_216_60_256_4_stop:
+    }
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/BridgeClient.mc"; @line = 1; ]
+<init> {
+}

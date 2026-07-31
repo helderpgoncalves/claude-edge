@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Rendered at this device family's exact launcher size, so the resource
+         compiler never has to rescale and soften the 1px strokes. -->
+    <bitmap id="LauncherIcon" filename="launcher_icon.png" />
+</resources>

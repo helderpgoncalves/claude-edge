@@ -350,6 +350,14 @@ class TerminalView extends WatchUi.View {
             }
         }
 
+        // With nothing more urgent to report, name the session being mirrored.
+        // It only matters when more than one is configured, which is exactly
+        // when showing it prevents acting on the wrong machine.
+        var name = _sessionName;
+        if (right.length() == 0 && name != null) {
+            right = name;
+        }
+
         if (right.length() > 0) {
             dc.drawText(
                 width - SIDE_PAD - 1,

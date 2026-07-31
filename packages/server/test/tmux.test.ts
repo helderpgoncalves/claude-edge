@@ -1,7 +1,10 @@
 import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
+import { randomBytes } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { rm } from 'node:fs/promises';
+import { join } from 'node:path';
 
 import {
   assertSafeSession,
@@ -23,7 +26,9 @@ const execFileAsync = promisify(execFile);
  * rejects — the argument quoting and target-syntax behaviour is exactly what
  * needs verifying.
  */
-const SOCKET = 'claude-edge-test';
+// Unique per process: the test runner executes files in parallel, and a
+// shared socket means one file's kill-server lands mid-capture in another.
+const SOCKET = `ce-tmux-${randomBytes(4).toString('hex')}`;
 const SESSION = 'cetest-unit';
 
 async function tmuxRaw(args: string[]): Promise<string> {
@@ -57,6 +62,12 @@ after(async () => {
   if (!tmuxAvailable) return;
   await tmuxRaw(['kill-session', '-t', SESSION]).catch(() => undefined);
   await tmuxRaw(['kill-server']).catch(() => undefined);
+
+  // kill-server stops the server but leaves its socket file on disk. Left
+  // alone these accumulate one per test run, so remove the one we created.
+  await rm(join(process.env['TMUX_TMPDIR'] ?? `/tmp/tmux-${process.getuid?.() ?? 0}`, SOCKET), {
+    force: true,
+  }).catch(() => undefined);
 });
 
 describe('assertSafeSession', () => {

@@ -1,0 +1,185 @@
+{
+  "settings" : [ {
+    "key" : "serverUrl",
+    "valueType" : "string",
+    "defaultValue" : "",
+    "configTitle" : "SettingsServerUrl",
+    "configPrompt" : null,
+    "configType" : "alphaNumeric",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : true,
+    "configOptions" : null,
+    "configMin" : null,
+    "configMax" : null,
+    "configMaxLength" : 200
+  }, {
+    "key" : "authToken",
+    "valueType" : "string",
+    "defaultValue" : "",
+    "configTitle" : "SettingsToken",
+    "configPrompt" : null,
+    "configType" : "password",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : true,
+    "configOptions" : null,
+    "configMin" : null,
+    "configMax" : null,
+    "configMaxLength" : 200
+  }, {
+    "key" : "sessionName",
+    "valueType" : "string",
+    "defaultValue" : "",
+    "configTitle" : "SettingsSession",
+    "configPrompt" : null,
+    "configType" : "alphaNumeric",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : false,
+    "configOptions" : null,
+    "configMin" : null,
+    "configMax" : null,
+    "configMaxLength" : 64
+  }, {
+    "key" : "pollMode",
+    "valueType" : "number",
+    "defaultValue" : 0,
+    "configTitle" : "SettingsPollMode",
+    "configPrompt" : null,
+    "configType" : "list",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : false,
+    "configOptions" : [ {
+      "display" : "SettingsPollAdaptive",
+      "value" : 0
+    }, {
+      "display" : "SettingsPollFast",
+      "value" : 1
+    }, {
+      "display" : "SettingsPollSlow",
+      "value" : 2
+    }, {
+      "display" : "SettingsPollCustom",
+      "value" : 3
+    } ],
+    "configMin" : null,
+    "configMax" : null,
+    "configMaxLength" : null
+  }, {
+    "key" : "pollSeconds",
+    "valueType" : "number",
+    "defaultValue" : 5,
+    "configTitle" : "SettingsPollSeconds",
+    "configPrompt" : null,
+    "configType" : "numeric",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : false,
+    "configOptions" : null,
+    "configMin" : 2,
+    "configMax" : 300,
+    "configMaxLength" : null
+  }, {
+    "key" : "fontSize",
+    "valueType" : "number",
+    "defaultValue" : 0,
+    "configTitle" : "SettingsFontSize",
+    "configPrompt" : null,
+    "configType" : "list",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : false,
+    "configOptions" : [ {
+      "display" : "SettingsFontXTiny",
+      "value" : 0
+    }, {
+      "display" : "SettingsFontTiny",
+      "value" : 1
+    }, {
+      "display" : "SettingsFontSmall",
+      "value" : 2
+    } ],
+    "configMin" : null,
+    "configMax" : null,
+    "configMaxLength" : null
+  }, {
+    "key" : "confirmDestructive",
+    "valueType" : "boolean",
+    "defaultValue" : true,
+    "configTitle" : "SettingsConfirmDestructive",
+    "configPrompt" : null,
+    "configType" : "boolean",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : false,
+    "configOptions" : null,
+    "configMin" : null,
+    "configMax" : null,
+    "configMaxLength" : null
+  }, {
+    "key" : "vibrateOnPrompt",
+    "valueType" : "boolean",
+    "defaultValue" : true,
+    "configTitle" : "SettingsVibrate",
+    "configPrompt" : null,
+    "configType" : "boolean",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : false,
+    "configOptions" : null,
+    "configMin" : null,
+    "configMax" : null,
+    "configMaxLength" : null
+  } ],
+  "supportsLiveValidation" : false,
+  "languages" : {
+    "valyrian" : {
+      "SettingsVibrate" : "Vibrate when input needed",
+      "SettingsSession" : "tmux session",
+      "StateWorking" : "Working",
+      "MenuTitle" : "Actions",
+      "SettingsToken" : "Access token",
+      "MenuSession" : "Switch session",
+      "ErrHttps" : "Server must use HTTPS.",
+      "MenuAbout" : "About",
+      "ErrServer" : "Server error.",
+      "Connecting" : "Connecting…",
+      "AppName" : "Claude Edge",
+      "SettingsFontXTiny" : "Smallest (most text)",
+      "StateNoSession" : "No session",
+      "ErrStale" : "Screen changed. Look again.",
+      "ErrTooBig" : "Response too large. Reduce text size.",
+      "SettingsFontSize" : "Text size",
+      "SettingsFontTiny" : "Small",
+      "ErrNoPhone" : "No phone connection.",
+      "SettingsPollMode" : "Refresh rate",
+      "SettingsConfirmDestructive" : "Confirm risky actions",
+      "MenuRefresh" : "Refresh now",
+      "SettingsServerUrl" : "Server URL",
+      "SettingsPollFast" : "Always fast",
+      "SettingsFontSmall" : "Medium",
+      "ErrNoConfig" : "Set the server URL in the Connect IQ app settings.",
+      "ErrTimeout" : "Timed out.",
+      "ErrAuth" : "Token rejected.",
+      "StateWaiting" : "Needs you",
+      "SettingsServerUrlPrompt" : "https://your-domain.example",
+      "ConfirmTitle" : "Are you sure?",
+      "SettingsPollAdaptive" : "Adaptive (recommended)",
+      "SettingsPollCustom" : "Custom interval",
+      "SettingsPollSeconds" : "Custom interval (seconds)",
+      "StateIdle" : "Idle",
+      "StateUnknown" : "Unknown",
+      "SettingsPollSlow" : "Battery saver"
+    }
+  }
+}

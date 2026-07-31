@@ -1,0 +1,26 @@
+{
+  "//": [
+    "Extensions VS Code offers to install when this repository is opened.",
+    "Deliberately short: a long list trains people to dismiss the prompt.",
+    "Each entry below is needed to work on some part of this repo."
+  ],
+  "recommendations": [
+    // Monkey C language support, the Connect IQ build tasks, and the simulator
+    // integration. Required for anything under edge-app/.
+    "garmin.monkey-c",
+
+    // TypeScript linting and formatting for the server and the PWA. Both are
+    // configured in-repo, so the extensions pick up the project's rules rather
+    // than each developer's personal settings.
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // Compose file support and container management, for the Docker workflow.
+    "ms-azuretools.vscode-containers",
+
+    // Runs the .http files in docs/api/ against a local bridge, which is the
+    // quickest way to exercise an endpoint without the device.
+    "humao.rest-client"
+  ],
+  "unwantedRecommendations": []
+}

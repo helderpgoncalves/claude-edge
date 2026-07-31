@@ -1,21 +1,44 @@
 # Connect IQ build configuration.
 #
-# The base configuration applies to every product. Per-product overrides below
-# exist only where a device genuinely differs — a larger screen that can afford
-# a bigger default font, or the absence of a touchscreen.
+# `resources/` holds everything shared: strings, settings, and the properties
+# every device reads. It deliberately contains no drawables.
+#
+# The launcher icon is the one resource that genuinely cannot be shared. Each
+# Edge declares an exact launcher size, and supplying anything else makes the
+# resource compiler rescale the bitmap — which softens the 1px strokes in this
+# icon into grey mush at 35px. So there is one resource layer per distinct size,
+# and each product is pointed at the layer matching what it asks for.
+#
+# Sizes come from each device's own compiler.json:
+#     35px  edge530 edge540 edge830 edge840
+#     36px  edge1030 edge1030plus edgeexplore2 edgemtb
+#     40px  edge1040
+#     56px  edge550 edge850
+#     68px  edge1050
 
 project.manifest = manifest.xml
 
 base.sourcePath = source
 base.resourcePath = resources
 
-# Larger-screened Edges get their own resource layer so defaults can differ
-# without a second source tree. The 1050 in particular is 480x800, more than
-# three times the pixel count of the 540, and the smallest font there would be
-# unreadably tiny.
-edge1050.resourcePath = $(edge1050.resourcePath);resources-large
-edge1040.resourcePath = $(edge1040.resourcePath);resources-large
-edge1030.resourcePath = $(edge1030.resourcePath);resources-large
-edge1030plus.resourcePath = $(edge1030plus.resourcePath);resources-large
-edge550.resourcePath = $(edge550.resourcePath);resources-large
-edge850.resourcePath = $(edge850.resourcePath);resources-large
+# --- 35px ---------------------------------------------------------------------
+edge530.resourcePath = $(edge530.resourcePath);resources-icon35
+edge540.resourcePath = $(edge540.resourcePath);resources-icon35
+edge830.resourcePath = $(edge830.resourcePath);resources-icon35
+edge840.resourcePath = $(edge840.resourcePath);resources-icon35
+
+# --- 36px ---------------------------------------------------------------------
+edge1030.resourcePath = $(edge1030.resourcePath);resources-icon36
+edge1030plus.resourcePath = $(edge1030plus.resourcePath);resources-icon36
+edgeexplore2.resourcePath = $(edgeexplore2.resourcePath);resources-icon36
+edgemtb.resourcePath = $(edgemtb.resourcePath);resources-icon36
+
+# --- 40px ---------------------------------------------------------------------
+edge1040.resourcePath = $(edge1040.resourcePath);resources-icon40
+
+# --- 56px ---------------------------------------------------------------------
+edge550.resourcePath = $(edge550.resourcePath);resources-icon56
+edge850.resourcePath = $(edge850.resourcePath);resources-icon56
+
+# --- 68px ---------------------------------------------------------------------
+edge1050.resourcePath = $(edge1050.resourcePath);resources-icon68

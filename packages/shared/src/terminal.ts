@@ -151,15 +151,70 @@ export function wrapLine(line: string, width: number): string[] {
 }
 
 /**
+ * A line consisting only of box-drawing characters, spaces, and at most a
+ * little punctuation: a horizontal rule with no content of its own.
+ */
+const BOX_RULE = /^[\s─-╿—–_=-]+$/;
+
+/** Leading and trailing vertical box borders around a line's real content. */
+const BOX_BORDERS = /^\s*[│┃║|]\s?|\s?[│┃║|]\s*$/g;
+
+/**
+ * Strip terminal box-drawing decoration that costs more than it conveys on a
+ * narrow screen.
+ *
+ * Claude Code frames its prompts in boxes sized for an 80-column terminal. On a
+ * 40-column device each border line wraps to two rows, so a single framed
+ * question can consume six of the fourteen rows an Edge 540 has — nearly half
+ * the screen spent on decoration that carries no information.
+ *
+ * Horizontal rules are dropped entirely and vertical borders are trimmed from
+ * the ends of content lines. The text inside is untouched.
+ */
+export function stripBoxDecoration(lines: readonly string[]): string[] {
+  const out: string[] = [];
+
+  for (const line of lines) {
+    // A pure rule carries no information; drop it outright. Substituting a
+    // blank line would trade one wasted row for another, and a framed prompt
+    // has two rules, so the waste is doubled on the smallest screens.
+    if (line.trim() !== '' && BOX_RULE.test(line)) continue;
+
+    const stripped = line.replace(BOX_BORDERS, '').replace(/\s+$/, '');
+
+    // Collapse runs of blank lines. Removing the frame frequently leaves the
+    // blank line that sat above it adjacent to the one below, and on a
+    // fourteen-row screen two consecutive empty rows are 14% of the display.
+    if (stripped === '' && out.length > 0 && out[out.length - 1] === '') continue;
+
+    out.push(stripped);
+  }
+
+  // A leading blank line introduced by a dropped top border is pure waste.
+  while (out.length > 0 && out[0] === '') out.shift();
+  while (out.length > 0 && out[out.length - 1] === '') out.pop();
+
+  return out;
+}
+
+/**
  * Wrap a captured pane to a column budget.
  *
  * @param lines ANSI-stripped logical lines, oldest first.
  * @param width Column budget.
+ * @param stripBoxes Remove box-drawing decoration first. On by default: the
+ *   frames are sized for a desktop terminal and are pure cost on a device.
  * @returns Physical lines, oldest first.
  */
-export function wrapLines(lines: readonly string[], width: number): string[] {
+export function wrapLines(
+  lines: readonly string[],
+  width: number,
+  stripBoxes = true,
+): string[] {
+  const source = stripBoxes ? stripBoxDecoration(lines) : lines;
+
   const out: string[] = [];
-  for (const line of lines) {
+  for (const line of source) {
     out.push(...wrapLine(line, width));
   }
   return out;

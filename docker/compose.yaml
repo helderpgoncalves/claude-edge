@@ -1,0 +1,134 @@
+# Production stack: the bridge behind Caddy, which obtains and renews TLS
+# certificates from Let's Encrypt automatically.
+#
+#   cp .env.example .env    # then edit it
+#   docker compose -f docker/compose.yaml up -d
+#
+# WHY THERE IS A REVERSE PROXY AT ALL
+# -----------------------------------
+# Connect IQ refuses plain HTTP and refuses self-signed certificates: a request
+# to either fails with SECURE_CONNECTION_REQUIRED (-1001) before it leaves the
+# phone. A publicly trusted certificate is therefore not a nice-to-have, it is
+# the minimum for the device to work at all.
+#
+# Caddy is chosen over nginx here for one reason: it obtains and renews
+# certificates with no cron job, no certbot invocation, and no renewal hook to
+# forget. For a service one person runs on one VPS, that removes the most
+# likely cause of it silently breaking three months later.
+
+name: claude-edge
+
+services:
+  bridge:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: claude-edge-bridge:latest
+    restart: unless-stopped
+    init: true
+
+    # No published ports. The bridge is reachable only through Caddy, on the
+    # internal network, so there is no way to hit it without passing TLS.
+    expose:
+      - "8787"
+
+    environment:
+      READ_TOKEN: ${READ_TOKEN:?READ_TOKEN must be set in .env}
+      WRITE_TOKEN: ${WRITE_TOKEN:?WRITE_TOKEN must be set in .env}
+
+      TMUX_SESSION: ${TMUX_SESSION:-claude}
+      TMUX_SOCKET: ${TMUX_SOCKET:-claude-edge}
+      TMUX_TMPDIR: /tmp/tmux
+      ALLOWED_SESSIONS: ${ALLOWED_SESSIONS:-}
+
+      # Both default to off. Free text is arbitrary instruction to an agent with
+      # shell access; destructive actions include permanently widening that
+      # agent's permissions. Turn either on deliberately, not by inheriting a
+      # default. See docs/security.md.
+      ALLOW_FREE_TEXT: ${ALLOW_FREE_TEXT:-false}
+      ALLOW_DESTRUCTIVE: ${ALLOW_DESTRUCTIVE:-false}
+
+      POLL_WORKING_S: ${POLL_WORKING_S:-3}
+      POLL_BLOCKED_S: ${POLL_BLOCKED_S:-2}
+      POLL_IDLE_S: ${POLL_IDLE_S:-15}
+      POLL_DEAD_S: ${POLL_DEAD_S:-30}
+
+      RATE_READ_PER_MIN: ${RATE_READ_PER_MIN:-60}
+      RATE_WRITE_PER_MIN: ${RATE_WRITE_PER_MIN:-20}
+
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+
+    volumes:
+      # The tmux socket directory from the host, where the real Claude Code
+      # session runs. Read-write because the bridge must send keys, not only
+      # read the pane.
+      #
+      # Start the session with a matching socket name:
+      #     tmux -L claude-edge new-session -s claude
+      #
+      # Using a dedicated socket rather than the default is a containment
+      # boundary, not a convention: the bridge is then structurally unable to
+      # reach any other tmux session on the host, whatever the code does.
+      - ${TMUX_SOCKET_DIR:-/tmp/tmux-1000}:/tmp/tmux
+
+    networks:
+      - internal
+
+    security_opt:
+      - no-new-privileges:true
+
+    # The bridge shells out to tmux, so it needs a writable /tmp, but nothing
+    # else on the filesystem should be writable.
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+      - "443:443"
+      # HTTP/3. Harmless if the host firewall drops it.
+      - "443:443/udp"
+
+    environment:
+      # The domain the certificate is issued for, and the address the device
+      # is configured with.
+      DOMAIN: ${DOMAIN:?DOMAIN must be set in .env}
+      # Let's Encrypt uses this to warn about expiry problems.
+      ACME_EMAIL: ${ACME_EMAIL:?ACME_EMAIL must be set in .env}
+
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Certificates and ACME account keys. Losing this volume means
+      # re-issuing certificates, which Let's Encrypt rate-limits.
+      - caddy-data:/data
+      - caddy-config:/config
+
+    networks:
+      - internal
+
+    depends_on:
+      - bridge
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  caddy-data:
+  caddy-config:

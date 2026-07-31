@@ -1,0 +1,61 @@
+{
+  // ---------------------------------------------------------------- Monkey C
+  // The SDK is not on PATH by default; pointing the extension at it directly
+  // means Go to Definition and the simulator work without further setup.
+  "monkeyC.typeCheckLevel": "Strict",
+  "monkeyC.developerKeyPath": "${env:HOME}/.garmin_keys/developer_key.der",
+
+  // ------------------------------------------------------------- TypeScript
+  // Use the workspace TypeScript rather than the one bundled with VS Code, so
+  // editor diagnostics match what `pnpm typecheck` reports in CI.
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+
+  // ------------------------------------------------------------- Formatting
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[jsonc]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+
+  // Monkey C is not covered by Prettier; the extension owns its formatting.
+  "[monkeyc]": {
+    "editor.defaultFormatter": "garmin.monkey-c",
+    "editor.tabSize": 4
+  },
+
+  // ------------------------------------------------------------------ Files
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  // Trailing whitespace is significant in the terminal fixtures: it reproduces
+  // what tmux actually emits, and trimming it would make the tests pass for the
+  // wrong reason.
+  "[plaintext]": { "files.trimTrailingWhitespace": false },
+
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/bin": true,
+    "**/*.tsbuildinfo": true
+  },
+
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/pnpm-lock.yaml": true
+  },
+
+  // ------------------------------------------------------------------ Editor
+  "editor.rulers": [100],
+  "eslint.workingDirectories": [{ "mode": "auto" }]
+}
