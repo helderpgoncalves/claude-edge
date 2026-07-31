@@ -3,40 +3,45 @@
 How `edge.heldergoncalves.io` is deployed on the Coolify server, and how to
 update it.
 
-## Registered in Coolify
+## Managed by Coolify
 
-Project **Claude Edge** → application **claude-edge-web**, visible in the
-dashboard with its environment variables managed there.
-
-One caveat worth knowing. The containers were started over SSH before the
-application was registered, so Coolify adopted a deployment it did not create.
-Everything works and appears in the UI, but the first deploy triggered *from*
-Coolify will rebuild from the repository — expect a short restart the first
-time you press Deploy.
-
-Registration was done through Coolify's own Eloquent models rather than raw
-SQL, so its UUID format and relationships stayed its concern. Two schema
-surprises found along the way, in case a future version moves them again:
-tokens are scoped to a team, and environment variables are polymorphic
-(`resourceable_type` / `resourceable_id`, not `application_id`).
-
-## What is running
+Project **Claude Edge** → application **claude-edge-web**, deployed by Coolify
+itself. Press Deploy in the dashboard and it rebuilds from `main`.
 
 | | |
 |---|---|
-| Host | `91.98.22.239`, Coolify with a Traefik proxy |
-| Path | `/data/claude-edge/` |
-| Domain | `edge.heldergoncalves.io`, TLS through Cloudflare |
-| Services | `claude-edge-web-web-1`, `claude-edge-web-postgres-1` |
+| Compose | `/compose.web.yaml` |
+| Domain | `https://edge.heldergoncalves.io` |
+| Health check | `/api/health` |
+| Containers | `web-hvr3b4f-*`, `postgres-hvr3b4f-*` |
+| Status | `running:healthy` |
 
-```
-/data/claude-edge/
-  .env                          secrets, 0600, generated on the server
-  repo/                         a clone of the GitHub repository
-    docker-compose.override.yaml  Traefik labels, written on the host
-```
+### The build context, which is what made the first deploy fail
 
-## Secrets
+Coolify copies **the compose file's own directory** as the build context. With
+the file under `docker/`, `context: ..` climbed above what was copied and the
+build died with a bare `lstat /artifacts/docker: no such file or directory`.
+
+Hence `compose.web.yaml` at the repository root: the context is then the
+repository, which is what the Dockerfile and a local `docker compose` both
+already assumed. Do not move it back.
+
+### Schema notes
+
+Registration was done through Coolify's Eloquent models rather than raw SQL, so
+its UUID format and relationships stayed its concern. Two things in this
+version surprised the first attempt and are worth recording in case a future
+release moves them again:
+
+- API tokens are scoped to a team; `createToken` alone leaves `team_id` null
+  and the insert fails.
+- Environment variables are polymorphic — `resourceable_type` and
+  `resourceable_id`, not `application_id`.
+
+Also: repeated imports create duplicate variables rather than updating them.
+Deduplicate by key, keeping the newest.
+
+## Secrets## Secrets
 
 Generated **on the server** with `openssl rand` and never printed:
 
@@ -51,23 +56,8 @@ sign-in is configured; the button stays hidden while they are.
 
 ## Updating
 
-```bash
-ssh root@91.98.22.239
-cd /data/claude-edge/repo
-git fetch origin main && git reset --hard origin/main
-cp ../.env .env
-docker compose -f compose.web.yaml -f docker-compose.override.yaml \
-  --env-file .env up -d --build
-```
-
-## The override file
-
-Coolify's proxy reads Traefik labels from the container. The compose file in the
-repository has none, because someone self-hosting will not be running Coolify —
-they belong to this deployment, not to the project.
-
-`docker-compose.override.yaml` lives on the host and adds them, following the
-same pattern as the other applications on this server.
+Press **Deploy** in the Coolify dashboard, or push to `main` if a webhook is
+configured. Nothing needs doing over SSH.
 
 ## Checks
 
