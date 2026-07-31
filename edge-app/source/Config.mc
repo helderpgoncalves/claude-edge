@@ -138,6 +138,32 @@ module Config {
         return text.substring(0, prefix.length()).equals(prefix);
     }
 
+    //! Is this an http:// URL pointing at the local machine?
+    //!
+    //! Only exact loopback hosts count. A prefix match on "127." would accept
+    //! `http://127.0.0.1.attacker.example`, which is not loopback at all, so
+    //! the host is compared up to its port or path separator.
+    function isLoopback(url as String) as Boolean {
+        if (!startsWith(url, "http://")) {
+            return false;
+        }
+
+        var rest = url.substring(7, url.length());
+
+        // Trim anything after the host: port, path, query.
+        var chars = rest.toCharArray();
+        var host = "";
+        for (var i = 0; i < chars.size(); i++) {
+            var c = chars[i];
+            if (c == ':' || c == '/' || c == '?') {
+                break;
+            }
+            host += c.toString();
+        }
+
+        return host.equals("127.0.0.1") || host.equals("localhost") || host.equals("[::1]");
+    }
+
     //! Load and validate every setting.
     function load() as Settings {
         var s = new Settings();
@@ -163,10 +189,17 @@ module Config {
             return s;
         }
 
-        // Connect IQ refuses plain HTTP outright, returning SECURE_CONNECTION_
-        // REQUIRED (-1001). Saying so in words here is far more useful than
-        // letting the rider discover a numeric code on a hillside.
-        if (!startsWith(s.serverUrl, "https://")) {
+        // Connect IQ refuses plain HTTP on a real device, returning
+        // SECURE_CONNECTION_REQUIRED (-1001). Saying so in words here is far
+        // more useful than letting the rider discover a numeric code on a
+        // hillside.
+        //
+        // Loopback is exempt. The simulator does allow plain HTTP, and
+        // development is done against a bridge on localhost; rejecting it here
+        // would mean every developer has to stand up TLS before seeing the app
+        // do anything. A loopback address cannot leave the machine, so there is
+        // nothing to protect in transit.
+        if (!startsWith(s.serverUrl, "https://") && !isLoopback(s.serverUrl)) {
             s.error = WatchUi.loadResource(Rez.Strings.ErrHttps) as String;
             return s;
         }

@@ -98,10 +98,14 @@ const PERMISSION_PHRASES = [
 
 /**
  * Option labels that grant lasting or wide-reaching capability. A prompt
- * offering one of these is flagged destructive, and the device requires a
- * second confirmation before it can be chosen.
+ * offering one of these is flagged destructive, the device requires a second
+ * confirmation, and the server refuses it outright unless ALLOW_DESTRUCTIVE.
+ *
+ * Exported because keymap.ts needs the identical list. It previously had its
+ * own copy, the two drifted, and the result was a prompt flagged as safe in
+ * one code path and dangerous in the other. One definition, imported.
  */
-const DESTRUCTIVE_LABELS = [
+export const DESTRUCTIVE_LABELS = [
   "don't ask again",
   'dont ask again',
   'yes to all',
@@ -109,6 +113,19 @@ const DESTRUCTIVE_LABELS = [
   'always allow',
   'accept edits',
   'bypass',
+
+  // Claude Code 2.x wording, observed against a live session:
+  //   "Yes, allow all edits during this session (shift+tab)"
+  //   "Yes, and don't ask again for bash commands in ..."
+  // These grant a capability for the remainder of the session, which is
+  // precisely the class this list exists to catch. They were missing until a
+  // test against a real prompt showed the flag was not being set — a reminder
+  // that this list is a record of observed wording, not a prediction of it.
+  'allow all',
+  'during this session',
+  'for the rest of',
+  'auto-accept',
+  'auto accept',
 ] as const;
 
 /** Tool names Claude Code commonly names in a permission prompt. */
@@ -138,7 +155,7 @@ const QUESTION_LOOKBACK = 12;
  * bug: the device would offer a permanent permission grant as if it were an
  * ordinary choice. So fold the variants to their ASCII equivalents first.
  */
-function normalise(text: string): string {
+export function normalise(text: string): string {
   return text
     .toLowerCase()
     .replace(/[‘’ʼ′]/g, "'") // curly and prime apostrophes
@@ -147,7 +164,7 @@ function normalise(text: string): string {
     .replace(/\s+/g, ' ');
 }
 
-function containsAny(haystack: string, needles: readonly string[]): boolean {
+export function containsAny(haystack: string, needles: readonly string[]): boolean {
   const normalised = normalise(haystack);
   return needles.some((n) => normalised.includes(n));
 }

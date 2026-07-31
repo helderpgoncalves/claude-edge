@@ -1,0 +1,11 @@
+# Development-only resource layer.
+#
+# Included by `./scripts/build-edge.sh --dev`, never by a normal build. It adds
+# resources-dev, whose properties.xml carries a local server URL and the
+# well-known development token, so the simulator connects the moment it starts.
+#
+# The token in there is the one from docker/compose.dev.yaml. It is not a
+# secret and is useless against any real deployment — but the layer is still
+# kept out of default builds so it cannot reach a device by accident.
+
+base.resourcePath = $(base.resourcePath);resources-dev

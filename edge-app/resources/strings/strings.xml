@@ -35,10 +35,13 @@
     <string id="ErrTooBig">Response too large. Reduce text size.</string>
     <string id="ErrStale">Screen changed. Look again.</string>
     <string id="ErrServer">Server error.</string>
+    <string id="ErrTextDisabled">Typing is disabled on the server.</string>
     <string id="ErrTimeout">Timed out.</string>
 
     <string id="MenuTitle">Actions</string>
     <string id="MenuRefresh">Refresh now</string>
+    <string id="MenuType">Type a message</string>
+    <string id="MenuTypeSub">Use the keyboard</string>
     <string id="MenuSession">Switch session</string>
     <string id="MenuAbout">About</string>
     <string id="Connecting">Connecting…</string>

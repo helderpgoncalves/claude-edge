@@ -59,1410 +59,1701 @@ _Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_33_
         putv self :_view %tmp.4;
 _Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_33_53_36_4_stop:
     }
-    //! Enter button, or a tap. Confirms the highlighted option.
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 41; @symbol_functiondef = [onSelect,41,20,28]; @symbol_return<0> = [Boolean,41,34,41]; ]
+    //! Enter (right side of the device), or a tap. Confirms.
+    //!
+    //! The button layout this is written against, on an Edge 540:
+    //!
+    //!     up / down     left side    move the highlight, or scroll
+    //!     enter         right side   confirm
+    //!     esc           right side   back
+    //!     lap / start   bottom       jump to live / refresh
+    //!
+    //! That mapping is the device's own — up and down carry the
+    //! previousPage/nextPage behaviours, enter carries onSelect — so it matches
+    //! every other app on the unit and needs no explaining to the rider.
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 52; @symbol_functiondef = [onSelect,52,20,28]; @symbol_return<0> = [Boolean,52,34,41]; ]
     public
     function onSelect() as Boolean {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_41_42_57_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 42 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_42_8_47_8_if_stmt:
-        symbol [ _pendingAction %tmp.2 42 12 26 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_52_42_71_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 53 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_8_58_8_if_stmt:
+        symbol [ _pendingAction %tmp.2 53 12 26 ];
         %tmp.2 = getv ? :_pendingAction;
         %tmp.3 = null;
         %tmp.4 = ne %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_42_8_47_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_42_8_47_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_42_36_47_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 43 12 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_42_36_47_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_42_36_47_8_stop" ]
+        bf %tmp.4 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_8_58_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_8_58_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_36_58_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 54 12 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_36_58_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_36_58_8_stop" ]
         %action.1 = local;
-        symbol [ action %action.1 43 16 22 ];
-        symbol [ _pendingAction %tmp.6 43 25 39 ];
+        symbol [ action %action.1 54 16 22 ];
+        symbol [ _pendingAction %tmp.6 54 25 39 ];
         %tmp.6 = getv ? :_pendingAction;
         %tmp.7 = as %tmp.6 { (!Null) };
         %tmp.8 = as %tmp.7 String;
-        symbol [ String %tmp.8 43 43 49 ];
+        symbol [ String %tmp.8 54 43 49 ];
         lputv %action.1 %tmp.8;
-        symbol [ action %action.1 43 16 22 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 44 12 ]
+        symbol [ action %action.1 54 16 22 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 55 12 ]
         %tmp.9 = null;
-        symbol [ _pendingAction ? 44 12 26 ];
+        symbol [ _pendingAction ? 55 12 26 ];
         putv self :_pendingAction %tmp.9;
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 45 12 ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 56 12 ]
         %tmp.10 = self;
-        symbol [ send %tmp.11 45 12 16 ];
+        symbol [ send %tmp.11 56 12 16 ];
         %tmp.11 = getv function %tmp.10 :send;
         %tmp.12 = lgetv %action.1;
-        symbol [ action %tmp.12 45 17 23 ];
+        symbol [ action %tmp.12 56 17 23 ];
         invoke %tmp.10 %tmp.11(%tmp.12);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 46 12 ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 57 12 ]
         %tmp.13 = true;
         ret %tmp.13;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_42_36_47_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_42_8_47_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_42_8_47_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 51 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_51_8_55_8_if_stmt:
-        symbol [ _view %tmp.15 51 12 17 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_36_58_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_8_58_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_8_58_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 63 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_52_42_71_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_52_42_71_4_stop" ]
+        %prompt.2 = local;
+        symbol [ prompt %prompt.2 63 12 18 ];
+        symbol [ _view %tmp.15 63 21 26 ];
         %tmp.15 = getv ? :_view;
-        symbol [ getPrompt %tmp.16 51 18 27 ];
+        symbol [ getPrompt %tmp.16 63 27 36 ];
         %tmp.16 = getv function %tmp.15 :getPrompt;
         %tmp.17 = invoke %tmp.15 %tmp.16();
-        %tmp.18 = null;
-        %tmp.19 = ne %tmp.17 %tmp.18;
-        bf %tmp.19 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_51_8_55_8_if_else_false;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_51_8_55_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_51_39_53_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 52 12 ]
-        %tmp.20 = self;
-        symbol [ showPromptMenu %tmp.21 52 12 26 ];
-        %tmp.21 = getv function %tmp.20 :showPromptMenu;
-        invoke %tmp.20 %tmp.21();
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_51_39_53_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_51_8_55_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_51_8_55_8_if_else_false:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_15_55_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 54 12 ]
-        symbol [ _view %tmp.23 54 12 17 ];
-        %tmp.23 = getv ? :_view;
-        symbol [ forceRefresh %tmp.24 54 18 30 ];
-        %tmp.24 = getv function %tmp.23 :forceRefresh;
-        invoke %tmp.23 %tmp.24();
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_53_15_55_8_stop:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_51_8_55_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 56 8 ]
-        %tmp.25 = true;
-        ret %tmp.25;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_41_42_57_4_stop:
+        lputv %prompt.2 %tmp.17;
+        symbol [ prompt %prompt.2 63 12 18 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 64 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_64_8_67_8_if_stmt:
+        %tmp.18 = lgetv %prompt.2;
+        symbol [ prompt %tmp.18 64 12 18 ];
+        %tmp.19 = null;
+        %tmp.20 = ne %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_64_8_67_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_64_8_67_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_64_28_67_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 65 12 ]
+        %tmp.21 = self;
+        symbol [ answerPrompt %tmp.22 65 12 24 ];
+        %tmp.22 = getv function %tmp.21 :answerPrompt;
+        symbol [ _view %tmp.24 65 25 30 ];
+        %tmp.24 = getv ? :_view;
+        symbol [ getHighlightedOption %tmp.25 65 31 51 ];
+        %tmp.25 = getv function %tmp.24 :getHighlightedOption;
+        %tmp.26 = invoke %tmp.24 %tmp.25();
+        invoke %tmp.21 %tmp.22(%tmp.26);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 66 12 ]
+        %tmp.27 = true;
+        ret %tmp.27;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_64_28_67_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_64_8_67_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_64_8_67_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 69 8 ]
+        symbol [ _view %tmp.29 69 8 13 ];
+        %tmp.29 = getv ? :_view;
+        symbol [ forceRefresh %tmp.30 69 14 26 ];
+        %tmp.30 = getv function %tmp.29 :forceRefresh;
+        invoke %tmp.29 %tmp.30();
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 70 8 ]
+        %tmp.31 = true;
+        ret %tmp.31;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_52_42_71_4_stop:
     }
     //! Back / Esc. Cancels a pending confirmation, leaves scrollback, or exits.
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 60; @symbol_functiondef = [onBack,60,20,26]; @symbol_return<0> = [Boolean,60,32,39]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 74; @symbol_functiondef = [onBack,74,20,26]; @symbol_return<0> = [Boolean,74,32,39]; ]
     public
     function onBack() as Boolean {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_60_40_75_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 61 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_61_8_65_8_if_stmt:
-        symbol [ _pendingAction %tmp.2 61 12 26 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_74_40_89_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 75 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_75_8_79_8_if_stmt:
+        symbol [ _pendingAction %tmp.2 75 12 26 ];
         %tmp.2 = getv ? :_pendingAction;
         %tmp.3 = null;
         %tmp.4 = ne %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_61_8_65_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_61_8_65_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_61_36_65_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 62 12 ]
+        bf %tmp.4 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_75_8_79_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_75_8_79_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_75_36_79_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 76 12 ]
         %tmp.5 = null;
-        symbol [ _pendingAction ? 62 12 26 ];
+        symbol [ _pendingAction ? 76 12 26 ];
         putv self :_pendingAction %tmp.5;
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 63 12 ]
-        symbol [ _view %tmp.7 63 12 17 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 77 12 ]
+        symbol [ _view %tmp.7 77 12 17 ];
         %tmp.7 = getv ? :_view;
-        symbol [ setMessage %tmp.8 63 18 28 ];
+        symbol [ setMessage %tmp.8 77 18 28 ];
         %tmp.8 = getv function %tmp.7 :setMessage;
         %tmp.9 = null;
         invoke %tmp.7 %tmp.8(%tmp.9);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 64 12 ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 78 12 ]
         %tmp.10 = true;
         ret %tmp.10;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_61_36_65_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_61_8_65_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_61_8_65_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 70 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_70_8_73_8_if_stmt:
-        symbol [ _view %tmp.12 70 13 18 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_75_36_79_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_75_8_79_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_75_8_79_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 84 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_84_8_87_8_if_stmt:
+        symbol [ _view %tmp.12 84 13 18 ];
         %tmp.12 = getv ? :_view;
-        symbol [ isLive %tmp.13 70 19 25 ];
+        symbol [ isLive %tmp.13 84 19 25 ];
         %tmp.13 = getv function %tmp.12 :isLive;
         %tmp.14 = invoke %tmp.12 %tmp.13();
         %tmp.15 = not %tmp.14;
-        bf %tmp.15 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_70_8_73_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_70_8_73_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_70_29_73_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 71 12 ]
-        symbol [ _view %tmp.17 71 12 17 ];
+        bf %tmp.15 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_84_8_87_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_84_8_87_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_84_29_87_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 85 12 ]
+        symbol [ _view %tmp.17 85 12 17 ];
         %tmp.17 = getv ? :_view;
-        symbol [ jumpToLive %tmp.18 71 18 28 ];
+        symbol [ jumpToLive %tmp.18 85 18 28 ];
         %tmp.18 = getv function %tmp.17 :jumpToLive;
         invoke %tmp.17 %tmp.18();
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 72 12 ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 86 12 ]
         %tmp.19 = true;
         ret %tmp.19;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_70_29_73_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_70_8_73_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_70_8_73_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 74 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_84_29_87_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_84_8_87_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_84_8_87_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 88 8 ]
         %tmp.20 = false;
         ret %tmp.20;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_60_40_75_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_74_40_89_4_stop:
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 77; @symbol_functiondef = [onMenu,77,20,26]; @symbol_return<0> = [Boolean,77,32,39]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 91; @symbol_functiondef = [onMenu,91,20,26]; @symbol_return<0> = [Boolean,91,32,39]; ]
     public
     function onMenu() as Boolean {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_77_40_80_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 78 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_91_40_94_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 92 8 ]
         %tmp.1 = self;
-        symbol [ showMainMenu %tmp.2 78 8 20 ];
+        symbol [ showMainMenu %tmp.2 92 8 20 ];
         %tmp.2 = getv function %tmp.1 :showMainMenu;
         invoke %tmp.1 %tmp.2();
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 79 8 ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 93 8 ]
         %tmp.3 = true;
         ret %tmp.3;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_77_40_80_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_91_40_94_4_stop:
     }
-    //! Down button, or a swipe up. Scrolls towards newer output.
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 83; @symbol_functiondef = [onNextPage,83,20,30]; @symbol_return<0> = [Boolean,83,36,43]; ]
+    //! Down button (left side of the device), or a swipe up.
+    //!
+    //! Moves the highlight when a prompt is waiting, scrolls otherwise. The
+    //! same physical button doing both is deliberate: when Claude is asking
+    //! something, choosing an answer is the only thing the rider wants to do,
+    //! and making them switch modes to reach it would be the wrong trade on a
+    //! device operated one-handed at speed.
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 103; @symbol_functiondef = [onNextPage,103,20,30]; @symbol_return<0> = [Boolean,103,36,43]; ]
     public
     function onNextPage() as Boolean {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_83_44_86_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 84 8 ]
-        symbol [ _view %tmp.2 84 8 13 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_44_110_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 104 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_104_8_107_8_if_stmt:
+        symbol [ _view %tmp.2 104 12 17 ];
         %tmp.2 = getv ? :_view;
-        symbol [ scrollDown %tmp.3 84 14 24 ];
-        %tmp.3 = getv function %tmp.2 :scrollDown;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 85 8 ]
-        %tmp.4 = true;
-        ret %tmp.4;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_83_44_86_4_stop:
+        symbol [ getPrompt %tmp.3 104 18 27 ];
+        %tmp.3 = getv function %tmp.2 :getPrompt;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        %tmp.5 = null;
+        %tmp.6 = ne %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_104_8_107_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_104_8_107_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_104_39_107_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 105 12 ]
+        symbol [ _view %tmp.8 105 12 17 ];
+        %tmp.8 = getv ? :_view;
+        symbol [ moveHighlight %tmp.9 105 18 31 ];
+        %tmp.9 = getv function %tmp.8 :moveHighlight;
+        %tmp.10 = 1;
+        invoke %tmp.8 %tmp.9(%tmp.10);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 106 12 ]
+        %tmp.11 = true;
+        ret %tmp.11;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_104_39_107_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_104_8_107_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_104_8_107_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 108 8 ]
+        symbol [ _view %tmp.13 108 8 13 ];
+        %tmp.13 = getv ? :_view;
+        symbol [ scrollDown %tmp.14 108 14 24 ];
+        %tmp.14 = getv function %tmp.13 :scrollDown;
+        invoke %tmp.13 %tmp.14();
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 109 8 ]
+        %tmp.15 = true;
+        ret %tmp.15;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_44_110_4_stop:
     }
-    //! Up button, or a swipe down. Scrolls back into history.
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 89; @symbol_functiondef = [onPreviousPage,89,20,34]; @symbol_return<0> = [Boolean,89,40,47]; ]
+    //! Up button (left side of the device), or a swipe down.
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 113; @symbol_functiondef = [onPreviousPage,113,20,34]; @symbol_return<0> = [Boolean,113,40,47]; ]
     public
     function onPreviousPage() as Boolean {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_89_48_92_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 90 8 ]
-        symbol [ _view %tmp.2 90 8 13 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_113_48_120_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 114 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_114_8_117_8_if_stmt:
+        symbol [ _view %tmp.2 114 12 17 ];
         %tmp.2 = getv ? :_view;
-        symbol [ scrollUp %tmp.3 90 14 22 ];
-        %tmp.3 = getv function %tmp.2 :scrollUp;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 91 8 ]
-        %tmp.4 = true;
-        ret %tmp.4;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_89_48_92_4_stop:
+        symbol [ getPrompt %tmp.3 114 18 27 ];
+        %tmp.3 = getv function %tmp.2 :getPrompt;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        %tmp.5 = null;
+        %tmp.6 = ne %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_114_8_117_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_114_8_117_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_114_39_117_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 115 12 ]
+        symbol [ _view %tmp.8 115 12 17 ];
+        %tmp.8 = getv ? :_view;
+        symbol [ moveHighlight %tmp.9 115 18 31 ];
+        %tmp.9 = getv function %tmp.8 :moveHighlight;
+        %tmp.10 = -1;
+        invoke %tmp.8 %tmp.9(%tmp.10);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 116 12 ]
+        %tmp.11 = true;
+        ret %tmp.11;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_114_39_117_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_114_8_117_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_114_8_117_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 118 8 ]
+        symbol [ _view %tmp.13 118 8 13 ];
+        %tmp.13 = getv ? :_view;
+        symbol [ scrollUp %tmp.14 118 14 22 ];
+        %tmp.14 = getv function %tmp.13 :scrollUp;
+        invoke %tmp.13 %tmp.14();
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 119 8 ]
+        %tmp.15 = true;
+        ret %tmp.15;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_113_48_120_4_stop:
     }
     //! Raw keys, for the buttons with no behaviour mapping.
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 97; @symbol_functiondef = [onKey,97,20,25]; @symbol_param<0> = [event,97,26,31]; @symbol_param<0>_type<0> = [WatchUi,97,35,42]; @symbol_param<0>_type<1> = [KeyEvent,97,43,51]; @symbol_return<0> = [Boolean,97,56,63]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 125; @symbol_functiondef = [onKey,125,20,25]; @symbol_param<0> = [event,125,26,31]; @symbol_param<0>_type<0> = [WatchUi,125,35,42]; @symbol_param<0>_type<1> = [KeyEvent,125,43,51]; @symbol_return<0> = [Boolean,125,56,63]; ]
     public
     function onKey(event as WatchUi.KeyEvent) as Boolean {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_97_64_116_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 98 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_97_64_116_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_97_64_116_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_125_64_144_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 126 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_125_64_144_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_125_64_144_4_stop" ]
         %key.1 = local;
-        symbol [ key %key.1 98 12 15 ];
+        symbol [ key %key.1 126 12 15 ];
         %tmp.1 = lgetv %event;
-        symbol [ event %tmp.1 98 18 23 ];
-        symbol [ getKey %tmp.2 98 24 30 ];
+        symbol [ event %tmp.1 126 18 23 ];
+        symbol [ getKey %tmp.2 126 24 30 ];
         %tmp.2 = getv function %tmp.1 :getKey;
         %tmp.3 = invoke %tmp.1 %tmp.2();
         lputv %key.1 %tmp.3;
-        symbol [ key %key.1 98 12 15 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 103 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_8_107_8_if_stmt:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_12_103_53_begin:
-        symbol [ WatchUi %tmp.4 103 13 20 ];
+        symbol [ key %key.1 126 12 15 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 131 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_8_135_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_12_131_53_begin:
+        symbol [ WatchUi %tmp.4 131 13 20 ];
         %tmp.4 = getm $.Toybox.WatchUi;
         %tmp.6 = const :KEY_LAP;
-        symbol [ KEY_LAP %tmp.6 103 26 33 const ];
+        symbol [ KEY_LAP %tmp.6 131 26 33 const ];
         %tmp.7 = canhazplz %tmp.4 %tmp.6;
-        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_8_107_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_38_103_53_true:
+        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_8_135_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_38_131_53_true:
         %tmp.8 = lgetv %key.1;
-        symbol [ key %tmp.8 103 38 41 ];
-        symbol [ WatchUi %tmp.9 103 45 52 ];
+        symbol [ key %tmp.8 131 38 41 ];
+        symbol [ WatchUi %tmp.9 131 45 52 ];
         %tmp.9 = getm $.Toybox.WatchUi;
-        symbol [ KEY_LAP %tmp.10 103 53 60 ];
+        symbol [ KEY_LAP %tmp.10 131 53 60 ];
         %tmp.10 = getv %tmp.9 :KEY_LAP;
         %tmp.11 = eq %tmp.8 %tmp.10;
         push %tmp.11;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_38_103_53_end:
-        %tmp.12 = phi [%tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_12_103_53_begin] [%tmp.11 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_38_103_53_true] [%tmp.12 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_38_103_53_end];
-        bf %tmp.12 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_8_107_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_8_107_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_62_107_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 104 12 ]
-        symbol [ _view %tmp.14 104 12 17 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_38_131_53_end:
+        %tmp.12 = phi [%tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_12_131_53_begin] [%tmp.11 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_38_131_53_true] [%tmp.12 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_38_131_53_end];
+        bf %tmp.12 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_8_135_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_8_135_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_62_135_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 132 12 ]
+        symbol [ _view %tmp.14 132 12 17 ];
         %tmp.14 = getv ? :_view;
-        symbol [ jumpToLive %tmp.15 104 18 28 ];
+        symbol [ jumpToLive %tmp.15 132 18 28 ];
         %tmp.15 = getv function %tmp.14 :jumpToLive;
         invoke %tmp.14 %tmp.15();
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 105 12 ]
-        symbol [ _view %tmp.17 105 12 17 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 133 12 ]
+        symbol [ _view %tmp.17 133 12 17 ];
         %tmp.17 = getv ? :_view;
-        symbol [ forceRefresh %tmp.18 105 18 30 ];
+        symbol [ forceRefresh %tmp.18 133 18 30 ];
         %tmp.18 = getv function %tmp.17 :forceRefresh;
         invoke %tmp.17 %tmp.18();
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 106 12 ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 134 12 ]
         %tmp.19 = true;
         ret %tmp.19;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_62_107_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_8_107_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_103_8_107_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 110 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_8_113_8_if_stmt:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_12_110_55_begin:
-        symbol [ WatchUi %tmp.20 110 13 20 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_62_135_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_8_135_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_131_8_135_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 138 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_8_141_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_12_138_55_begin:
+        symbol [ WatchUi %tmp.20 138 13 20 ];
         %tmp.20 = getm $.Toybox.WatchUi;
         %tmp.22 = const :KEY_START;
-        symbol [ KEY_START %tmp.22 110 26 35 const ];
+        symbol [ KEY_START %tmp.22 138 26 35 const ];
         %tmp.23 = canhazplz %tmp.20 %tmp.22;
-        bf %tmp.23 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_8_113_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_40_110_55_true:
+        bf %tmp.23 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_8_141_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_40_138_55_true:
         %tmp.24 = lgetv %key.1;
-        symbol [ key %tmp.24 110 40 43 ];
-        symbol [ WatchUi %tmp.25 110 47 54 ];
+        symbol [ key %tmp.24 138 40 43 ];
+        symbol [ WatchUi %tmp.25 138 47 54 ];
         %tmp.25 = getm $.Toybox.WatchUi;
-        symbol [ KEY_START %tmp.26 110 55 64 ];
+        symbol [ KEY_START %tmp.26 138 55 64 ];
         %tmp.26 = getv %tmp.25 :KEY_START;
         %tmp.27 = eq %tmp.24 %tmp.26;
         push %tmp.27;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_40_110_55_end:
-        %tmp.28 = phi [%tmp.23 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_12_110_55_begin] [%tmp.27 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_40_110_55_true] [%tmp.28 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_40_110_55_end];
-        bf %tmp.28 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_8_113_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_8_113_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_66_113_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 111 12 ]
-        symbol [ _view %tmp.30 111 12 17 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_40_138_55_end:
+        %tmp.28 = phi [%tmp.23 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_12_138_55_begin] [%tmp.27 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_40_138_55_true] [%tmp.28 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_40_138_55_end];
+        bf %tmp.28 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_8_141_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_8_141_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_66_141_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 139 12 ]
+        symbol [ _view %tmp.30 139 12 17 ];
         %tmp.30 = getv ? :_view;
-        symbol [ forceRefresh %tmp.31 111 18 30 ];
+        symbol [ forceRefresh %tmp.31 139 18 30 ];
         %tmp.31 = getv function %tmp.30 :forceRefresh;
         invoke %tmp.30 %tmp.31();
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 112 12 ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 140 12 ]
         %tmp.32 = true;
         ret %tmp.32;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_66_113_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_8_113_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_110_8_113_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 115 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_66_141_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_8_141_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_138_8_141_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 143 8 ]
         %tmp.33 = false;
         ret %tmp.33;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_97_64_116_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_125_64_144_4_stop:
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 120; @symbol_functiondef = [showMainMenu,120,21,33]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 148; @symbol_functiondef = [showMainMenu,148,21,33]; ]
     private
     function showMainMenu() as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_120_44_142_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 121 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_120_44_142_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_120_44_142_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_148_44_181_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 149 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_148_44_181_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_148_44_181_4_stop" ]
         %menu.1 = local;
-        symbol [ menu %menu.1 121 12 16 ];
-        symbol [ WatchUi %tmp.3 121 23 30 ];
+        symbol [ menu %menu.1 149 12 16 ];
+        symbol [ WatchUi %tmp.3 149 23 30 ];
         %tmp.3 = getm $.Toybox.WatchUi;
-        symbol [ Menu2 %tmp.4 121 31 36 ];
+        symbol [ Menu2 %tmp.4 149 31 36 ];
         %tmp.4 = getv function ? %tmp.3 :Menu2;
         %tmp.5 = newd 1;
         %tmp.7 = const :title;
-        symbol [ title %tmp.7 122 13 18 const ];
-        symbol [ WatchUi %tmp.8 122 22 29 ];
+        symbol [ title %tmp.7 150 13 18 const ];
+        symbol [ WatchUi %tmp.8 150 22 29 ];
         %tmp.8 = getm $.Toybox.WatchUi;
-        symbol [ loadResource %tmp.9 122 30 42 ];
+        symbol [ loadResource %tmp.9 150 30 42 ];
         %tmp.9 = getv function %tmp.8 :loadResource;
-        symbol [ Rez %tmp.11 122 43 46 ];
+        symbol [ Rez %tmp.11 150 43 46 ];
         %tmp.11 = getv ? :Rez;
-        symbol [ Strings %tmp.12 122 47 54 ];
+        symbol [ Strings %tmp.12 150 47 54 ];
         %tmp.12 = getv %tmp.11 :Strings;
-        symbol [ MenuTitle %tmp.13 122 55 64 ];
+        symbol [ MenuTitle %tmp.13 150 55 64 ];
         %tmp.13 = getv %tmp.12 :MenuTitle;
         %tmp.14 = invoke %tmp.8 %tmp.9(%tmp.13);
         %tmp.15 = as %tmp.14 String;
-        symbol [ String %tmp.15 122 69 75 ];
+        symbol [ String %tmp.15 150 69 75 ];
         %tmp.16 = dup %tmp.5;
         %tmp.17 = aputv %tmp.16 %tmp.7 %tmp.15;
         %tmp.1 = newc %tmp.4 (%tmp.17);
         lputv %menu.1 %tmp.1;
-        symbol [ menu %menu.1 121 12 16 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 125 8 ]
-        %tmp.18 = lgetv %menu.1;
-        symbol [ menu %tmp.18 125 8 12 ];
-        symbol [ addItem %tmp.19 125 13 20 ];
-        %tmp.19 = getv function %tmp.18 :addItem;
-        symbol [ WatchUi %tmp.22 125 25 32 ];
-        %tmp.22 = getm $.Toybox.WatchUi;
-        symbol [ MenuItem %tmp.23 125 33 41 ];
-        %tmp.23 = getv function ? %tmp.22 :MenuItem;
-        symbol [ WatchUi %tmp.24 126 12 19 ];
-        %tmp.24 = getm $.Toybox.WatchUi;
-        symbol [ loadResource %tmp.25 126 20 32 ];
-        %tmp.25 = getv function %tmp.24 :loadResource;
-        symbol [ Rez %tmp.27 126 33 36 ];
-        %tmp.27 = getv ? :Rez;
-        symbol [ Strings %tmp.28 126 37 44 ];
-        %tmp.28 = getv %tmp.27 :Strings;
-        symbol [ MenuRefresh %tmp.29 126 45 56 ];
-        %tmp.29 = getv %tmp.28 :MenuRefresh;
-        %tmp.30 = invoke %tmp.24 %tmp.25(%tmp.29);
-        %tmp.31 = as %tmp.30 String;
-        symbol [ String %tmp.31 126 61 67 ];
-        %tmp.32 = null;
-        %tmp.33 = "refresh";
-        %tmp.34 = null;
-        %tmp.20 = newc %tmp.23 (%tmp.31, %tmp.32, %tmp.33, %tmp.34);
-        invoke %tmp.18 %tmp.19(%tmp.20);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 134 8 ]
-        %tmp.35 = lgetv %menu.1;
-        symbol [ menu %tmp.35 134 8 12 ];
-        symbol [ addItem %tmp.36 134 13 20 ];
-        %tmp.36 = getv function %tmp.35 :addItem;
-        symbol [ WatchUi %tmp.39 134 25 32 ];
-        %tmp.39 = getm $.Toybox.WatchUi;
-        symbol [ MenuItem %tmp.40 134 33 41 ];
-        %tmp.40 = getv function ? %tmp.39 :MenuItem;
-        %tmp.41 = "Up";
-        %tmp.42 = null;
-        %tmp.43 = "up";
-        %tmp.44 = null;
-        %tmp.37 = newc %tmp.40 (%tmp.41, %tmp.42, %tmp.43, %tmp.44);
-        invoke %tmp.35 %tmp.36(%tmp.37);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 135 8 ]
-        %tmp.45 = lgetv %menu.1;
-        symbol [ menu %tmp.45 135 8 12 ];
-        symbol [ addItem %tmp.46 135 13 20 ];
-        %tmp.46 = getv function %tmp.45 :addItem;
-        symbol [ WatchUi %tmp.49 135 25 32 ];
-        %tmp.49 = getm $.Toybox.WatchUi;
-        symbol [ MenuItem %tmp.50 135 33 41 ];
-        %tmp.50 = getv function ? %tmp.49 :MenuItem;
-        %tmp.51 = "Down";
-        %tmp.52 = null;
-        %tmp.53 = "down";
-        %tmp.54 = null;
-        %tmp.47 = newc %tmp.50 (%tmp.51, %tmp.52, %tmp.53, %tmp.54);
-        invoke %tmp.45 %tmp.46(%tmp.47);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 136 8 ]
-        %tmp.55 = lgetv %menu.1;
-        symbol [ menu %tmp.55 136 8 12 ];
-        symbol [ addItem %tmp.56 136 13 20 ];
-        %tmp.56 = getv function %tmp.55 :addItem;
-        symbol [ WatchUi %tmp.59 136 25 32 ];
-        %tmp.59 = getm $.Toybox.WatchUi;
-        symbol [ MenuItem %tmp.60 136 33 41 ];
-        %tmp.60 = getv function ? %tmp.59 :MenuItem;
-        %tmp.61 = "Enter";
+        symbol [ menu %menu.1 149 12 16 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 155 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_155_8_162_8_if_stmt:
+        symbol [ WatchUi %tmp.18 155 12 19 ];
+        %tmp.18 = getm $.Toybox.WatchUi;
+        %tmp.20 = const :TextPicker;
+        symbol [ TextPicker %tmp.20 155 25 35 const ];
+        %tmp.21 = canhazplz %tmp.18 %tmp.20;
+        bf %tmp.21 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_155_8_162_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_155_8_162_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_155_37_162_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 156 12 ]
+        %tmp.22 = lgetv %menu.1;
+        symbol [ menu %tmp.22 156 12 16 ];
+        symbol [ addItem %tmp.23 156 17 24 ];
+        %tmp.23 = getv function %tmp.22 :addItem;
+        symbol [ WatchUi %tmp.26 156 29 36 ];
+        %tmp.26 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.27 156 37 45 ];
+        %tmp.27 = getv function ? %tmp.26 :MenuItem;
+        symbol [ WatchUi %tmp.28 157 16 23 ];
+        %tmp.28 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.29 157 24 36 ];
+        %tmp.29 = getv function %tmp.28 :loadResource;
+        symbol [ Rez %tmp.31 157 37 40 ];
+        %tmp.31 = getv ? :Rez;
+        symbol [ Strings %tmp.32 157 41 48 ];
+        %tmp.32 = getv %tmp.31 :Strings;
+        symbol [ MenuType %tmp.33 157 49 57 ];
+        %tmp.33 = getv %tmp.32 :MenuType;
+        %tmp.34 = invoke %tmp.28 %tmp.29(%tmp.33);
+        %tmp.35 = as %tmp.34 String;
+        symbol [ String %tmp.35 157 62 68 ];
+        symbol [ WatchUi %tmp.36 158 16 23 ];
+        %tmp.36 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.37 158 24 36 ];
+        %tmp.37 = getv function %tmp.36 :loadResource;
+        symbol [ Rez %tmp.39 158 37 40 ];
+        %tmp.39 = getv ? :Rez;
+        symbol [ Strings %tmp.40 158 41 48 ];
+        %tmp.40 = getv %tmp.39 :Strings;
+        symbol [ MenuTypeSub %tmp.41 158 49 60 ];
+        %tmp.41 = getv %tmp.40 :MenuTypeSub;
+        %tmp.42 = invoke %tmp.36 %tmp.37(%tmp.41);
+        %tmp.43 = as %tmp.42 String;
+        symbol [ String %tmp.43 158 65 71 ];
+        %tmp.44 = "type";
+        %tmp.45 = null;
+        %tmp.24 = newc %tmp.27 (%tmp.35, %tmp.43, %tmp.44, %tmp.45);
+        invoke %tmp.22 %tmp.23(%tmp.24);
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_155_37_162_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_155_8_162_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_155_8_162_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 164 8 ]
+        %tmp.46 = lgetv %menu.1;
+        symbol [ menu %tmp.46 164 8 12 ];
+        symbol [ addItem %tmp.47 164 13 20 ];
+        %tmp.47 = getv function %tmp.46 :addItem;
+        symbol [ WatchUi %tmp.50 164 25 32 ];
+        %tmp.50 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.51 164 33 41 ];
+        %tmp.51 = getv function ? %tmp.50 :MenuItem;
+        symbol [ WatchUi %tmp.52 165 12 19 ];
+        %tmp.52 = getm $.Toybox.WatchUi;
+        symbol [ loadResource %tmp.53 165 20 32 ];
+        %tmp.53 = getv function %tmp.52 :loadResource;
+        symbol [ Rez %tmp.55 165 33 36 ];
+        %tmp.55 = getv ? :Rez;
+        symbol [ Strings %tmp.56 165 37 44 ];
+        %tmp.56 = getv %tmp.55 :Strings;
+        symbol [ MenuRefresh %tmp.57 165 45 56 ];
+        %tmp.57 = getv %tmp.56 :MenuRefresh;
+        %tmp.58 = invoke %tmp.52 %tmp.53(%tmp.57);
+        %tmp.59 = as %tmp.58 String;
+        symbol [ String %tmp.59 165 61 67 ];
+        %tmp.60 = null;
+        %tmp.61 = "refresh";
         %tmp.62 = null;
-        %tmp.63 = "enter";
-        %tmp.64 = null;
-        %tmp.57 = newc %tmp.60 (%tmp.61, %tmp.62, %tmp.63, %tmp.64);
-        invoke %tmp.55 %tmp.56(%tmp.57);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 137 8 ]
-        %tmp.65 = lgetv %menu.1;
-        symbol [ menu %tmp.65 137 8 12 ];
-        symbol [ addItem %tmp.66 137 13 20 ];
-        %tmp.66 = getv function %tmp.65 :addItem;
-        symbol [ WatchUi %tmp.69 137 25 32 ];
-        %tmp.69 = getm $.Toybox.WatchUi;
-        symbol [ MenuItem %tmp.70 137 33 41 ];
-        %tmp.70 = getv function ? %tmp.69 :MenuItem;
-        %tmp.71 = "Esc";
+        %tmp.48 = newc %tmp.51 (%tmp.59, %tmp.60, %tmp.61, %tmp.62);
+        invoke %tmp.46 %tmp.47(%tmp.48);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 173 8 ]
+        %tmp.63 = lgetv %menu.1;
+        symbol [ menu %tmp.63 173 8 12 ];
+        symbol [ addItem %tmp.64 173 13 20 ];
+        %tmp.64 = getv function %tmp.63 :addItem;
+        symbol [ WatchUi %tmp.67 173 25 32 ];
+        %tmp.67 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.68 173 33 41 ];
+        %tmp.68 = getv function ? %tmp.67 :MenuItem;
+        %tmp.69 = "Up";
+        %tmp.70 = null;
+        %tmp.71 = "up";
         %tmp.72 = null;
-        %tmp.73 = "escape";
-        %tmp.74 = null;
-        %tmp.67 = newc %tmp.70 (%tmp.71, %tmp.72, %tmp.73, %tmp.74);
-        invoke %tmp.65 %tmp.66(%tmp.67);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 138 8 ]
-        %tmp.75 = lgetv %menu.1;
-        symbol [ menu %tmp.75 138 8 12 ];
-        symbol [ addItem %tmp.76 138 13 20 ];
-        %tmp.76 = getv function %tmp.75 :addItem;
-        symbol [ WatchUi %tmp.79 138 25 32 ];
-        %tmp.79 = getm $.Toybox.WatchUi;
-        symbol [ MenuItem %tmp.80 138 33 41 ];
-        %tmp.80 = getv function ? %tmp.79 :MenuItem;
-        %tmp.81 = "Stop task";
+        %tmp.65 = newc %tmp.68 (%tmp.69, %tmp.70, %tmp.71, %tmp.72);
+        invoke %tmp.63 %tmp.64(%tmp.65);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 174 8 ]
+        %tmp.73 = lgetv %menu.1;
+        symbol [ menu %tmp.73 174 8 12 ];
+        symbol [ addItem %tmp.74 174 13 20 ];
+        %tmp.74 = getv function %tmp.73 :addItem;
+        symbol [ WatchUi %tmp.77 174 25 32 ];
+        %tmp.77 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.78 174 33 41 ];
+        %tmp.78 = getv function ? %tmp.77 :MenuItem;
+        %tmp.79 = "Down";
+        %tmp.80 = null;
+        %tmp.81 = "down";
         %tmp.82 = null;
-        %tmp.83 = "interrupt";
-        %tmp.84 = null;
-        %tmp.77 = newc %tmp.80 (%tmp.81, %tmp.82, %tmp.83, %tmp.84);
-        invoke %tmp.75 %tmp.76(%tmp.77);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 139 8 ]
-        %tmp.85 = lgetv %menu.1;
-        symbol [ menu %tmp.85 139 8 12 ];
-        symbol [ addItem %tmp.86 139 13 20 ];
-        %tmp.86 = getv function %tmp.85 :addItem;
-        symbol [ WatchUi %tmp.89 139 25 32 ];
-        %tmp.89 = getm $.Toybox.WatchUi;
-        symbol [ MenuItem %tmp.90 139 33 41 ];
-        %tmp.90 = getv function ? %tmp.89 :MenuItem;
-        %tmp.91 = "Continue";
+        %tmp.75 = newc %tmp.78 (%tmp.79, %tmp.80, %tmp.81, %tmp.82);
+        invoke %tmp.73 %tmp.74(%tmp.75);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 175 8 ]
+        %tmp.83 = lgetv %menu.1;
+        symbol [ menu %tmp.83 175 8 12 ];
+        symbol [ addItem %tmp.84 175 13 20 ];
+        %tmp.84 = getv function %tmp.83 :addItem;
+        symbol [ WatchUi %tmp.87 175 25 32 ];
+        %tmp.87 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.88 175 33 41 ];
+        %tmp.88 = getv function ? %tmp.87 :MenuItem;
+        %tmp.89 = "Enter";
+        %tmp.90 = null;
+        %tmp.91 = "enter";
         %tmp.92 = null;
-        %tmp.93 = "continue";
-        %tmp.94 = null;
-        %tmp.87 = newc %tmp.90 (%tmp.91, %tmp.92, %tmp.93, %tmp.94);
-        invoke %tmp.85 %tmp.86(%tmp.87);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 141 8 ]
-        symbol [ WatchUi %tmp.95 141 8 15 ];
-        %tmp.95 = getm $.Toybox.WatchUi;
-        symbol [ pushView %tmp.96 141 16 24 ];
-        %tmp.96 = getv function %tmp.95 :pushView;
-        %tmp.97 = lgetv %menu.1;
-        symbol [ menu %tmp.97 141 25 29 ];
-        symbol [ MenuDelegate %tmp.101 141 35 47 ];
-        %tmp.101 = getv ? :MenuDelegate;
-        %tmp.102 = self;
-        symbol [ self %tmp.102 141 48 52 ];
-        %tmp.98 = newc %tmp.101 (%tmp.102);
-        symbol [ WatchUi %tmp.103 141 55 62 ];
-        %tmp.103 = getm $.Toybox.WatchUi;
-        symbol [ SLIDE_UP %tmp.104 141 63 71 ];
-        %tmp.104 = getv %tmp.103 :SLIDE_UP;
-        invoke %tmp.95 %tmp.96(%tmp.97, %tmp.98, %tmp.104);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_120_44_142_4_stop:
+        %tmp.85 = newc %tmp.88 (%tmp.89, %tmp.90, %tmp.91, %tmp.92);
+        invoke %tmp.83 %tmp.84(%tmp.85);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 176 8 ]
+        %tmp.93 = lgetv %menu.1;
+        symbol [ menu %tmp.93 176 8 12 ];
+        symbol [ addItem %tmp.94 176 13 20 ];
+        %tmp.94 = getv function %tmp.93 :addItem;
+        symbol [ WatchUi %tmp.97 176 25 32 ];
+        %tmp.97 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.98 176 33 41 ];
+        %tmp.98 = getv function ? %tmp.97 :MenuItem;
+        %tmp.99 = "Esc";
+        %tmp.100 = null;
+        %tmp.101 = "escape";
+        %tmp.102 = null;
+        %tmp.95 = newc %tmp.98 (%tmp.99, %tmp.100, %tmp.101, %tmp.102);
+        invoke %tmp.93 %tmp.94(%tmp.95);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 177 8 ]
+        %tmp.103 = lgetv %menu.1;
+        symbol [ menu %tmp.103 177 8 12 ];
+        symbol [ addItem %tmp.104 177 13 20 ];
+        %tmp.104 = getv function %tmp.103 :addItem;
+        symbol [ WatchUi %tmp.107 177 25 32 ];
+        %tmp.107 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.108 177 33 41 ];
+        %tmp.108 = getv function ? %tmp.107 :MenuItem;
+        %tmp.109 = "Stop task";
+        %tmp.110 = null;
+        %tmp.111 = "interrupt";
+        %tmp.112 = null;
+        %tmp.105 = newc %tmp.108 (%tmp.109, %tmp.110, %tmp.111, %tmp.112);
+        invoke %tmp.103 %tmp.104(%tmp.105);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 178 8 ]
+        %tmp.113 = lgetv %menu.1;
+        symbol [ menu %tmp.113 178 8 12 ];
+        symbol [ addItem %tmp.114 178 13 20 ];
+        %tmp.114 = getv function %tmp.113 :addItem;
+        symbol [ WatchUi %tmp.117 178 25 32 ];
+        %tmp.117 = getm $.Toybox.WatchUi;
+        symbol [ MenuItem %tmp.118 178 33 41 ];
+        %tmp.118 = getv function ? %tmp.117 :MenuItem;
+        %tmp.119 = "Continue";
+        %tmp.120 = null;
+        %tmp.121 = "continue";
+        %tmp.122 = null;
+        %tmp.115 = newc %tmp.118 (%tmp.119, %tmp.120, %tmp.121, %tmp.122);
+        invoke %tmp.113 %tmp.114(%tmp.115);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 180 8 ]
+        symbol [ WatchUi %tmp.123 180 8 15 ];
+        %tmp.123 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.124 180 16 24 ];
+        %tmp.124 = getv function %tmp.123 :pushView;
+        %tmp.125 = lgetv %menu.1;
+        symbol [ menu %tmp.125 180 25 29 ];
+        symbol [ MenuDelegate %tmp.129 180 35 47 ];
+        %tmp.129 = getv ? :MenuDelegate;
+        %tmp.130 = self;
+        symbol [ self %tmp.130 180 48 52 ];
+        %tmp.126 = newc %tmp.129 (%tmp.130);
+        symbol [ WatchUi %tmp.131 180 55 62 ];
+        %tmp.131 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.132 180 63 71 ];
+        %tmp.132 = getv %tmp.131 :SLIDE_UP;
+        invoke %tmp.123 %tmp.124(%tmp.125, %tmp.126, %tmp.132);
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_148_44_181_4_stop:
     }
     //! A menu of the options parsed from the current prompt.
     //!
     //! Options are answered by *position*, not by typing a number: Claude Code
     //! renders a cursor over a list, so selecting the third option means two
     //! cursor moves then Enter. The server computes that from the index.
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 149; @symbol_functiondef = [showPromptMenu,149,21,35]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 188; @symbol_functiondef = [showPromptMenu,188,21,35]; ]
     private
     function showPromptMenu() as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 150 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 189 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_stop" ]
         %prompt.1 = local;
-        symbol [ prompt %prompt.1 150 12 18 ];
-        symbol [ _view %tmp.2 150 21 26 ];
+        symbol [ prompt %prompt.1 189 12 18 ];
+        symbol [ _view %tmp.2 189 21 26 ];
         %tmp.2 = getv ? :_view;
-        symbol [ getPrompt %tmp.3 150 27 36 ];
+        symbol [ getPrompt %tmp.3 189 27 36 ];
         %tmp.3 = getv function %tmp.2 :getPrompt;
         %tmp.4 = invoke %tmp.2 %tmp.3();
         lputv %prompt.1 %tmp.4;
-        symbol [ prompt %prompt.1 150 12 18 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 151 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_151_8_153_8_if_stmt:
+        symbol [ prompt %prompt.1 189 12 18 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 190 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_190_8_192_8_if_stmt:
         %tmp.5 = lgetv %prompt.1;
-        symbol [ prompt %tmp.5 151 12 18 ];
+        symbol [ prompt %tmp.5 190 12 18 ];
         %tmp.6 = null;
         %tmp.7 = eq %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_151_8_153_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_151_8_153_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_151_28_153_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 152 12 ]
+        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_190_8_192_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_190_8_192_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_190_28_192_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 191 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_151_28_153_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_151_8_153_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_151_8_153_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 155 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_190_28_192_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_190_8_192_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_190_8_192_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 194 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_stop" ]
         %options.2 = local;
-        symbol [ options %options.2 155 12 19 ];
+        symbol [ options %options.2 194 12 19 ];
         %tmp.8 = lgetv %prompt.1;
-        symbol [ prompt %tmp.8 155 22 28 ];
-        symbol [ get %tmp.9 155 29 32 ];
+        symbol [ prompt %tmp.8 194 22 28 ];
+        symbol [ get %tmp.9 194 29 32 ];
         %tmp.9 = getv function %tmp.8 :get;
         %tmp.10 = "o";
         %tmp.11 = invoke %tmp.8 %tmp.9(%tmp.10);
         lputv %options.2 %tmp.11;
-        symbol [ options %options.2 155 12 19 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 156 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_156_8_158_8_if_stmt:
+        symbol [ options %options.2 194 12 19 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 195 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_195_8_197_8_if_stmt:
         %tmp.12 = lgetv %options.2;
-        symbol [ options %tmp.12 156 14 21 ];
-        symbol [ Array %tmp.14 156 33 38 ];
+        symbol [ options %tmp.12 195 14 21 ];
+        symbol [ Array %tmp.14 195 33 38 ];
         %tmp.14 = getv ? :Array;
         %tmp.15 = isa %tmp.12 %tmp.14;
         %tmp.16 = not %tmp.15;
-        bf %tmp.16 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_156_8_158_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_156_8_158_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_156_41_158_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 157 12 ]
+        bf %tmp.16 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_195_8_197_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_195_8_197_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_195_41_197_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 196 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_156_41_158_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_156_8_158_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_156_8_158_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 160 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_195_41_197_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_195_8_197_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_195_8_197_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 199 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_stop" ]
         %question.3 = local;
-        symbol [ question %question.3 160 12 20 ];
+        symbol [ question %question.3 199 12 20 ];
         %tmp.17 = lgetv %prompt.1;
-        symbol [ prompt %tmp.17 160 23 29 ];
-        symbol [ get %tmp.18 160 30 33 ];
+        symbol [ prompt %tmp.17 199 23 29 ];
+        symbol [ get %tmp.18 199 30 33 ];
         %tmp.18 = getv function %tmp.17 :get;
         %tmp.19 = "q";
         %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
         lputv %question.3 %tmp.20;
-        symbol [ question %question.3 160 12 20 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 161 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_stop" ]
+        symbol [ question %question.3 199 12 20 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 200 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_stop" ]
         %title.4 = local;
-        symbol [ title %title.4 161 12 17 ];
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_161_20_163_68_begin:
+        symbol [ title %title.4 200 12 17 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_200_20_202_68_begin:
         %tmp.21 = lgetv %question.3;
-        symbol [ question %tmp.21 161 21 29 ];
-        symbol [ String %tmp.23 161 41 47 ];
+        symbol [ question %tmp.21 200 21 29 ];
+        symbol [ String %tmp.23 200 41 47 ];
         %tmp.23 = getv ? :String;
         %tmp.24 = isa %tmp.21 %tmp.23;
-        bf %tmp.24 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_161_20_163_68_else_false;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_161_20_163_68_true:
+        bf %tmp.24 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_200_20_202_68_else_false;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_200_20_202_68_true:
         %tmp.25 = self;
-        symbol [ shorten %tmp.26 162 14 21 ];
+        symbol [ shorten %tmp.26 201 14 21 ];
         %tmp.26 = getv function %tmp.25 :shorten;
         %tmp.27 = lgetv %question.3;
-        symbol [ question %tmp.27 162 22 30 ];
+        symbol [ question %tmp.27 201 22 30 ];
         %tmp.28 = as %tmp.27 { (String) };
         %tmp.29 = as %tmp.28 String;
-        symbol [ String %tmp.29 162 34 40 ];
+        symbol [ String %tmp.29 201 34 40 ];
         %tmp.30 = 40;
         %tmp.31 = invoke %tmp.25 %tmp.26(%tmp.29, %tmp.30);
         push %tmp.31;
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_161_20_163_68_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_161_20_163_68_else_false:
-        symbol [ WatchUi %tmp.32 163 15 22 ];
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_200_20_202_68_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_200_20_202_68_else_false:
+        symbol [ WatchUi %tmp.32 202 15 22 ];
         %tmp.32 = getm $.Toybox.WatchUi;
-        symbol [ loadResource %tmp.33 163 23 35 ];
+        symbol [ loadResource %tmp.33 202 23 35 ];
         %tmp.33 = getv function %tmp.32 :loadResource;
-        symbol [ Rez %tmp.35 163 36 39 ];
+        symbol [ Rez %tmp.35 202 36 39 ];
         %tmp.35 = getv ? :Rez;
-        symbol [ Strings %tmp.36 163 40 47 ];
+        symbol [ Strings %tmp.36 202 40 47 ];
         %tmp.36 = getv %tmp.35 :Strings;
-        symbol [ MenuTitle %tmp.37 163 48 57 ];
+        symbol [ MenuTitle %tmp.37 202 48 57 ];
         %tmp.37 = getv %tmp.36 :MenuTitle;
         %tmp.38 = invoke %tmp.32 %tmp.33(%tmp.37);
         %tmp.39 = as %tmp.38 String;
-        symbol [ String %tmp.39 163 62 68 ];
+        symbol [ String %tmp.39 202 62 68 ];
         push %tmp.39;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_161_20_163_68_end:
-        %tmp.40 = phi [%tmp.24 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_161_20_163_68_begin] [%tmp.31 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_161_20_163_68_true] [%tmp.39 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_161_20_163_68_else_false] [%tmp.40 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_161_20_163_68_end];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_200_20_202_68_end:
+        %tmp.40 = phi [%tmp.24 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_200_20_202_68_begin] [%tmp.31 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_200_20_202_68_true] [%tmp.39 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_200_20_202_68_else_false] [%tmp.40 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_200_20_202_68_end];
         lputv %title.4 %tmp.40;
-        symbol [ title %title.4 161 12 17 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 165 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_stop" ]
+        symbol [ title %title.4 200 12 17 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 204 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_stop" ]
         %menu.5 = local;
-        symbol [ menu %menu.5 165 12 16 ];
-        symbol [ WatchUi %tmp.43 165 23 30 ];
+        symbol [ menu %menu.5 204 12 16 ];
+        symbol [ WatchUi %tmp.43 204 23 30 ];
         %tmp.43 = getm $.Toybox.WatchUi;
-        symbol [ Menu2 %tmp.44 165 31 36 ];
+        symbol [ Menu2 %tmp.44 204 31 36 ];
         %tmp.44 = getv function ? %tmp.43 :Menu2;
         %tmp.45 = newd 1;
         %tmp.47 = const :title;
-        symbol [ title %tmp.47 165 40 45 const ];
+        symbol [ title %tmp.47 204 40 45 const ];
         %tmp.48 = lgetv %title.4;
-        symbol [ title %tmp.48 165 49 54 ];
+        symbol [ title %tmp.48 204 49 54 ];
         %tmp.49 = dup %tmp.45;
         %tmp.50 = aputv %tmp.49 %tmp.47 %tmp.48;
         %tmp.41 = newc %tmp.44 (%tmp.50);
         lputv %menu.5 %tmp.41;
-        symbol [ menu %menu.5 165 12 16 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 166 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_stop" ]
+        symbol [ menu %menu.5 204 12 16 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 205 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_stop" ]
         %list.6 = local;
-        symbol [ list %list.6 166 12 16 ];
+        symbol [ list %list.6 205 12 16 ];
         %tmp.51 = lgetv %options.2;
-        symbol [ options %tmp.51 166 19 26 ];
+        symbol [ options %tmp.51 205 19 26 ];
         %tmp.52 = as %tmp.51 Array;
-        symbol [ Array %tmp.52 166 30 35 ];
+        symbol [ Array %tmp.52 205 30 35 ];
         lputv %list.6 %tmp.52;
-        symbol [ list %list.6 166 12 16 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 168 8 ]
-        for @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_test @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_incr @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_init:
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_begin" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_end" ]
+        symbol [ list %list.6 205 12 16 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 207 8 ]
+        for @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_test @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_incr @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_init:
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_begin" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_end" ]
         %i.7 = local;
-        symbol [ i %i.7 168 17 18 ];
+        symbol [ i %i.7 207 17 18 ];
         %tmp.53 = 0;
         lputv %i.7 %tmp.53;
-        symbol [ i %i.7 168 17 18 ];
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_test:
+        symbol [ i %i.7 207 17 18 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_test:
         %tmp.54 = lgetv %i.7;
-        symbol [ i %tmp.54 168 24 25 ];
+        symbol [ i %tmp.54 207 24 25 ];
         %tmp.55 = lgetv %list.6;
-        symbol [ list %tmp.55 168 28 32 ];
-        symbol [ size %tmp.56 168 33 37 ];
+        symbol [ list %tmp.55 207 28 32 ];
+        symbol [ size %tmp.56 207 33 37 ];
         %tmp.56 = getv function %tmp.55 :size;
         %tmp.57 = invoke %tmp.55 %tmp.56();
         %tmp.58 = lt %tmp.54 %tmp.57;
-        bf %tmp.58 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_begin:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_46_182_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 169 12 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_46_182_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_46_182_8_stop" ]
+        bf %tmp.58 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_begin:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_46_221_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 208 12 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_46_221_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_46_221_8_stop" ]
         %option.8 = local;
-        symbol [ option %option.8 169 16 22 ];
+        symbol [ option %option.8 208 16 22 ];
         %tmp.59 = lgetv %list.6;
-        symbol [ list %tmp.59 169 25 29 ];
+        symbol [ list %tmp.59 208 25 29 ];
         %tmp.60 = lgetv %i.7;
-        symbol [ i %tmp.60 169 30 31 ];
+        symbol [ i %tmp.60 208 30 31 ];
         %tmp.61 = agetv %tmp.59 %tmp.60;
         lputv %option.8 %tmp.61;
-        symbol [ option %option.8 169 16 22 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 170 12 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_170_12_172_12_if_stmt:
+        symbol [ option %option.8 208 16 22 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 209 12 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_12_211_12_if_stmt:
         %tmp.62 = lgetv %option.8;
-        symbol [ option %tmp.62 170 18 24 ];
-        symbol [ Dictionary %tmp.64 170 36 46 ];
+        symbol [ option %tmp.62 209 18 24 ];
+        symbol [ Dictionary %tmp.64 209 36 46 ];
         %tmp.64 = getv ? :Dictionary;
         %tmp.65 = isa %tmp.62 %tmp.64;
         %tmp.66 = not %tmp.65;
-        bf %tmp.66 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_170_12_172_12_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_170_12_172_12_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_170_49_172_12_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 171 16 ]
-        goto break @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_incr;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_170_49_172_12_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_170_12_172_12_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_170_12_172_12_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 173 12 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_46_182_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_46_182_8_stop" ]
+        bf %tmp.66 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_12_211_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_12_211_12_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_49_211_12_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 210 16 ]
+        goto break @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_incr;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_49_211_12_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_12_211_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_12_211_12_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 212 12 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_46_221_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_46_221_8_stop" ]
         %label.9 = local;
-        symbol [ label %label.9 173 16 21 ];
+        symbol [ label %label.9 212 16 21 ];
         %tmp.67 = lgetv %option.8;
-        symbol [ option %tmp.67 173 25 31 ];
+        symbol [ option %tmp.67 212 25 31 ];
         %tmp.68 = as %tmp.67 Dictionary;
-        symbol [ Dictionary %tmp.68 173 35 45 ];
-        symbol [ get %tmp.69 173 47 50 ];
+        symbol [ Dictionary %tmp.68 212 35 45 ];
+        symbol [ get %tmp.69 212 47 50 ];
         %tmp.69 = getv function %tmp.68 :get;
         %tmp.70 = "l";
         %tmp.71 = invoke %tmp.68 %tmp.69(%tmp.70);
         lputv %label.9 %tmp.71;
-        symbol [ label %label.9 173 16 21 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 174 12 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_174_12_181_12_if_stmt:
+        symbol [ label %label.9 212 16 21 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 213 12 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_213_12_220_12_if_stmt:
         %tmp.72 = lgetv %label.9;
-        symbol [ label %tmp.72 174 16 21 ];
-        symbol [ String %tmp.74 174 33 39 ];
+        symbol [ label %tmp.72 213 16 21 ];
+        symbol [ String %tmp.74 213 33 39 ];
         %tmp.74 = getv ? :String;
         %tmp.75 = isa %tmp.72 %tmp.74;
-        bf %tmp.75 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_174_12_181_12_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_174_12_181_12_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_174_41_181_12_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 175 16 ]
+        bf %tmp.75 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_213_12_220_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_213_12_220_12_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_213_41_220_12_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 214 16 ]
         %tmp.76 = lgetv %menu.5;
-        symbol [ menu %tmp.76 175 16 20 ];
-        symbol [ addItem %tmp.77 175 21 28 ];
+        symbol [ menu %tmp.76 214 16 20 ];
+        symbol [ addItem %tmp.77 214 21 28 ];
         %tmp.77 = getv function %tmp.76 :addItem;
-        symbol [ WatchUi %tmp.80 175 33 40 ];
+        symbol [ WatchUi %tmp.80 214 33 40 ];
         %tmp.80 = getm $.Toybox.WatchUi;
-        symbol [ MenuItem %tmp.81 175 41 49 ];
+        symbol [ MenuItem %tmp.81 214 41 49 ];
         %tmp.81 = getv function ? %tmp.80 :MenuItem;
         %tmp.82 = lgetv %label.9;
-        symbol [ label %tmp.82 176 20 25 ];
+        symbol [ label %tmp.82 215 20 25 ];
         %tmp.83 = as %tmp.82 { (String) };
         %tmp.84 = as %tmp.83 String;
-        symbol [ String %tmp.84 176 29 35 ];
+        symbol [ String %tmp.84 215 29 35 ];
         %tmp.85 = null;
         %tmp.86 = "opt:";
         %tmp.87 = lgetv %i.7;
-        symbol [ i %tmp.87 178 29 30 ];
-        symbol [ toString %tmp.88 178 31 39 ];
+        symbol [ i %tmp.87 217 29 30 ];
+        symbol [ toString %tmp.88 217 31 39 ];
         %tmp.88 = getv function %tmp.87 :toString;
         %tmp.89 = invoke %tmp.87 %tmp.88();
         %tmp.90 = add %tmp.86 %tmp.89;
         %tmp.91 = null;
         %tmp.78 = newc %tmp.81 (%tmp.84, %tmp.85, %tmp.90, %tmp.91);
         invoke %tmp.76 %tmp.77(%tmp.78);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_174_41_181_12_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_174_12_181_12_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_174_12_181_12_if_end:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_46_182_8_stop:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_incr:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 168 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_213_41_220_12_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_213_12_220_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_213_12_220_12_if_end:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_46_221_8_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_incr:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 207 ]
         %tmp.94 = lgetv %i.7;
-        symbol [ i %tmp.94 168 41 42 ];
+        symbol [ i %tmp.94 207 41 42 ];
         %tmp.95 = add %tmp.94 1;
         lputv %i.7 %tmp.95;
-        symbol [ i %i.7 168 41 42 ];
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_test;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_168_8_182_8_for_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 184 8 ]
-        symbol [ WatchUi %tmp.96 184 8 15 ];
+        symbol [ i %i.7 207 41 42 ];
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_test;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_207_8_221_8_for_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 223 8 ]
+        symbol [ WatchUi %tmp.96 223 8 15 ];
         %tmp.96 = getm $.Toybox.WatchUi;
-        symbol [ pushView %tmp.97 184 16 24 ];
+        symbol [ pushView %tmp.97 223 16 24 ];
         %tmp.97 = getv function %tmp.96 :pushView;
         %tmp.98 = lgetv %menu.5;
-        symbol [ menu %tmp.98 184 25 29 ];
-        symbol [ MenuDelegate %tmp.102 184 35 47 ];
+        symbol [ menu %tmp.98 223 25 29 ];
+        symbol [ MenuDelegate %tmp.102 223 35 47 ];
         %tmp.102 = getv ? :MenuDelegate;
         %tmp.103 = self;
-        symbol [ self %tmp.103 184 48 52 ];
+        symbol [ self %tmp.103 223 48 52 ];
         %tmp.99 = newc %tmp.102 (%tmp.103);
-        symbol [ WatchUi %tmp.104 184 55 62 ];
+        symbol [ WatchUi %tmp.104 223 55 62 ];
         %tmp.104 = getm $.Toybox.WatchUi;
-        symbol [ SLIDE_UP %tmp.105 184 63 71 ];
+        symbol [ SLIDE_UP %tmp.105 223 63 71 ];
         %tmp.105 = getv %tmp.104 :SLIDE_UP;
         invoke %tmp.96 %tmp.97(%tmp.98, %tmp.99, %tmp.105);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_149_46_185_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_46_224_4_stop:
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 187; @symbol_functiondef = [shorten,187,21,28]; @symbol_param<0> = [text,187,29,33]; @symbol_param<0>_type<0> = [String,187,37,43]; @symbol_param<1> = [max,187,45,48]; @symbol_param<1>_type<0> = [Number,187,52,58]; @symbol_return<0> = [String,187,63,69]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 226; @symbol_functiondef = [shorten,226,21,28]; @symbol_param<0> = [text,226,29,33]; @symbol_param<0>_type<0> = [String,226,37,43]; @symbol_param<1> = [max,226,45,48]; @symbol_param<1>_type<0> = [Number,226,52,58]; @symbol_return<0> = [String,226,63,69]; ]
     private
     function shorten(text as String, max as Number) as String {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_187_70_192_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 188 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_8_190_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_226_70_231_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 227 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_227_8_229_8_if_stmt:
         %tmp.1 = lgetv %text;
-        symbol [ text %tmp.1 188 12 16 ];
-        symbol [ length %tmp.2 188 17 23 ];
+        symbol [ text %tmp.1 227 12 16 ];
+        symbol [ length %tmp.2 227 17 23 ];
         %tmp.2 = getv function %tmp.1 :length;
         %tmp.3 = invoke %tmp.1 %tmp.2();
         %tmp.4 = lgetv %max;
-        symbol [ max %tmp.4 188 29 32 ];
+        symbol [ max %tmp.4 227 29 32 ];
         %tmp.5 = lte %tmp.3 %tmp.4;
-        bf %tmp.5 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_8_190_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_8_190_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_34_190_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 189 12 ]
+        bf %tmp.5 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_227_8_229_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_227_8_229_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_227_34_229_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 228 12 ]
         %tmp.6 = lgetv %text;
-        symbol [ text %tmp.6 189 19 23 ];
+        symbol [ text %tmp.6 228 19 23 ];
         ret %tmp.6;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_34_190_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_8_190_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_188_8_190_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 191 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_227_34_229_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_227_8_229_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_227_8_229_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 230 8 ]
         %tmp.7 = lgetv %text;
-        symbol [ text %tmp.7 191 15 19 ];
-        symbol [ substring %tmp.8 191 20 29 ];
+        symbol [ text %tmp.7 230 15 19 ];
+        symbol [ substring %tmp.8 230 20 29 ];
         %tmp.8 = getv function %tmp.7 :substring;
         %tmp.9 = 0;
         %tmp.10 = lgetv %max;
-        symbol [ max %tmp.10 191 33 36 ];
+        symbol [ max %tmp.10 230 33 36 ];
         %tmp.11 = 1;
         %tmp.12 = sub %tmp.10 %tmp.11;
         %tmp.13 = invoke %tmp.7 %tmp.8(%tmp.9, %tmp.12);
         %tmp.14 = "…";
         %tmp.15 = add %tmp.13 %tmp.14;
         ret %tmp.15;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_187_70_192_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_226_70_231_4_stop:
     }
     //! Handle a menu selection.
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 197; @symbol_functiondef = [onMenuItem,197,20,30]; @symbol_param<0> = [id,197,31,33]; @symbol_param<0>_type<0> = [Object,197,37,43]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 236; @symbol_functiondef = [onMenuItem,236,20,30]; @symbol_param<0> = [id,236,31,33]; @symbol_param<0>_type<0> = [Object,236,37,43]; ]
     public
     function onMenuItem(id as Object or Null) as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_197_54_218_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 198 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_198_8_200_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_236_54_268_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 237 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_237_8_239_8_if_stmt:
         %tmp.1 = lgetv %id;
-        symbol [ id %tmp.1 198 14 16 ];
-        symbol [ String %tmp.3 198 28 34 ];
+        symbol [ id %tmp.1 237 14 16 ];
+        symbol [ String %tmp.3 237 28 34 ];
         %tmp.3 = getv ? :String;
         %tmp.4 = isa %tmp.1 %tmp.3;
         %tmp.5 = not %tmp.4;
-        bf %tmp.5 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_198_8_200_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_198_8_200_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_198_37_200_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 199 12 ]
+        bf %tmp.5 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_237_8_239_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_237_8_239_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_237_37_239_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 238 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_198_37_200_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_198_8_200_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_198_8_200_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 201 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_197_54_218_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_197_54_218_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_237_37_239_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_237_8_239_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_237_8_239_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 240 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_236_54_268_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_236_54_268_4_stop" ]
         %identifier.1 = local;
-        symbol [ identifier %identifier.1 201 12 22 ];
+        symbol [ identifier %identifier.1 240 12 22 ];
         %tmp.6 = lgetv %id;
-        symbol [ id %tmp.6 201 25 27 ];
+        symbol [ id %tmp.6 240 25 27 ];
         %tmp.7 = as %tmp.6 String;
-        symbol [ String %tmp.7 201 31 37 ];
+        symbol [ String %tmp.7 240 31 37 ];
         lputv %identifier.1 %tmp.7;
-        symbol [ identifier %identifier.1 201 12 22 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 203 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_203_8_206_8_if_stmt:
+        symbol [ identifier %identifier.1 240 12 22 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 242 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_242_8_245_8_if_stmt:
         %tmp.8 = lgetv %identifier.1;
-        symbol [ identifier %tmp.8 203 12 22 ];
-        symbol [ equals %tmp.9 203 23 29 ];
+        symbol [ identifier %tmp.8 242 12 22 ];
+        symbol [ equals %tmp.9 242 23 29 ];
         %tmp.9 = getv function %tmp.8 :equals;
         %tmp.10 = "refresh";
         %tmp.11 = invoke %tmp.8 %tmp.9(%tmp.10);
-        bf %tmp.11 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_203_8_206_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_203_8_206_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_203_42_206_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 204 12 ]
-        symbol [ _view %tmp.13 204 12 17 ];
+        bf %tmp.11 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_242_8_245_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_242_8_245_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_242_42_245_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 243 12 ]
+        symbol [ _view %tmp.13 243 12 17 ];
         %tmp.13 = getv ? :_view;
-        symbol [ forceRefresh %tmp.14 204 18 30 ];
+        symbol [ forceRefresh %tmp.14 243 18 30 ];
         %tmp.14 = getv function %tmp.13 :forceRefresh;
         invoke %tmp.13 %tmp.14();
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 205 12 ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 244 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_203_42_206_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_203_8_206_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_203_8_206_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 209 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_8_215_8_if_stmt:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_12_209_79_begin:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_242_42_245_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_242_8_245_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_242_8_245_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 247 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_247_8_256_8_if_stmt:
         %tmp.15 = lgetv %identifier.1;
-        symbol [ identifier %tmp.15 209 12 22 ];
-        symbol [ length %tmp.16 209 23 29 ];
-        %tmp.16 = getv function %tmp.15 :length;
-        %tmp.17 = invoke %tmp.15 %tmp.16();
-        %tmp.18 = 4;
-        %tmp.19 = gt %tmp.17 %tmp.18;
-        bf %tmp.19 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_8_215_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_39_209_79_true:
-        %tmp.20 = lgetv %identifier.1;
-        symbol [ identifier %tmp.20 209 39 49 ];
-        symbol [ substring %tmp.21 209 50 59 ];
-        %tmp.21 = getv function %tmp.20 :substring;
-        %tmp.22 = 0;
-        %tmp.23 = 4;
-        %tmp.24 = invoke %tmp.20 %tmp.21(%tmp.22, %tmp.23);
-        symbol [ equals %tmp.25 209 66 72 ];
-        %tmp.25 = getv function %tmp.24 :equals;
-        %tmp.26 = "opt:";
-        %tmp.27 = invoke %tmp.24 %tmp.25(%tmp.26);
-        push %tmp.27;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_39_209_79_end:
-        %tmp.28 = phi [%tmp.19 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_12_209_79_begin] [%tmp.27 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_39_209_79_true] [%tmp.28 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_39_209_79_end];
-        bf %tmp.28 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_8_215_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_8_215_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_82_215_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 210 12 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_82_215_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_82_215_8_stop" ]
-        %index.2 = local;
-        symbol [ index %index.2 210 16 21 ];
-        %tmp.29 = lgetv %identifier.1;
-        symbol [ identifier %tmp.29 210 24 34 ];
-        symbol [ substring %tmp.30 210 35 44 ];
-        %tmp.30 = getv function %tmp.29 :substring;
-        %tmp.31 = 4;
-        %tmp.32 = lgetv %identifier.1;
-        symbol [ identifier %tmp.32 210 48 58 ];
-        symbol [ length %tmp.33 210 59 65 ];
-        %tmp.33 = getv function %tmp.32 :length;
-        %tmp.34 = invoke %tmp.32 %tmp.33();
-        %tmp.35 = invoke %tmp.29 %tmp.30(%tmp.31, %tmp.34);
-        symbol [ toNumber %tmp.36 210 69 77 ];
-        %tmp.36 = getv function %tmp.35 :toNumber;
-        %tmp.37 = invoke %tmp.35 %tmp.36();
-        lputv %index.2 %tmp.37;
-        symbol [ index %index.2 210 16 21 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 211 12 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_211_12_213_12_if_stmt:
-        %tmp.38 = lgetv %index.2;
-        symbol [ index %tmp.38 211 16 21 ];
-        %tmp.39 = null;
-        %tmp.40 = ne %tmp.38 %tmp.39;
-        bf %tmp.40 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_211_12_213_12_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_211_12_213_12_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_211_31_213_12_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 212 16 ]
-        %tmp.41 = self;
-        symbol [ answerPrompt %tmp.42 212 16 28 ];
-        %tmp.42 = getv function %tmp.41 :answerPrompt;
-        %tmp.43 = lgetv %index.2;
-        symbol [ index %tmp.43 212 29 34 ];
-        %tmp.44 = as %tmp.43 { (!Null) };
-        %tmp.45 = as %tmp.44 Number;
-        symbol [ Number %tmp.45 212 38 44 ];
-        invoke %tmp.41 %tmp.42(%tmp.45);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_211_31_213_12_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_211_12_213_12_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_211_12_213_12_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 214 12 ]
+        symbol [ identifier %tmp.15 247 12 22 ];
+        symbol [ equals %tmp.16 247 23 29 ];
+        %tmp.16 = getv function %tmp.15 :equals;
+        %tmp.17 = "type";
+        %tmp.18 = invoke %tmp.15 %tmp.16(%tmp.17);
+        bf %tmp.18 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_247_8_256_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_247_8_256_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_247_39_256_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 251 12 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_247_39_256_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_247_39_256_8_stop" ]
+        %opened.2 = local;
+        symbol [ opened %opened.2 251 16 22 ];
+        symbol [ $ %tmp.19 251 25 26 ];
+        %tmp.19 = getm $;
+        symbol [ promptForText %tmp.20 251 27 40 ];
+        %tmp.20 = getv function %tmp.19 :promptForText;
+        %tmp.21 = "";
+        %tmp.22 = self;
+        symbol [ method %tmp.23 251 45 51 ];
+        %tmp.23 = getv function %tmp.22 :method;
+        %tmp.25 = const :onTextEntered;
+        symbol [ onTextEntered %tmp.25 251 53 66 const ];
+        %tmp.26 = invoke %tmp.22 %tmp.23(%tmp.25);
+        %tmp.27 = invoke %tmp.19 %tmp.20(%tmp.21, %tmp.26);
+        lputv %opened.2 %tmp.27;
+        symbol [ opened %opened.2 251 16 22 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 252 12 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_252_12_254_12_if_stmt:
+        %tmp.28 = lgetv %opened.2;
+        symbol [ opened %tmp.28 252 17 23 ];
+        %tmp.29 = not %tmp.28;
+        bf %tmp.29 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_252_12_254_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_252_12_254_12_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_252_25_254_12_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 253 16 ]
+        symbol [ _view %tmp.31 253 16 21 ];
+        %tmp.31 = getv ? :_view;
+        symbol [ setMessage %tmp.32 253 22 32 ];
+        %tmp.32 = getv function %tmp.31 :setMessage;
+        %tmp.33 = "No keyboard on this device";
+        invoke %tmp.31 %tmp.32(%tmp.33);
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_252_25_254_12_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_252_12_254_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_252_12_254_12_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 255 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_82_215_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_8_215_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_209_8_215_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 217 8 ]
-        %tmp.46 = self;
-        symbol [ send %tmp.47 217 8 12 ];
-        %tmp.47 = getv function %tmp.46 :send;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_247_39_256_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_247_8_256_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_247_8_256_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 259 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_8_265_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_12_259_79_begin:
+        %tmp.34 = lgetv %identifier.1;
+        symbol [ identifier %tmp.34 259 12 22 ];
+        symbol [ length %tmp.35 259 23 29 ];
+        %tmp.35 = getv function %tmp.34 :length;
+        %tmp.36 = invoke %tmp.34 %tmp.35();
+        %tmp.37 = 4;
+        %tmp.38 = gt %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_8_265_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_39_259_79_true:
+        %tmp.39 = lgetv %identifier.1;
+        symbol [ identifier %tmp.39 259 39 49 ];
+        symbol [ substring %tmp.40 259 50 59 ];
+        %tmp.40 = getv function %tmp.39 :substring;
+        %tmp.41 = 0;
+        %tmp.42 = 4;
+        %tmp.43 = invoke %tmp.39 %tmp.40(%tmp.41, %tmp.42);
+        symbol [ equals %tmp.44 259 66 72 ];
+        %tmp.44 = getv function %tmp.43 :equals;
+        %tmp.45 = "opt:";
+        %tmp.46 = invoke %tmp.43 %tmp.44(%tmp.45);
+        push %tmp.46;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_39_259_79_end:
+        %tmp.47 = phi [%tmp.38 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_12_259_79_begin] [%tmp.46 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_39_259_79_true] [%tmp.47 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_39_259_79_end];
+        bf %tmp.47 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_8_265_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_8_265_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_82_265_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 260 12 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_82_265_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_82_265_8_stop" ]
+        %index.3 = local;
+        symbol [ index %index.3 260 16 21 ];
         %tmp.48 = lgetv %identifier.1;
-        symbol [ identifier %tmp.48 217 13 23 ];
-        invoke %tmp.46 %tmp.47(%tmp.48);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_197_54_218_4_stop:
+        symbol [ identifier %tmp.48 260 24 34 ];
+        symbol [ substring %tmp.49 260 35 44 ];
+        %tmp.49 = getv function %tmp.48 :substring;
+        %tmp.50 = 4;
+        %tmp.51 = lgetv %identifier.1;
+        symbol [ identifier %tmp.51 260 48 58 ];
+        symbol [ length %tmp.52 260 59 65 ];
+        %tmp.52 = getv function %tmp.51 :length;
+        %tmp.53 = invoke %tmp.51 %tmp.52();
+        %tmp.54 = invoke %tmp.48 %tmp.49(%tmp.50, %tmp.53);
+        symbol [ toNumber %tmp.55 260 69 77 ];
+        %tmp.55 = getv function %tmp.54 :toNumber;
+        %tmp.56 = invoke %tmp.54 %tmp.55();
+        lputv %index.3 %tmp.56;
+        symbol [ index %index.3 260 16 21 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 261 12 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_261_12_263_12_if_stmt:
+        %tmp.57 = lgetv %index.3;
+        symbol [ index %tmp.57 261 16 21 ];
+        %tmp.58 = null;
+        %tmp.59 = ne %tmp.57 %tmp.58;
+        bf %tmp.59 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_261_12_263_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_261_12_263_12_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_261_31_263_12_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 262 16 ]
+        %tmp.60 = self;
+        symbol [ answerPrompt %tmp.61 262 16 28 ];
+        %tmp.61 = getv function %tmp.60 :answerPrompt;
+        %tmp.62 = lgetv %index.3;
+        symbol [ index %tmp.62 262 29 34 ];
+        %tmp.63 = as %tmp.62 { (!Null) };
+        %tmp.64 = as %tmp.63 Number;
+        symbol [ Number %tmp.64 262 38 44 ];
+        invoke %tmp.60 %tmp.61(%tmp.64);
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_261_31_263_12_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_261_12_263_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_261_12_263_12_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 264 12 ]
+        ret ?;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_82_265_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_8_265_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_259_8_265_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 267 8 ]
+        %tmp.65 = self;
+        symbol [ send %tmp.66 267 8 12 ];
+        %tmp.66 = getv function %tmp.65 :send;
+        %tmp.67 = lgetv %identifier.1;
+        symbol [ identifier %tmp.67 267 13 23 ];
+        invoke %tmp.65 %tmp.66(%tmp.67);
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_236_54_268_4_stop:
     }
     //! Answer the current prompt by option index.
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 221; @symbol_functiondef = [answerPrompt,221,21,33]; @symbol_param<0> = [index,221,34,39]; @symbol_param<0>_type<0> = [Number,221,43,49]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 271; @symbol_functiondef = [answerPrompt,271,21,33]; @symbol_param<0> = [index,271,34,39]; @symbol_param<0>_type<0> = [Number,271,43,49]; ]
     private
     function answerPrompt(index as Number) as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_221_59_248_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 222 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_221_59_248_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_221_59_248_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_271_59_298_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 272 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_271_59_298_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_271_59_298_4_stop" ]
         %prompt.1 = local;
-        symbol [ prompt %prompt.1 222 12 18 ];
-        symbol [ _view %tmp.2 222 21 26 ];
+        symbol [ prompt %prompt.1 272 12 18 ];
+        symbol [ _view %tmp.2 272 21 26 ];
         %tmp.2 = getv ? :_view;
-        symbol [ getPrompt %tmp.3 222 27 36 ];
+        symbol [ getPrompt %tmp.3 272 27 36 ];
         %tmp.3 = getv function %tmp.2 :getPrompt;
         %tmp.4 = invoke %tmp.2 %tmp.3();
         lputv %prompt.1 %tmp.4;
-        symbol [ prompt %prompt.1 222 12 18 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 223 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_223_8_225_8_if_stmt:
+        symbol [ prompt %prompt.1 272 12 18 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 273 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_273_8_275_8_if_stmt:
         %tmp.5 = lgetv %prompt.1;
-        symbol [ prompt %tmp.5 223 12 18 ];
+        symbol [ prompt %tmp.5 273 12 18 ];
         %tmp.6 = null;
         %tmp.7 = eq %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_223_8_225_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_223_8_225_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_223_28_225_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 224 12 ]
+        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_273_8_275_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_273_8_275_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_273_28_275_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 274 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_223_28_225_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_223_8_225_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_223_8_225_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 227 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_221_59_248_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_221_59_248_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_273_28_275_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_273_8_275_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_273_8_275_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 277 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_271_59_298_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_271_59_298_4_stop" ]
         %options.2 = local;
-        symbol [ options %options.2 227 12 19 ];
+        symbol [ options %options.2 277 12 19 ];
         %tmp.8 = lgetv %prompt.1;
-        symbol [ prompt %tmp.8 227 22 28 ];
-        symbol [ get %tmp.9 227 29 32 ];
+        symbol [ prompt %tmp.8 277 22 28 ];
+        symbol [ get %tmp.9 277 29 32 ];
         %tmp.9 = getv function %tmp.8 :get;
         %tmp.10 = "o";
         %tmp.11 = invoke %tmp.8 %tmp.9(%tmp.10);
         lputv %options.2 %tmp.11;
-        symbol [ options %options.2 227 12 19 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 228 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_228_8_230_8_if_stmt:
+        symbol [ options %options.2 277 12 19 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 278 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_278_8_280_8_if_stmt:
         %tmp.12 = lgetv %options.2;
-        symbol [ options %tmp.12 228 14 21 ];
-        symbol [ Array %tmp.14 228 33 38 ];
+        symbol [ options %tmp.12 278 14 21 ];
+        symbol [ Array %tmp.14 278 33 38 ];
         %tmp.14 = getv ? :Array;
         %tmp.15 = isa %tmp.12 %tmp.14;
         %tmp.16 = not %tmp.15;
-        bf %tmp.16 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_228_8_230_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_228_8_230_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_228_41_230_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 229 12 ]
+        bf %tmp.16 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_278_8_280_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_278_8_280_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_278_41_280_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 279 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_228_41_230_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_228_8_230_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_228_8_230_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 232 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_221_59_248_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_221_59_248_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_278_41_280_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_278_8_280_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_278_8_280_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 282 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_271_59_298_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_271_59_298_4_stop" ]
         %list.3 = local;
-        symbol [ list %list.3 232 12 16 ];
+        symbol [ list %list.3 282 12 16 ];
         %tmp.17 = lgetv %options.2;
-        symbol [ options %tmp.17 232 19 26 ];
+        symbol [ options %tmp.17 282 19 26 ];
         %tmp.18 = as %tmp.17 Array;
-        symbol [ Array %tmp.18 232 30 35 ];
+        symbol [ Array %tmp.18 282 30 35 ];
         lputv %list.3 %tmp.18;
-        symbol [ list %list.3 232 12 16 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 233 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_8_235_8_if_stmt:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_12_233_44_begin:
+        symbol [ list %list.3 282 12 16 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 283 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_8_285_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_12_283_44_begin:
         %tmp.19 = lgetv %index;
-        symbol [ index %tmp.19 233 12 17 ];
+        symbol [ index %tmp.19 283 12 17 ];
         %tmp.20 = 0;
         %tmp.21 = lt %tmp.19 %tmp.20;
-        bt %tmp.21 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_8_235_8_if_true;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_25_233_44_false:
+        bt %tmp.21 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_8_285_8_if_true;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_25_283_44_false:
         %tmp.22 = lgetv %index;
-        symbol [ index %tmp.22 233 25 30 ];
+        symbol [ index %tmp.22 283 25 30 ];
         %tmp.23 = lgetv %list.3;
-        symbol [ list %tmp.23 233 34 38 ];
-        symbol [ size %tmp.24 233 39 43 ];
+        symbol [ list %tmp.23 283 34 38 ];
+        symbol [ size %tmp.24 283 39 43 ];
         %tmp.24 = getv function %tmp.23 :size;
         %tmp.25 = invoke %tmp.23 %tmp.24();
         %tmp.26 = gte %tmp.22 %tmp.25;
         push %tmp.26;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_25_233_44_end:
-        %tmp.27 = phi [%tmp.21 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_12_233_44_begin] [%tmp.26 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_25_233_44_false] [%tmp.27 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_25_233_44_end];
-        bf %tmp.27 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_8_235_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_8_235_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_47_235_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 234 12 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_25_283_44_end:
+        %tmp.27 = phi [%tmp.21 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_12_283_44_begin] [%tmp.26 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_25_283_44_false] [%tmp.27 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_25_283_44_end];
+        bf %tmp.27 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_8_285_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_8_285_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_47_285_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 284 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_47_235_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_8_235_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_233_8_235_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 240 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_221_59_248_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_221_59_248_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_47_285_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_8_285_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_283_8_285_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 290 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_271_59_298_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_271_59_298_4_stop" ]
         %destructive.4 = local;
-        symbol [ destructive %destructive.4 240 12 23 ];
+        symbol [ destructive %destructive.4 290 12 23 ];
         %tmp.28 = lgetv %prompt.1;
-        symbol [ prompt %tmp.28 240 26 32 ];
-        symbol [ get %tmp.29 240 33 36 ];
+        symbol [ prompt %tmp.28 290 26 32 ];
+        symbol [ get %tmp.29 290 33 36 ];
         %tmp.29 = getv function %tmp.28 :get;
         %tmp.30 = "d";
         %tmp.31 = invoke %tmp.28 %tmp.29(%tmp.30);
         lputv %destructive.4 %tmp.31;
-        symbol [ destructive %destructive.4 240 12 23 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 241 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_8_245_8_if_stmt:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_12_241_55_begin:
+        symbol [ destructive %destructive.4 290 12 23 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 291 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_8_295_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_12_291_55_begin:
         %tmp.32 = lgetv %destructive.4;
-        symbol [ destructive %tmp.32 241 12 23 ];
+        symbol [ destructive %tmp.32 291 12 23 ];
         %tmp.33 = true;
         %tmp.34 = eq %tmp.32 %tmp.33;
-        bf %tmp.34 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_8_245_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_35_241_55_true:
-        symbol [ _view %tmp.36 241 35 40 ];
+        bf %tmp.34 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_8_295_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_35_291_55_true:
+        symbol [ _view %tmp.36 291 35 40 ];
         %tmp.36 = getv ? :_view;
-        symbol [ getSettings %tmp.37 241 41 52 ];
+        symbol [ getSettings %tmp.37 291 41 52 ];
         %tmp.37 = getv function %tmp.36 :getSettings;
         %tmp.38 = invoke %tmp.36 %tmp.37();
-        symbol [ confirmDestructive %tmp.39 241 55 73 ];
+        symbol [ confirmDestructive %tmp.39 291 55 73 ];
         %tmp.39 = getv %tmp.38 :confirmDestructive;
         push %tmp.39;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_35_241_55_end:
-        %tmp.40 = phi [%tmp.34 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_12_241_55_begin] [%tmp.39 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_35_241_55_true] [%tmp.40 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_35_241_55_end];
-        bf %tmp.40 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_8_245_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_8_245_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_75_245_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 242 12 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_35_291_55_end:
+        %tmp.40 = phi [%tmp.34 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_12_291_55_begin] [%tmp.39 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_35_291_55_true] [%tmp.40 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_35_291_55_end];
+        bf %tmp.40 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_8_295_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_8_295_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_75_295_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 292 12 ]
         %tmp.41 = "opt:";
         %tmp.42 = lgetv %index;
-        symbol [ index %tmp.42 242 38 43 ];
-        symbol [ toString %tmp.43 242 44 52 ];
+        symbol [ index %tmp.42 292 38 43 ];
+        symbol [ toString %tmp.43 292 44 52 ];
         %tmp.43 = getv function %tmp.42 :toString;
         %tmp.44 = invoke %tmp.42 %tmp.43();
         %tmp.45 = add %tmp.41 %tmp.44;
-        symbol [ _pendingAction ? 242 12 26 ];
+        symbol [ _pendingAction ? 292 12 26 ];
         putv self :_pendingAction %tmp.45;
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 243 12 ]
-        symbol [ _view %tmp.47 243 12 17 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 293 12 ]
+        symbol [ _view %tmp.47 293 12 17 ];
         %tmp.47 = getv ? :_view;
-        symbol [ setMessage %tmp.48 243 18 28 ];
+        symbol [ setMessage %tmp.48 293 18 28 ];
         %tmp.48 = getv function %tmp.47 :setMessage;
-        symbol [ WatchUi %tmp.49 243 29 36 ];
+        symbol [ WatchUi %tmp.49 293 29 36 ];
         %tmp.49 = getm $.Toybox.WatchUi;
-        symbol [ loadResource %tmp.50 243 37 49 ];
+        symbol [ loadResource %tmp.50 293 37 49 ];
         %tmp.50 = getv function %tmp.49 :loadResource;
-        symbol [ Rez %tmp.52 243 50 53 ];
+        symbol [ Rez %tmp.52 293 50 53 ];
         %tmp.52 = getv ? :Rez;
-        symbol [ Strings %tmp.53 243 54 61 ];
+        symbol [ Strings %tmp.53 293 54 61 ];
         %tmp.53 = getv %tmp.52 :Strings;
-        symbol [ ConfirmTitle %tmp.54 243 62 74 ];
+        symbol [ ConfirmTitle %tmp.54 293 62 74 ];
         %tmp.54 = getv %tmp.53 :ConfirmTitle;
         %tmp.55 = invoke %tmp.49 %tmp.50(%tmp.54);
         %tmp.56 = as %tmp.55 String;
-        symbol [ String %tmp.56 243 79 85 ];
+        symbol [ String %tmp.56 293 79 85 ];
         invoke %tmp.47 %tmp.48(%tmp.56);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 244 12 ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 294 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_75_245_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_8_245_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_241_8_245_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 247 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_75_295_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_8_295_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_291_8_295_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 297 8 ]
         %tmp.57 = self;
-        symbol [ sendOption %tmp.58 247 8 18 ];
+        symbol [ sendOption %tmp.58 297 8 18 ];
         %tmp.58 = getv function %tmp.57 :sendOption;
         %tmp.59 = lgetv %index;
-        symbol [ index %tmp.59 247 19 24 ];
+        symbol [ index %tmp.59 297 19 24 ];
         invoke %tmp.57 %tmp.58(%tmp.59);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_221_59_248_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_271_59_298_4_stop:
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 250; @symbol_functiondef = [sendOption,250,21,31]; @symbol_param<0> = [index,250,32,37]; @symbol_param<0>_type<0> = [Number,250,41,47]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 300; @symbol_functiondef = [sendOption,300,21,31]; @symbol_param<0> = [index,300,32,37]; @symbol_param<0>_type<0> = [Number,300,41,47]; ]
     private
     function sendOption(index as Number) as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_250_57_252_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 251 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_300_57_302_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 301 8 ]
         %tmp.1 = self;
-        symbol [ sendWithId %tmp.2 251 8 18 ];
+        symbol [ sendWithId %tmp.2 301 8 18 ];
         %tmp.2 = getv function %tmp.1 :sendWithId;
         %tmp.3 = "select:";
         %tmp.4 = lgetv %index;
-        symbol [ index %tmp.4 251 31 36 ];
-        symbol [ toString %tmp.5 251 37 45 ];
+        symbol [ index %tmp.4 301 31 36 ];
+        symbol [ toString %tmp.5 301 37 45 ];
         %tmp.5 = getv function %tmp.4 :toString;
         %tmp.6 = invoke %tmp.4 %tmp.5();
         %tmp.7 = add %tmp.3 %tmp.6;
         invoke %tmp.1 %tmp.2(%tmp.7);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_250_57_252_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_300_57_302_4_stop:
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 254; @symbol_functiondef = [send,254,21,25]; @symbol_param<0> = [actionId,254,26,34]; @symbol_param<0>_type<0> = [String,254,38,44]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 304; @symbol_functiondef = [send,304,21,25]; @symbol_param<0> = [actionId,304,26,34]; @symbol_param<0>_type<0> = [String,304,38,44]; ]
     private
     function send(actionId as String) as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_254_54_264_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 256 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_8_262_8_if_stmt:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_12_256_75_begin:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_304_54_314_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 306 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_8_312_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_12_306_75_begin:
         %tmp.1 = lgetv %actionId;
-        symbol [ actionId %tmp.1 256 12 20 ];
-        symbol [ length %tmp.2 256 21 27 ];
+        symbol [ actionId %tmp.1 306 12 20 ];
+        symbol [ length %tmp.2 306 21 27 ];
         %tmp.2 = getv function %tmp.1 :length;
         %tmp.3 = invoke %tmp.1 %tmp.2();
         %tmp.4 = 4;
         %tmp.5 = gt %tmp.3 %tmp.4;
-        bf %tmp.5 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_8_262_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_37_256_75_true:
+        bf %tmp.5 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_8_312_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_37_306_75_true:
         %tmp.6 = lgetv %actionId;
-        symbol [ actionId %tmp.6 256 37 45 ];
-        symbol [ substring %tmp.7 256 46 55 ];
+        symbol [ actionId %tmp.6 306 37 45 ];
+        symbol [ substring %tmp.7 306 46 55 ];
         %tmp.7 = getv function %tmp.6 :substring;
         %tmp.8 = 0;
         %tmp.9 = 4;
         %tmp.10 = invoke %tmp.6 %tmp.7(%tmp.8, %tmp.9);
-        symbol [ equals %tmp.11 256 62 68 ];
+        symbol [ equals %tmp.11 306 62 68 ];
         %tmp.11 = getv function %tmp.10 :equals;
         %tmp.12 = "opt:";
         %tmp.13 = invoke %tmp.10 %tmp.11(%tmp.12);
         push %tmp.13;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_37_256_75_end:
-        %tmp.14 = phi [%tmp.5 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_12_256_75_begin] [%tmp.13 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_37_256_75_true] [%tmp.14 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_37_256_75_end];
-        bf %tmp.14 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_8_262_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_8_262_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_78_262_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 257 12 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_78_262_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_78_262_8_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_37_306_75_end:
+        %tmp.14 = phi [%tmp.5 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_12_306_75_begin] [%tmp.13 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_37_306_75_true] [%tmp.14 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_37_306_75_end];
+        bf %tmp.14 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_8_312_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_8_312_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_78_312_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 307 12 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_78_312_8_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_78_312_8_stop" ]
         %index.1 = local;
-        symbol [ index %index.1 257 16 21 ];
+        symbol [ index %index.1 307 16 21 ];
         %tmp.15 = lgetv %actionId;
-        symbol [ actionId %tmp.15 257 24 32 ];
-        symbol [ substring %tmp.16 257 33 42 ];
+        symbol [ actionId %tmp.15 307 24 32 ];
+        symbol [ substring %tmp.16 307 33 42 ];
         %tmp.16 = getv function %tmp.15 :substring;
         %tmp.17 = 4;
         %tmp.18 = lgetv %actionId;
-        symbol [ actionId %tmp.18 257 46 54 ];
-        symbol [ length %tmp.19 257 55 61 ];
+        symbol [ actionId %tmp.18 307 46 54 ];
+        symbol [ length %tmp.19 307 55 61 ];
         %tmp.19 = getv function %tmp.18 :length;
         %tmp.20 = invoke %tmp.18 %tmp.19();
         %tmp.21 = invoke %tmp.15 %tmp.16(%tmp.17, %tmp.20);
-        symbol [ toNumber %tmp.22 257 65 73 ];
+        symbol [ toNumber %tmp.22 307 65 73 ];
         %tmp.22 = getv function %tmp.21 :toNumber;
         %tmp.23 = invoke %tmp.21 %tmp.22();
         lputv %index.1 %tmp.23;
-        symbol [ index %index.1 257 16 21 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 258 12 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_258_12_260_12_if_stmt:
+        symbol [ index %index.1 307 16 21 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 308 12 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_308_12_310_12_if_stmt:
         %tmp.24 = lgetv %index.1;
-        symbol [ index %tmp.24 258 16 21 ];
+        symbol [ index %tmp.24 308 16 21 ];
         %tmp.25 = null;
         %tmp.26 = ne %tmp.24 %tmp.25;
-        bf %tmp.26 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_258_12_260_12_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_258_12_260_12_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_258_31_260_12_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 259 16 ]
+        bf %tmp.26 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_308_12_310_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_308_12_310_12_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_308_31_310_12_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 309 16 ]
         %tmp.27 = self;
-        symbol [ sendOption %tmp.28 259 16 26 ];
+        symbol [ sendOption %tmp.28 309 16 26 ];
         %tmp.28 = getv function %tmp.27 :sendOption;
         %tmp.29 = lgetv %index.1;
-        symbol [ index %tmp.29 259 27 32 ];
+        symbol [ index %tmp.29 309 27 32 ];
         %tmp.30 = as %tmp.29 { (!Null) };
         %tmp.31 = as %tmp.30 Number;
-        symbol [ Number %tmp.31 259 36 42 ];
+        symbol [ Number %tmp.31 309 36 42 ];
         invoke %tmp.27 %tmp.28(%tmp.31);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_258_31_260_12_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_258_12_260_12_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_258_12_260_12_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 261 12 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_308_31_310_12_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_308_12_310_12_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_308_12_310_12_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 311 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_78_262_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_8_262_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_256_8_262_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 263 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_78_312_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_8_312_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_306_8_312_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 313 8 ]
         %tmp.32 = self;
-        symbol [ sendWithId %tmp.33 263 8 18 ];
+        symbol [ sendWithId %tmp.33 313 8 18 ];
         %tmp.33 = getv function %tmp.32 :sendWithId;
         %tmp.34 = lgetv %actionId;
-        symbol [ actionId %tmp.34 263 19 27 ];
+        symbol [ actionId %tmp.34 313 19 27 ];
         invoke %tmp.32 %tmp.33(%tmp.34);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_254_54_264_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_304_54_314_4_stop:
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 266; @symbol_functiondef = [sendWithId,266,21,31]; @symbol_param<0> = [actionId,266,32,40]; @symbol_param<0>_type<0> = [String,266,44,50]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 316; @symbol_functiondef = [sendWithId,316,21,31]; @symbol_param<0> = [actionId,316,32,40]; @symbol_param<0>_type<0> = [String,316,44,50]; ]
     private
     function sendWithId(actionId as String) as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_266_60_287_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 267 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_266_60_287_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_266_60_287_4_stop" ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_316_60_337_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 317 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_316_60_337_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_316_60_337_4_stop" ]
         %client.1 = local;
-        symbol [ client %client.1 267 12 18 ];
-        symbol [ _view %tmp.2 267 21 26 ];
+        symbol [ client %client.1 317 12 18 ];
+        symbol [ _view %tmp.2 317 21 26 ];
         %tmp.2 = getv ? :_view;
-        symbol [ getClient %tmp.3 267 27 36 ];
+        symbol [ getClient %tmp.3 317 27 36 ];
         %tmp.3 = getv function %tmp.2 :getClient;
         %tmp.4 = invoke %tmp.2 %tmp.3();
         lputv %client.1 %tmp.4;
-        symbol [ client %client.1 267 12 18 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 268 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_268_8_270_8_if_stmt:
+        symbol [ client %client.1 317 12 18 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 318 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_318_8_320_8_if_stmt:
         %tmp.5 = lgetv %client.1;
-        symbol [ client %tmp.5 268 12 18 ];
+        symbol [ client %tmp.5 318 12 18 ];
         %tmp.6 = null;
         %tmp.7 = eq %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_268_8_270_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_268_8_270_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_268_28_270_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 269 12 ]
+        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_318_8_320_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_318_8_320_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_318_28_320_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 319 12 ]
         ret ?;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_268_28_270_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_268_8_270_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_268_8_270_8_if_end:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 272 8 ]
-        symbol [ _nonceCounter %tmp.8 272 8 21 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_318_28_320_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_318_8_320_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_318_8_320_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 322 8 ]
+        symbol [ _nonceCounter %tmp.8 322 8 21 ];
         %tmp.8 = getv self :_nonceCounter;
         %tmp.9 = 1;
         %tmp.10 = add %tmp.8 %tmp.9;
-        symbol [ _nonceCounter ? 272 8 21 ];
+        symbol [ _nonceCounter ? 322 8 21 ];
         putv self :_nonceCounter dup %tmp.10;
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 277 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_266_60_287_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_266_60_287_4_stop" ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 327 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_316_60_337_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_316_60_337_4_stop" ]
         %nonce.2 = local;
-        symbol [ nonce %nonce.2 277 12 17 ];
-        symbol [ System %tmp.11 277 20 26 ];
+        symbol [ nonce %nonce.2 327 12 17 ];
+        symbol [ System %tmp.11 327 20 26 ];
         %tmp.11 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.12 277 27 35 ];
+        symbol [ getTimer %tmp.12 327 27 35 ];
         %tmp.12 = getv function %tmp.11 :getTimer;
         %tmp.13 = invoke %tmp.11 %tmp.12();
-        symbol [ toString %tmp.14 277 38 46 ];
+        symbol [ toString %tmp.14 327 38 46 ];
         %tmp.14 = getv function %tmp.13 :toString;
         %tmp.15 = invoke %tmp.13 %tmp.14();
         %tmp.16 = "-";
         %tmp.17 = add %tmp.15 %tmp.16;
-        symbol [ _nonceCounter %tmp.19 277 57 70 ];
+        symbol [ _nonceCounter %tmp.19 327 57 70 ];
         %tmp.19 = getv ? :_nonceCounter;
-        symbol [ toString %tmp.20 277 71 79 ];
+        symbol [ toString %tmp.20 327 71 79 ];
         %tmp.20 = getv function %tmp.19 :toString;
         %tmp.21 = invoke %tmp.19 %tmp.20();
         %tmp.22 = add %tmp.17 %tmp.21;
         lputv %nonce.2 %tmp.22;
-        symbol [ nonce %nonce.2 277 12 17 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 281 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_266_60_287_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_266_60_287_4_stop" ]
+        symbol [ nonce %nonce.2 327 12 17 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 331 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_316_60_337_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_316_60_337_4_stop" ]
         %expect.3 = local;
-        symbol [ expect %expect.3 281 12 18 ];
-        symbol [ _view %tmp.24 281 21 26 ];
+        symbol [ expect %expect.3 331 12 18 ];
+        symbol [ _view %tmp.24 331 21 26 ];
         %tmp.24 = getv ? :_view;
-        symbol [ getHash %tmp.25 281 27 34 ];
+        symbol [ getHash %tmp.25 331 27 34 ];
         %tmp.25 = getv function %tmp.24 :getHash;
         %tmp.26 = invoke %tmp.24 %tmp.25();
         lputv %expect.3 %tmp.26;
-        symbol [ expect %expect.3 281 12 18 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 283 8 ]
-        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_266_60_287_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_266_60_287_4_stop" ]
+        symbol [ expect %expect.3 331 12 18 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 333 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_316_60_337_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_316_60_337_4_stop" ]
         %sent.4 = local;
-        symbol [ sent %sent.4 283 12 16 ];
+        symbol [ sent %sent.4 333 12 16 ];
         %tmp.27 = lgetv %client.1;
-        symbol [ client %tmp.27 283 19 25 ];
-        symbol [ sendAction %tmp.28 283 26 36 ];
+        symbol [ client %tmp.27 333 19 25 ];
+        symbol [ sendAction %tmp.28 333 26 36 ];
         %tmp.28 = getv function %tmp.27 :sendAction;
         %tmp.29 = lgetv %actionId;
-        symbol [ actionId %tmp.29 283 37 45 ];
+        symbol [ actionId %tmp.29 333 37 45 ];
         %tmp.30 = lgetv %nonce.2;
-        symbol [ nonce %tmp.30 283 47 52 ];
+        symbol [ nonce %tmp.30 333 47 52 ];
         %tmp.31 = lgetv %expect.3;
-        symbol [ expect %tmp.31 283 54 60 ];
+        symbol [ expect %tmp.31 333 54 60 ];
         %tmp.32 = self;
-        symbol [ method %tmp.33 283 62 68 ];
+        symbol [ method %tmp.33 333 62 68 ];
         %tmp.33 = getv function %tmp.32 :method;
         %tmp.35 = const :onActionResult;
-        symbol [ onActionResult %tmp.35 283 70 84 const ];
+        symbol [ onActionResult %tmp.35 333 70 84 const ];
         %tmp.36 = invoke %tmp.32 %tmp.33(%tmp.35);
         %tmp.37 = invoke %tmp.27 %tmp.28(%tmp.29, %tmp.30, %tmp.31, %tmp.36);
         lputv %sent.4 %tmp.37;
-        symbol [ sent %sent.4 283 12 16 ];
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 284 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_284_8_286_8_if_stmt:
+        symbol [ sent %sent.4 333 12 16 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 334 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_334_8_336_8_if_stmt:
         %tmp.38 = lgetv %sent.4;
-        symbol [ sent %tmp.38 284 13 17 ];
+        symbol [ sent %tmp.38 334 13 17 ];
         %tmp.39 = not %tmp.38;
-        bf %tmp.39 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_284_8_286_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_284_8_286_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_284_19_286_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 285 12 ]
-        symbol [ _view %tmp.41 285 12 17 ];
+        bf %tmp.39 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_334_8_336_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_334_8_336_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_334_19_336_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 335 12 ]
+        symbol [ _view %tmp.41 335 12 17 ];
         %tmp.41 = getv ? :_view;
-        symbol [ setMessage %tmp.42 285 18 28 ];
+        symbol [ setMessage %tmp.42 335 18 28 ];
         %tmp.42 = getv function %tmp.41 :setMessage;
         %tmp.43 = "Busy";
         invoke %tmp.41 %tmp.42(%tmp.43);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_284_19_286_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_284_8_286_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_284_8_286_8_if_end:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_266_60_287_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_334_19_336_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_334_8_336_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_334_8_336_8_if_end:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_316_60_337_4_stop:
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 289; @symbol_functiondef = [onActionResult,289,20,34]; @symbol_param<0> = [success,289,35,42]; @symbol_param<0>_type<0> = [Boolean,289,46,53]; @symbol_param<1> = [message,289,55,62]; @symbol_param<1>_type<0> = [String,289,66,72]; ]
+    //! Send text the rider typed on the device keyboard.
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 340; @symbol_functiondef = [onTextEntered,340,20,33]; @symbol_param<0> = [text,340,34,38]; @symbol_param<0>_type<0> = [String,340,42,48]; ]
+    public
+    function onTextEntered(text as String) as Void {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_340_58_355_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 341 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_340_58_355_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_340_58_355_4_stop" ]
+        %client.1 = local;
+        symbol [ client %client.1 341 12 18 ];
+        symbol [ _view %tmp.2 341 21 26 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ getClient %tmp.3 341 27 36 ];
+        %tmp.3 = getv function %tmp.2 :getClient;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        lputv %client.1 %tmp.4;
+        symbol [ client %client.1 341 12 18 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 342 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_342_8_344_8_if_stmt:
+        %tmp.5 = lgetv %client.1;
+        symbol [ client %tmp.5 342 12 18 ];
+        %tmp.6 = null;
+        %tmp.7 = eq %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_342_8_344_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_342_8_344_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_342_28_344_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 343 12 ]
+        ret ?;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_342_28_344_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_342_8_344_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_342_8_344_8_if_end:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 346 8 ]
+        symbol [ _nonceCounter %tmp.8 346 8 21 ];
+        %tmp.8 = getv self :_nonceCounter;
+        %tmp.9 = 1;
+        %tmp.10 = add %tmp.8 %tmp.9;
+        symbol [ _nonceCounter ? 346 8 21 ];
+        putv self :_nonceCounter dup %tmp.10;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 347 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_340_58_355_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_340_58_355_4_stop" ]
+        %nonce.2 = local;
+        symbol [ nonce %nonce.2 347 12 17 ];
+        symbol [ System %tmp.11 347 20 26 ];
+        %tmp.11 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.12 347 27 35 ];
+        %tmp.12 = getv function %tmp.11 :getTimer;
+        %tmp.13 = invoke %tmp.11 %tmp.12();
+        symbol [ toString %tmp.14 347 38 46 ];
+        %tmp.14 = getv function %tmp.13 :toString;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        %tmp.16 = "-";
+        %tmp.17 = add %tmp.15 %tmp.16;
+        symbol [ _nonceCounter %tmp.19 347 57 70 ];
+        %tmp.19 = getv ? :_nonceCounter;
+        symbol [ toString %tmp.20 347 71 79 ];
+        %tmp.20 = getv function %tmp.19 :toString;
+        %tmp.21 = invoke %tmp.19 %tmp.20();
+        %tmp.22 = add %tmp.17 %tmp.21;
+        lputv %nonce.2 %tmp.22;
+        symbol [ nonce %nonce.2 347 12 17 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 349 8 ]
+        symbol [ _view %tmp.24 349 8 13 ];
+        %tmp.24 = getv ? :_view;
+        symbol [ setMessage %tmp.25 349 14 24 ];
+        %tmp.25 = getv function %tmp.24 :setMessage;
+        %tmp.26 = "Sending…";
+        invoke %tmp.24 %tmp.25(%tmp.26);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 351 8 ]
+        [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_340_58_355_4_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_340_58_355_4_stop" ]
+        %sent.3 = local;
+        symbol [ sent %sent.3 351 12 16 ];
+        %tmp.27 = lgetv %client.1;
+        symbol [ client %tmp.27 351 19 25 ];
+        symbol [ sendText %tmp.28 351 26 34 ];
+        %tmp.28 = getv function %tmp.27 :sendText;
+        %tmp.29 = lgetv %text;
+        symbol [ text %tmp.29 351 35 39 ];
+        %tmp.30 = lgetv %nonce.2;
+        symbol [ nonce %tmp.30 351 41 46 ];
+        %tmp.31 = self;
+        symbol [ method %tmp.32 351 48 54 ];
+        %tmp.32 = getv function %tmp.31 :method;
+        %tmp.34 = const :onActionResult;
+        symbol [ onActionResult %tmp.34 351 56 70 const ];
+        %tmp.35 = invoke %tmp.31 %tmp.32(%tmp.34);
+        %tmp.36 = invoke %tmp.27 %tmp.28(%tmp.29, %tmp.30, %tmp.35);
+        lputv %sent.3 %tmp.36;
+        symbol [ sent %sent.3 351 12 16 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 352 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_352_8_354_8_if_stmt:
+        %tmp.37 = lgetv %sent.3;
+        symbol [ sent %tmp.37 352 13 17 ];
+        %tmp.38 = not %tmp.37;
+        bf %tmp.38 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_352_8_354_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_352_8_354_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_352_19_354_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 353 12 ]
+        symbol [ _view %tmp.40 353 12 17 ];
+        %tmp.40 = getv ? :_view;
+        symbol [ setMessage %tmp.41 353 18 28 ];
+        %tmp.41 = getv function %tmp.40 :setMessage;
+        %tmp.42 = "Busy";
+        invoke %tmp.40 %tmp.41(%tmp.42);
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_352_19_354_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_352_8_354_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_352_8_354_8_if_end:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_340_58_355_4_stop:
+    }
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 357; @symbol_functiondef = [onActionResult,357,20,34]; @symbol_param<0> = [success,357,35,42]; @symbol_param<0>_type<0> = [Boolean,357,46,53]; @symbol_param<1> = [message,357,55,62]; @symbol_param<1>_type<0> = [String,357,66,72]; ]
     public
     function onActionResult(success as Boolean, message as String or Null) as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_289_83_299_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 290 8 ]
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_290_8_298_8_if_stmt:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_357_83_367_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 358 8 ]
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_358_8_366_8_if_stmt:
         %tmp.1 = lgetv %success;
-        symbol [ success %tmp.1 290 12 19 ];
-        bf %tmp.1 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_290_8_298_8_if_else_false;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_290_8_298_8_if_true:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_290_21_296_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 291 12 ]
-        symbol [ _view %tmp.3 291 12 17 ];
+        symbol [ success %tmp.1 358 12 19 ];
+        bf %tmp.1 @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_358_8_366_8_if_else_false;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_358_8_366_8_if_true:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_358_21_364_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 359 12 ]
+        symbol [ _view %tmp.3 359 12 17 ];
         %tmp.3 = getv ? :_view;
-        symbol [ setMessage %tmp.4 291 18 28 ];
+        symbol [ setMessage %tmp.4 359 18 28 ];
         %tmp.4 = getv function %tmp.3 :setMessage;
         %tmp.5 = null;
         invoke %tmp.3 %tmp.4(%tmp.5);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 295 12 ]
-        symbol [ _view %tmp.7 295 12 17 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 363 12 ]
+        symbol [ _view %tmp.7 363 12 17 ];
         %tmp.7 = getv ? :_view;
-        symbol [ forceRefresh %tmp.8 295 18 30 ];
+        symbol [ forceRefresh %tmp.8 363 18 30 ];
         %tmp.8 = getv function %tmp.7 :forceRefresh;
         invoke %tmp.7 %tmp.8();
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_290_21_296_8_stop:
-        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_290_8_298_8_if_end;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_290_8_298_8_if_else_false:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_296_15_298_8_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 297 12 ]
-        symbol [ _view %tmp.10 297 12 17 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_358_21_364_8_stop:
+        goto @_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_358_8_366_8_if_end;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_358_8_366_8_if_else_false:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_364_15_366_8_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 365 12 ]
+        symbol [ _view %tmp.10 365 12 17 ];
         %tmp.10 = getv ? :_view;
-        symbol [ setMessage %tmp.11 297 18 28 ];
+        symbol [ setMessage %tmp.11 365 18 28 ];
         %tmp.11 = getv function %tmp.10 :setMessage;
         %tmp.12 = lgetv %message;
-        symbol [ message %tmp.12 297 29 36 ];
+        symbol [ message %tmp.12 365 29 36 ];
         invoke %tmp.10 %tmp.11(%tmp.12);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_296_15_298_8_stop:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_290_8_298_8_if_end:
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_289_83_299_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_364_15_366_8_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_358_8_366_8_if_end:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_357_83_367_4_stop:
     }
 }
 //! Bridges Menu2 selections back to the terminal delegate.
-[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 303; @symbol_classdef = [MenuDelegate,303,6,18]; @symbol_extends<0> = [WatchUi,303,27,34]; @symbol_extends<1> = [Menu2InputDelegate,303,35,53]; ]
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 371; @symbol_classdef = [MenuDelegate,371,6,18]; @symbol_extends<0> = [WatchUi,371,27,34]; @symbol_extends<1> = [Menu2InputDelegate,371,35,53]; ]
 class MenuDelegate extends WatchUi.Menu2InputDelegate {
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 303; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 371; ]
     <init> {
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 303; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 371; ]
     static
     <init> {
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 305; @position = 16; @symbol_vardef = [_owner,305,16,22]; @symbol_type<0> = [TerminalDelegate,305,26,42]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 373; @position = 16; @symbol_vardef = [_owner,373,16,22]; @symbol_type<0> = [TerminalDelegate,373,26,42]; ]
     private
     var _owner as TerminalDelegate;
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 307; @symbol_functiondef = [initialize,307,20,30]; @symbol_param<0> = [owner,307,31,36]; @symbol_param<0>_type<0> = [TerminalDelegate,307,40,56]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 375; @symbol_functiondef = [initialize,375,20,30]; @symbol_param<0> = [owner,375,31,36]; @symbol_param<0>_type<0> = [TerminalDelegate,375,40,56]; ]
     public
     function initialize(owner as TerminalDelegate) as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_307_58_310_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 308 8 ]
-        symbol [ Menu2InputDelegate %tmp.2 308 8 26 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_375_58_378_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 376 8 ]
+        symbol [ Menu2InputDelegate %tmp.2 376 8 26 ];
         %tmp.2 = getv ? :Menu2InputDelegate;
-        symbol [ initialize %tmp.3 308 27 37 ];
+        symbol [ initialize %tmp.3 376 27 37 ];
         %tmp.3 = getv function %tmp.2 :initialize;
         invoke %tmp.2 %tmp.3();
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 309 8 ]
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 377 8 ]
         %tmp.4 = lgetv %owner;
-        symbol [ owner %tmp.4 309 17 22 ];
-        symbol [ _owner ? 309 8 14 ];
+        symbol [ owner %tmp.4 377 17 22 ];
+        symbol [ _owner ? 377 8 14 ];
         putv self :_owner %tmp.4;
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_307_58_310_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_375_58_378_4_stop:
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 312; @symbol_functiondef = [onSelect,312,20,28]; @symbol_param<0> = [item,312,29,33]; @symbol_param<0>_type<0> = [WatchUi,312,37,44]; @symbol_param<0>_type<1> = [MenuItem,312,45,53]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 380; @symbol_functiondef = [onSelect,380,20,28]; @symbol_param<0> = [item,380,29,33]; @symbol_param<0>_type<0> = [WatchUi,380,37,44]; @symbol_param<0>_type<1> = [MenuItem,380,45,53]; ]
     public
     function onSelect(item as WatchUi.MenuItem) as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_312_63_315_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 313 8 ]
-        symbol [ WatchUi %tmp.1 313 8 15 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_380_63_383_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 381 8 ]
+        symbol [ WatchUi %tmp.1 381 8 15 ];
         %tmp.1 = getm $.Toybox.WatchUi;
-        symbol [ popView %tmp.2 313 16 23 ];
+        symbol [ popView %tmp.2 381 16 23 ];
         %tmp.2 = getv function %tmp.1 :popView;
-        symbol [ WatchUi %tmp.3 313 24 31 ];
+        symbol [ WatchUi %tmp.3 381 24 31 ];
         %tmp.3 = getm $.Toybox.WatchUi;
-        symbol [ SLIDE_DOWN %tmp.4 313 32 42 ];
+        symbol [ SLIDE_DOWN %tmp.4 381 32 42 ];
         %tmp.4 = getv %tmp.3 :SLIDE_DOWN;
         invoke %tmp.1 %tmp.2(%tmp.4);
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 314 8 ]
-        symbol [ _owner %tmp.6 314 8 14 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 382 8 ]
+        symbol [ _owner %tmp.6 382 8 14 ];
         %tmp.6 = getv ? :_owner;
-        symbol [ onMenuItem %tmp.7 314 15 25 ];
+        symbol [ onMenuItem %tmp.7 382 15 25 ];
         %tmp.7 = getv function %tmp.6 :onMenuItem;
         %tmp.8 = lgetv %item;
-        symbol [ item %tmp.8 314 26 30 ];
-        symbol [ getId %tmp.9 314 31 36 ];
+        symbol [ item %tmp.8 382 26 30 ];
+        symbol [ getId %tmp.9 382 31 36 ];
         %tmp.9 = getv function %tmp.8 :getId;
         %tmp.10 = invoke %tmp.8 %tmp.9();
         invoke %tmp.6 %tmp.7(%tmp.10);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_312_63_315_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_380_63_383_4_stop:
     }
-    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 317; @symbol_functiondef = [onBack,317,20,26]; ]
+    [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 385; @symbol_functiondef = [onBack,385,20,26]; ]
     public
     function onBack() as Void {
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_317_37_319_4_start:
-[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 318 8 ]
-        symbol [ WatchUi %tmp.1 318 8 15 ];
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_385_37_387_4_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc" 386 8 ]
+        symbol [ WatchUi %tmp.1 386 8 15 ];
         %tmp.1 = getm $.Toybox.WatchUi;
-        symbol [ popView %tmp.2 318 16 23 ];
+        symbol [ popView %tmp.2 386 16 23 ];
         %tmp.2 = getv function %tmp.1 :popView;
-        symbol [ WatchUi %tmp.3 318 24 31 ];
+        symbol [ WatchUi %tmp.3 386 24 31 ];
         %tmp.3 = getm $.Toybox.WatchUi;
-        symbol [ SLIDE_DOWN %tmp.4 318 32 42 ];
+        symbol [ SLIDE_DOWN %tmp.4 386 32 42 ];
         %tmp.4 = getv %tmp.3 :SLIDE_DOWN;
         invoke %tmp.1 %tmp.2(%tmp.4);
-_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_317_37_319_4_stop:
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_TerminalDelegate_mc_385_37_387_4_stop:
     }
 }
 [ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/TerminalDelegate.mc"; @line = 1; ]

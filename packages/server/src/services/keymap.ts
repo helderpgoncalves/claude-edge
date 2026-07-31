@@ -35,6 +35,8 @@
 
 import type { ActionInfo, PendingPrompt } from '@claude-edge/shared';
 
+import { DESTRUCTIVE_LABELS, containsAny } from './detect.ts';
+
 export type ActionCategory = 'navigation' | 'response' | 'control' | 'prompt';
 
 export interface KeyAction {
@@ -229,18 +231,9 @@ export function buildSelectSequence(
 export function isDestructiveOption(prompt: PendingPrompt, index: number): boolean {
   const option = prompt.o[index];
   if (!option) return false;
-  const label = option.l
-    .toLowerCase()
-    .replace(/[‘’ʼ]/g, "'")
-    .replace(/\s+/g, ' ');
-  return [
-    "don't ask again",
-    'yes to all',
-    'yes all',
-    'always allow',
-    'accept edits',
-    'bypass',
-  ].some((phrase) => label.includes(phrase));
+  // Same list and same normalisation the detector uses, so an option cannot be
+  // flagged dangerous on screen and accepted as ordinary by the write path.
+  return containsAny(option.l, DESTRUCTIVE_LABELS);
 }
 
 /** The action catalogue in the compact shape the device consumes. */

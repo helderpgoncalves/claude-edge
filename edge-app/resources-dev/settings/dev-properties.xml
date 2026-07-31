@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Development defaults, layered over resources/settings/properties.xml when the
+  app is built with the dev flag (see scripts/build-edge.sh).
+
+  This exists because entering a URL and a 43-character token by hand in the
+  simulator's settings editor is slow and has to be repeated every time app data
+  is reset. With these compiled in, the app connects to a local bridge the
+  moment it launches.
+
+  NEVER ship this. The build script includes it only for dev builds, and the
+  token below is the well-known development one from docker/compose.dev.yaml —
+  not a secret, and useless against any real deployment.
+-->
+<resources>
+    <properties>
+        <!-- The simulator allows plain HTTP; a real device does not. -->
+        <property id="serverUrl" type="string">http://127.0.0.1:8787</property>
+        <property id="authToken" type="string">dev-write-token-dev-write-token-dev-wr</property>
+        <property id="sessionName" type="string"></property>
+        <property id="pollMode" type="number">0</property>
+        <property id="pollSeconds" type="number">5</property>
+        <property id="fontSize" type="number">0</property>
+        <property id="confirmDestructive" type="boolean">true</property>
+        <property id="vibrateOnPrompt" type="boolean">true</property>
+    </properties>
+</resources>

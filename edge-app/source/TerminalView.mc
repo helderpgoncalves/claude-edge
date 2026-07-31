@@ -59,6 +59,14 @@ class TerminalView extends WatchUi.View {
     private var _cols as Number = 40;
     private var _headerHeight as Number = 16;
 
+    //! Which prompt option the up/down buttons currently sit on.
+    //!
+    //! Held on the device rather than mirrored from the pane: the rider's
+    //! highlight is a local intention that has not been sent anywhere yet, and
+    //! reading it back from the terminal would make it jump around as Claude
+    //! Code redraws.
+    private var _highlighted as Number = 0;
+
     // --- Scrollback and polling.
     private var _offset as Number = 0;
     private var _totalLines as Number = 0;
@@ -229,7 +237,17 @@ class TerminalView extends WatchUi.View {
         }
 
         var prompt = data.get("p");
+        var previous = _prompt;
         _prompt = (prompt instanceof Dictionary) ? prompt as Dictionary : null;
+
+        // Reset the highlight when a *different* prompt appears, but leave it
+        // alone while the same one is on screen. Otherwise every poll would
+        // snap the rider's selection back to the first option mid-decision.
+        if (_prompt == null) {
+            _highlighted = 0;
+        } else if (previous == null || !samePrompt(previous, _prompt as Dictionary)) {
+            _highlighted = 0;
+        }
 
         var suggestion = data.get("n");
         var suggestionS = (suggestion instanceof Number) ? suggestion as Number : 5;
@@ -241,15 +259,21 @@ class TerminalView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
 
-    //! Vibrate once when the session starts needing a human.
+    //! Alert the rider when the session starts needing a human.
     //!
-    //! Guarded by _alerted so a session that sits blocked for minutes buzzes
-    //! once rather than on every poll — the difference between a useful nudge
-    //! and something the rider disables immediately.
+    //! Both a tone and a vibration, because neither alone is reliable on a
+    //! bicycle: vibration is easily lost through bar tape and gloves, and a
+    //! tone can vanish into traffic or wind noise. Together one of them lands.
+    //!
+    //! Guarded by _alerted so a session that sits blocked for several minutes
+    //! alerts once rather than on every poll. That distinction is what keeps
+    //! the feature from being the first thing a rider turns off.
     private function maybeAlert() as Void {
         var blocking = (_state == STATE_AWAITING_PERMISSION) || (_state == STATE_AWAITING_INPUT);
 
         if (!blocking) {
+            // Re-arm only once the session stops blocking, so the next prompt
+            // alerts again.
             _alerted = false;
             return;
         }
@@ -258,8 +282,25 @@ class TerminalView extends WatchUi.View {
         }
         _alerted = true;
 
+        // Both are guarded with `has`: tones and the vibration motor are
+        // device-dependent, and calling a missing symbol is a runtime crash
+        // rather than a no-op.
+        if (Attention has :playTone) {
+            // ATTENTION_TONE_ALERT_HI is short and distinctly not a navigation
+            // or lap-split sound, so it is not confused with the unit's own
+            // alerts. It also respects the device's sound setting, which means
+            // a rider who has silenced their Edge stays silenced.
+            Attention.playTone(Attention.TONE_ALERT_HI);
+        }
+
         if (Attention has :vibrate) {
-            Attention.vibrate([new Attention.VibeProfile(75, 300)]);
+            // Two short pulses rather than one long buzz: a single pulse reads
+            // as an incidental bump, a double is recognisably deliberate.
+            Attention.vibrate([
+                new Attention.VibeProfile(80, 250),
+                new Attention.VibeProfile(0, 120),
+                new Attention.VibeProfile(80, 250),
+            ]);
         }
     }
 
@@ -270,6 +311,58 @@ class TerminalView extends WatchUi.View {
         if (value.equals("awaiting_input")) { return STATE_AWAITING_INPUT; }
         if (value.equals("no_session")) { return STATE_NO_SESSION; }
         return STATE_UNKNOWN;
+    }
+
+    //! Are these the same prompt, for the purpose of keeping the highlight?
+    //! Compared on the question text, which is stable while the spinner and
+    //! token counters around it are not.
+    private function samePrompt(a as Dictionary, b as Dictionary) as Boolean {
+        var qa = a.get("q");
+        var qb = b.get("q");
+        if (qa instanceof String && qb instanceof String) {
+            return (qa as String).equals(qb as String);
+        }
+        return false;
+    }
+
+    // ------------------------------------------------- prompt option highlight
+
+    //! Move the highlight by `delta`, clamped to the options available.
+    //!
+    //! Clamped rather than wrapped: wrapping past the end onto "Yes" is exactly
+    //! the surprise you do not want when the rider is pressing down repeatedly
+    //! to reach "No".
+    public function moveHighlight(delta as Number) as Void {
+        var prompt = _prompt;
+        if (prompt == null) {
+            return;
+        }
+
+        var options = prompt.get("o");
+        if (!(options instanceof Array)) {
+            return;
+        }
+
+        var count = (options as Array).size();
+        if (count == 0) {
+            return;
+        }
+
+        var next = _highlighted + delta;
+        if (next < 0) {
+            next = 0;
+        } else if (next >= count) {
+            next = count - 1;
+        }
+
+        if (next != _highlighted) {
+            _highlighted = next;
+            WatchUi.requestUpdate();
+        }
+    }
+
+    public function getHighlightedOption() as Number {
+        return _highlighted;
     }
 
     // ------------------------------------------------------------- scrolling
@@ -387,13 +480,96 @@ class TerminalView extends WatchUi.View {
         var start = _lines.size() > textRows ? _lines.size() - textRows : 0;
 
         for (var i = start; i < _lines.size(); i++) {
-            dc.drawText(SIDE_PAD, y, _font, _lines[i], Graphics.TEXT_JUSTIFY_LEFT);
+            var line = _lines[i];
+
+            // Skip the lines the prompt panel is already showing. On a 30-column
+            // screen the question and its options take a third of the display,
+            // and printing them twice pushes the context that explains *what*
+            // is being approved — the diff, the command — off the top.
+            if (prompt != null && isEchoedByPrompt(line, prompt)) {
+                continue;
+            }
+
+            dc.drawText(SIDE_PAD, y, _font, line, Graphics.TEXT_JUSTIFY_LEFT);
             y += _lineHeight;
         }
 
         if (prompt != null) {
             drawPrompt(dc, prompt, dc.getHeight() - (promptRows * _lineHeight));
         }
+    }
+
+    //! Would this terminal line duplicate something the prompt panel shows?
+    //!
+    //! Compared on a normalised prefix rather than exactly, because the
+    //! terminal copy is wrapped to the screen while the panel's is the whole
+    //! string, so the two are rarely character-identical.
+    private function isEchoedByPrompt(line as String, prompt as Dictionary) as Boolean {
+        var trimmed = trimSpaces(line);
+        if (trimmed.length() < 4) {
+            return false;
+        }
+
+        var question = prompt.get("q");
+        if (question instanceof String) {
+            var q = trimSpaces(question as String);
+            if (q.length() >= 4) {
+                var head = q.length() < trimmed.length() ? q : trimmed;
+                var n = head.length() < 12 ? head.length() : 12;
+                if (q.substring(0, n).equals(trimmed.substring(0, n))) {
+                    return true;
+                }
+            }
+        }
+
+        // The option row, and the keyboard hint below it.
+        if (trimmed.equals("Esc to cancel") || trimmed.equals("Enter to select")) {
+            return true;
+        }
+
+        var options = prompt.get("o");
+        if (options instanceof Array) {
+            var list = options as Array;
+            if (list.size() > 0) {
+                var first = list[0];
+                if (first instanceof Dictionary) {
+                    var label = (first as Dictionary).get("l");
+                    // The rendered row starts with the cursor and the first
+                    // option, so matching that identifies the whole row.
+                    if (label instanceof String && (label as String).length() >= 2) {
+                        var prefix = (label as String).substring(0, 2);
+                        if (trimmed.length() >= 2 && trimmed.substring(0, 2).equals(prefix)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //! Strip leading and trailing spaces. Monkey C has no String.trim().
+    private function trimSpaces(text as String) as String {
+        var chars = text.toCharArray();
+        var start = 0;
+        var end = chars.size();
+
+        while (start < end && (chars[start] == ' ' || chars[start] == '\t')) {
+            start++;
+        }
+        while (end > start && (chars[end - 1] == ' ' || chars[end - 1] == '\t')) {
+            end--;
+        }
+        if (start == 0 && end == chars.size()) {
+            return text;
+        }
+
+        var out = "";
+        for (var i = start; i < end; i++) {
+            out += chars[i].toString();
+        }
+        return out;
     }
 
     private function promptHeightRows(prompt as Dictionary) as Number {
@@ -447,12 +623,27 @@ class TerminalView extends WatchUi.View {
                 continue;
             }
 
-            dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_TRANSPARENT);
+            var selected = (i == _highlighted);
+
+            // The highlighted row is drawn as a filled bar with inverted text.
+            // Colour alone would not carry: this is read in direct sunlight, at
+            // a glance, on a transflective display.
+            if (selected) {
+                dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(0, y, width, _lineHeight);
+                dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
+            } else {
+                dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_TRANSPARENT);
+            }
+
+            // A cursor glyph as well as the highlight, so the selection is
+            // unambiguous even where the fill is hard to see.
+            var marker = selected ? ">" : " ";
             dc.drawText(
                 SIDE_PAD,
                 y,
                 _font,
-                (i + 1).toString() + " " + truncate(label as String, _cols - 2),
+                marker + truncate(label as String, _cols - 2),
                 Graphics.TEXT_JUSTIFY_LEFT
             );
             y += _lineHeight;

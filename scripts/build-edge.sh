@@ -5,6 +5,7 @@
 #   ./scripts/build-edge.sh edge1050        # one specific device
 #   ./scripts/build-edge.sh --all           # every supported device
 #   ./scripts/build-edge.sh --package       # a signed .iq for the store
+#   ./scripts/build-edge.sh --dev [device]  # with development defaults baked in
 #
 # Reports each binary's size against the device's memory limit, because a build
 # that succeeds can still be too large to install.
@@ -90,11 +91,20 @@ PY
 build_one() {
   local device="$1"
   local out="$OUT_DIR/$device.prg"
+  local jungles="$APP_DIR/monkey.jungle"
+
+  # A dev build layers in resources-dev, which carries a compiled-in server URL
+  # and token so the simulator connects on launch instead of needing them typed
+  # in by hand after every app-data reset.
+  if [[ "${DEV_BUILD:-0}" == "1" ]]; then
+    jungles="$jungles;$APP_DIR/dev.jungle"
+    out="$OUT_DIR/$device-dev.prg"
+  fi
 
   printf '%-14s ' "$device"
 
   if ! output="$("$MONKEYC" \
-        --jungles "$APP_DIR/monkey.jungle" \
+        --jungles "$jungles" \
         --device "$device" \
         --output "$out" \
         --private-key "$KEY" \
@@ -126,6 +136,13 @@ build_one() {
 
 # --- main ---------------------------------------------------------------------
 mkdir -p "$OUT_DIR"
+
+# --dev is a modifier, not a mode: consume it and continue with the rest.
+if [[ "${1:-}" == "--dev" ]]; then
+  export DEV_BUILD=1
+  shift
+  echo "Development build: bundling resources-dev (never ship this)"
+fi
 
 case "${1:-$DEFAULT_DEVICE}" in
   --all)

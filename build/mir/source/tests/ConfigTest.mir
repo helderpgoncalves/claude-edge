@@ -1,0 +1,734 @@
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 1; @symbol_importdef<0> = [Toybox,1,7,13]; @symbol_importdef<1> = [Lang,1,14,18]; ]
+import Toybox.Lang;
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 2; @symbol_importdef<0> = [Toybox,2,7,13]; @symbol_importdef<1> = [Test,2,14,18]; ]
+import Toybox.Test;
+//! Unit tests for Config, run on-device (or in the simulator) by the Connect IQ
+//! test runner:
+//!
+//!     ./scripts/test-edge.sh
+//!
+//! These cover the logic that decides whether the app will talk to a server at
+//! all, and how often. Both are easy to get subtly wrong and awkward to notice
+//! by looking at the screen: a URL validator that is too strict silently
+//! refuses a working deployment, and a poll interval that is not clamped lets a
+//! remote server drain the battery.
+//!
+//! Functions carrying (:test) are excluded from ordinary builds, so none of
+//! this ships.
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 21; test = true; @symbol_functiondef = [testTrimRemovesSurroundingSpaces,21,9,41]; @symbol_param<0> = [logger,21,42,48]; @symbol_param<0>_type<0> = [Test,21,52,56]; @symbol_param<0>_type<1> = [Logger,21,57,63]; @symbol_return<0> = [Boolean,21,68,75]; ]
+function testTrimRemovesSurroundingSpaces(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_21_76_26_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 22 4 ]
+    symbol [ Test %tmp.1 22 4 8 ];
+    %tmp.1 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.2 22 9 27 ];
+    %tmp.2 = getv function %tmp.1 :assertEqualMessage;
+    symbol [ Config %tmp.4 22 28 34 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ trim %tmp.5 22 35 39 ];
+    %tmp.5 = getv function %tmp.4 :trim;
+    %tmp.6 = "  hello  ";
+    %tmp.7 = invoke %tmp.4 %tmp.5(%tmp.6);
+    %tmp.8 = "hello";
+    %tmp.9 = "spaces not trimmed";
+    invoke %tmp.1 %tmp.2(%tmp.7, %tmp.8, %tmp.9);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 23 4 ]
+    symbol [ Test %tmp.10 23 4 8 ];
+    %tmp.10 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.11 23 9 27 ];
+    %tmp.11 = getv function %tmp.10 :assertEqualMessage;
+    symbol [ Config %tmp.13 23 28 34 ];
+    %tmp.13 = getv ? :Config;
+    symbol [ trim %tmp.14 23 35 39 ];
+    %tmp.14 = getv function %tmp.13 :trim;
+    %tmp.15 = "\thello\t";
+    %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+    %tmp.17 = "hello";
+    %tmp.18 = "tabs not trimmed";
+    invoke %tmp.10 %tmp.11(%tmp.16, %tmp.17, %tmp.18);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 24 4 ]
+    symbol [ Test %tmp.19 24 4 8 ];
+    %tmp.19 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.20 24 9 27 ];
+    %tmp.20 = getv function %tmp.19 :assertEqualMessage;
+    symbol [ Config %tmp.22 24 28 34 ];
+    %tmp.22 = getv ? :Config;
+    symbol [ trim %tmp.23 24 35 39 ];
+    %tmp.23 = getv function %tmp.22 :trim;
+    %tmp.24 = "hello";
+    %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+    %tmp.26 = "hello";
+    %tmp.27 = "clean input was altered";
+    invoke %tmp.19 %tmp.20(%tmp.25, %tmp.26, %tmp.27);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 25 4 ]
+    %tmp.28 = true;
+    ret %tmp.28;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_21_76_26_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 29; test = true; @symbol_functiondef = [testTrimHandlesEdgeCases,29,9,33]; @symbol_param<0> = [logger,29,34,40]; @symbol_param<0>_type<0> = [Test,29,44,48]; @symbol_param<0>_type<1> = [Logger,29,49,55]; @symbol_return<0> = [Boolean,29,60,67]; ]
+function testTrimHandlesEdgeCases(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_29_68_35_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 30 4 ]
+    symbol [ Test %tmp.1 30 4 8 ];
+    %tmp.1 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.2 30 9 27 ];
+    %tmp.2 = getv function %tmp.1 :assertEqualMessage;
+    symbol [ Config %tmp.4 30 28 34 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ trim %tmp.5 30 35 39 ];
+    %tmp.5 = getv function %tmp.4 :trim;
+    %tmp.6 = "";
+    %tmp.7 = invoke %tmp.4 %tmp.5(%tmp.6);
+    %tmp.8 = "";
+    %tmp.9 = "empty string";
+    invoke %tmp.1 %tmp.2(%tmp.7, %tmp.8, %tmp.9);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 31 4 ]
+    symbol [ Test %tmp.10 31 4 8 ];
+    %tmp.10 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.11 31 9 27 ];
+    %tmp.11 = getv function %tmp.10 :assertEqualMessage;
+    symbol [ Config %tmp.13 31 28 34 ];
+    %tmp.13 = getv ? :Config;
+    symbol [ trim %tmp.14 31 35 39 ];
+    %tmp.14 = getv function %tmp.13 :trim;
+    %tmp.15 = "   ";
+    %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+    %tmp.17 = "";
+    %tmp.18 = "all whitespace";
+    invoke %tmp.10 %tmp.11(%tmp.16, %tmp.17, %tmp.18);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 33 4 ]
+    symbol [ Test %tmp.19 33 4 8 ];
+    %tmp.19 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.20 33 9 27 ];
+    %tmp.20 = getv function %tmp.19 :assertEqualMessage;
+    symbol [ Config %tmp.22 33 28 34 ];
+    %tmp.22 = getv ? :Config;
+    symbol [ trim %tmp.23 33 35 39 ];
+    %tmp.23 = getv function %tmp.22 :trim;
+    %tmp.24 = " a b ";
+    %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+    %tmp.26 = "a b";
+    %tmp.27 = "interior space lost";
+    invoke %tmp.19 %tmp.20(%tmp.25, %tmp.26, %tmp.27);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 34 4 ]
+    %tmp.28 = true;
+    ret %tmp.28;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_29_68_35_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 38; test = true; @symbol_functiondef = [testTrimStripsPastedNewlines,38,9,37]; @symbol_param<0> = [logger,38,38,44]; @symbol_param<0>_type<0> = [Test,38,48,52]; @symbol_param<0>_type<1> = [Logger,38,53,59]; @symbol_return<0> = [Boolean,38,64,71]; ]
+function testTrimStripsPastedNewlines(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_38_72_44_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 41 4 ]
+    symbol [ Test %tmp.1 41 4 8 ];
+    %tmp.1 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.2 41 9 27 ];
+    %tmp.2 = getv function %tmp.1 :assertEqualMessage;
+    symbol [ Config %tmp.4 41 28 34 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ trim %tmp.5 41 35 39 ];
+    %tmp.5 = getv function %tmp.4 :trim;
+    %tmp.6 = "token\n";
+    %tmp.7 = invoke %tmp.4 %tmp.5(%tmp.6);
+    %tmp.8 = "token";
+    %tmp.9 = "trailing newline kept";
+    invoke %tmp.1 %tmp.2(%tmp.7, %tmp.8, %tmp.9);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 42 4 ]
+    symbol [ Test %tmp.10 42 4 8 ];
+    %tmp.10 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.11 42 9 27 ];
+    %tmp.11 = getv function %tmp.10 :assertEqualMessage;
+    symbol [ Config %tmp.13 42 28 34 ];
+    %tmp.13 = getv ? :Config;
+    symbol [ trim %tmp.14 42 35 39 ];
+    %tmp.14 = getv function %tmp.13 :trim;
+    %tmp.15 = "\r\ntoken\r\n";
+    %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+    %tmp.17 = "token";
+    %tmp.18 = "CRLF kept";
+    invoke %tmp.10 %tmp.11(%tmp.16, %tmp.17, %tmp.18);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 43 4 ]
+    %tmp.19 = true;
+    ret %tmp.19;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_38_72_44_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 49; test = true; @symbol_functiondef = [testStartsWith,49,9,23]; @symbol_param<0> = [logger,49,24,30]; @symbol_param<0>_type<0> = [Test,49,34,38]; @symbol_param<0>_type<1> = [Logger,49,39,45]; @symbol_return<0> = [Boolean,49,50,57]; ]
+function testStartsWith(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_49_58_56_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 50 4 ]
+    symbol [ Test %tmp.1 50 4 8 ];
+    %tmp.1 = getm $.Toybox.Test;
+    symbol [ assert %tmp.2 50 9 15 ];
+    %tmp.2 = getv function %tmp.1 :assert;
+    symbol [ Config %tmp.4 50 16 22 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ startsWith %tmp.5 50 23 33 ];
+    %tmp.5 = getv function %tmp.4 :startsWith;
+    %tmp.6 = "https://x";
+    %tmp.7 = "https://";
+    %tmp.8 = invoke %tmp.4 %tmp.5(%tmp.6, %tmp.7);
+    invoke %tmp.1 %tmp.2(%tmp.8);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 51 4 ]
+    symbol [ Test %tmp.9 51 4 8 ];
+    %tmp.9 = getm $.Toybox.Test;
+    symbol [ assert %tmp.10 51 9 15 ];
+    %tmp.10 = getv function %tmp.9 :assert;
+    symbol [ Config %tmp.12 51 17 23 ];
+    %tmp.12 = getv ? :Config;
+    symbol [ startsWith %tmp.13 51 24 34 ];
+    %tmp.13 = getv function %tmp.12 :startsWith;
+    %tmp.14 = "http://x";
+    %tmp.15 = "https://";
+    %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.14, %tmp.15);
+    %tmp.17 = not %tmp.16;
+    invoke %tmp.9 %tmp.10(%tmp.17);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 52 4 ]
+    symbol [ Test %tmp.18 52 4 8 ];
+    %tmp.18 = getm $.Toybox.Test;
+    symbol [ assert %tmp.19 52 9 15 ];
+    %tmp.19 = getv function %tmp.18 :assert;
+    symbol [ Config %tmp.21 52 17 23 ];
+    %tmp.21 = getv ? :Config;
+    symbol [ startsWith %tmp.22 52 24 34 ];
+    %tmp.22 = getv function %tmp.21 :startsWith;
+    %tmp.23 = "";
+    %tmp.24 = "https://";
+    %tmp.25 = invoke %tmp.21 %tmp.22(%tmp.23, %tmp.24);
+    %tmp.26 = not %tmp.25;
+    invoke %tmp.18 %tmp.19(%tmp.26);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 54 4 ]
+    symbol [ Test %tmp.27 54 4 8 ];
+    %tmp.27 = getm $.Toybox.Test;
+    symbol [ assert %tmp.28 54 9 15 ];
+    %tmp.28 = getv function %tmp.27 :assert;
+    symbol [ Config %tmp.30 54 17 23 ];
+    %tmp.30 = getv ? :Config;
+    symbol [ startsWith %tmp.31 54 24 34 ];
+    %tmp.31 = getv function %tmp.30 :startsWith;
+    %tmp.32 = "ht";
+    %tmp.33 = "https://";
+    %tmp.34 = invoke %tmp.30 %tmp.31(%tmp.32, %tmp.33);
+    %tmp.35 = not %tmp.34;
+    invoke %tmp.27 %tmp.28(%tmp.35);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 55 4 ]
+    %tmp.36 = true;
+    ret %tmp.36;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_49_58_56_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 61; test = true; @symbol_functiondef = [testLoopbackAccepted,61,9,29]; @symbol_param<0> = [logger,61,30,36]; @symbol_param<0>_type<0> = [Test,61,40,44]; @symbol_param<0>_type<1> = [Logger,61,45,51]; @symbol_return<0> = [Boolean,61,56,63]; ]
+function testLoopbackAccepted(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_61_64_70_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 65 4 ]
+    symbol [ Test %tmp.1 65 4 8 ];
+    %tmp.1 = getm $.Toybox.Test;
+    symbol [ assert %tmp.2 65 9 15 ];
+    %tmp.2 = getv function %tmp.1 :assert;
+    symbol [ Config %tmp.4 65 16 22 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ isLoopback %tmp.5 65 23 33 ];
+    %tmp.5 = getv function %tmp.4 :isLoopback;
+    %tmp.6 = "http://127.0.0.1:8787";
+    %tmp.7 = invoke %tmp.4 %tmp.5(%tmp.6);
+    invoke %tmp.1 %tmp.2(%tmp.7);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 66 4 ]
+    symbol [ Test %tmp.8 66 4 8 ];
+    %tmp.8 = getm $.Toybox.Test;
+    symbol [ assert %tmp.9 66 9 15 ];
+    %tmp.9 = getv function %tmp.8 :assert;
+    symbol [ Config %tmp.11 66 16 22 ];
+    %tmp.11 = getv ? :Config;
+    symbol [ isLoopback %tmp.12 66 23 33 ];
+    %tmp.12 = getv function %tmp.11 :isLoopback;
+    %tmp.13 = "http://localhost:8787";
+    %tmp.14 = invoke %tmp.11 %tmp.12(%tmp.13);
+    invoke %tmp.8 %tmp.9(%tmp.14);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 67 4 ]
+    symbol [ Test %tmp.15 67 4 8 ];
+    %tmp.15 = getm $.Toybox.Test;
+    symbol [ assert %tmp.16 67 9 15 ];
+    %tmp.16 = getv function %tmp.15 :assert;
+    symbol [ Config %tmp.18 67 16 22 ];
+    %tmp.18 = getv ? :Config;
+    symbol [ isLoopback %tmp.19 67 23 33 ];
+    %tmp.19 = getv function %tmp.18 :isLoopback;
+    %tmp.20 = "http://127.0.0.1";
+    %tmp.21 = invoke %tmp.18 %tmp.19(%tmp.20);
+    invoke %tmp.15 %tmp.16(%tmp.21);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 68 4 ]
+    symbol [ Test %tmp.22 68 4 8 ];
+    %tmp.22 = getm $.Toybox.Test;
+    symbol [ assert %tmp.23 68 9 15 ];
+    %tmp.23 = getv function %tmp.22 :assert;
+    symbol [ Config %tmp.25 68 16 22 ];
+    %tmp.25 = getv ? :Config;
+    symbol [ isLoopback %tmp.26 68 23 33 ];
+    %tmp.26 = getv function %tmp.25 :isLoopback;
+    %tmp.27 = "http://localhost/api";
+    %tmp.28 = invoke %tmp.25 %tmp.26(%tmp.27);
+    invoke %tmp.22 %tmp.23(%tmp.28);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 69 4 ]
+    %tmp.29 = true;
+    ret %tmp.29;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_61_64_70_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 73; test = true; @symbol_functiondef = [testLoopbackRejectsImpostors,73,9,37]; @symbol_param<0> = [logger,73,38,44]; @symbol_param<0>_type<0> = [Test,73,48,52]; @symbol_param<0>_type<1> = [Logger,73,53,59]; @symbol_return<0> = [Boolean,73,64,71]; ]
+function testLoopbackRejectsImpostors(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_73_72_91_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 76 4 ]
+    symbol [ Test %tmp.1 76 4 8 ];
+    %tmp.1 = getm $.Toybox.Test;
+    symbol [ assertMessage %tmp.2 76 9 22 ];
+    %tmp.2 = getv function %tmp.1 :assertMessage;
+    symbol [ Config %tmp.4 77 9 15 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ isLoopback %tmp.5 77 16 26 ];
+    %tmp.5 = getv function %tmp.4 :isLoopback;
+    %tmp.6 = "http://127.0.0.1.attacker.example";
+    %tmp.7 = invoke %tmp.4 %tmp.5(%tmp.6);
+    %tmp.8 = not %tmp.7;
+    %tmp.9 = "a hostname beginning with 127.0.0.1 was treated as loopback";
+    invoke %tmp.1 %tmp.2(%tmp.8, %tmp.9);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 80 4 ]
+    symbol [ Test %tmp.10 80 4 8 ];
+    %tmp.10 = getm $.Toybox.Test;
+    symbol [ assertMessage %tmp.11 80 9 22 ];
+    %tmp.11 = getv function %tmp.10 :assertMessage;
+    symbol [ Config %tmp.13 81 9 15 ];
+    %tmp.13 = getv ? :Config;
+    symbol [ isLoopback %tmp.14 81 16 26 ];
+    %tmp.14 = getv function %tmp.13 :isLoopback;
+    %tmp.15 = "http://localhost.attacker.example";
+    %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+    %tmp.17 = not %tmp.16;
+    %tmp.18 = "a hostname beginning with localhost was treated as loopback";
+    invoke %tmp.10 %tmp.11(%tmp.17, %tmp.18);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 84 4 ]
+    symbol [ Test %tmp.19 84 4 8 ];
+    %tmp.19 = getm $.Toybox.Test;
+    symbol [ assertMessage %tmp.20 84 9 22 ];
+    %tmp.20 = getv function %tmp.19 :assertMessage;
+    symbol [ Config %tmp.22 85 9 15 ];
+    %tmp.22 = getv ? :Config;
+    symbol [ isLoopback %tmp.23 85 16 26 ];
+    %tmp.23 = getv function %tmp.22 :isLoopback;
+    %tmp.24 = "http://evil.com/?x=127.0.0.1";
+    %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+    %tmp.26 = not %tmp.25;
+    %tmp.27 = "loopback in a query string was treated as the host";
+    invoke %tmp.19 %tmp.20(%tmp.26, %tmp.27);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 88 4 ]
+    symbol [ Test %tmp.28 88 4 8 ];
+    %tmp.28 = getm $.Toybox.Test;
+    symbol [ assert %tmp.29 88 9 15 ];
+    %tmp.29 = getv function %tmp.28 :assert;
+    symbol [ Config %tmp.31 88 17 23 ];
+    %tmp.31 = getv ? :Config;
+    symbol [ isLoopback %tmp.32 88 24 34 ];
+    %tmp.32 = getv function %tmp.31 :isLoopback;
+    %tmp.33 = "http://192.168.1.5";
+    %tmp.34 = invoke %tmp.31 %tmp.32(%tmp.33);
+    %tmp.35 = not %tmp.34;
+    invoke %tmp.28 %tmp.29(%tmp.35);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 89 4 ]
+    symbol [ Test %tmp.36 89 4 8 ];
+    %tmp.36 = getm $.Toybox.Test;
+    symbol [ assert %tmp.37 89 9 15 ];
+    %tmp.37 = getv function %tmp.36 :assert;
+    symbol [ Config %tmp.39 89 17 23 ];
+    %tmp.39 = getv ? :Config;
+    symbol [ isLoopback %tmp.40 89 24 34 ];
+    %tmp.40 = getv function %tmp.39 :isLoopback;
+    %tmp.41 = "http://example.com";
+    %tmp.42 = invoke %tmp.39 %tmp.40(%tmp.41);
+    %tmp.43 = not %tmp.42;
+    invoke %tmp.36 %tmp.37(%tmp.43);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 90 4 ]
+    %tmp.44 = true;
+    ret %tmp.44;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_73_72_91_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 94; test = true; @symbol_functiondef = [testLoopbackRequiresHttpScheme,94,9,39]; @symbol_param<0> = [logger,94,40,46]; @symbol_param<0>_type<0> = [Test,94,50,54]; @symbol_param<0>_type<1> = [Logger,94,55,61]; @symbol_return<0> = [Boolean,94,66,73]; ]
+function testLoopbackRequiresHttpScheme(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_94_74_101_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 97 4 ]
+    symbol [ Test %tmp.1 97 4 8 ];
+    %tmp.1 = getm $.Toybox.Test;
+    symbol [ assert %tmp.2 97 9 15 ];
+    %tmp.2 = getv function %tmp.1 :assert;
+    symbol [ Config %tmp.4 97 17 23 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ isLoopback %tmp.5 97 24 34 ];
+    %tmp.5 = getv function %tmp.4 :isLoopback;
+    %tmp.6 = "https://127.0.0.1:8787";
+    %tmp.7 = invoke %tmp.4 %tmp.5(%tmp.6);
+    %tmp.8 = not %tmp.7;
+    invoke %tmp.1 %tmp.2(%tmp.8);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 98 4 ]
+    symbol [ Test %tmp.9 98 4 8 ];
+    %tmp.9 = getm $.Toybox.Test;
+    symbol [ assert %tmp.10 98 9 15 ];
+    %tmp.10 = getv function %tmp.9 :assert;
+    symbol [ Config %tmp.12 98 17 23 ];
+    %tmp.12 = getv ? :Config;
+    symbol [ isLoopback %tmp.13 98 24 34 ];
+    %tmp.13 = getv function %tmp.12 :isLoopback;
+    %tmp.14 = "127.0.0.1:8787";
+    %tmp.15 = invoke %tmp.12 %tmp.13(%tmp.14);
+    %tmp.16 = not %tmp.15;
+    invoke %tmp.9 %tmp.10(%tmp.16);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 99 4 ]
+    symbol [ Test %tmp.17 99 4 8 ];
+    %tmp.17 = getm $.Toybox.Test;
+    symbol [ assert %tmp.18 99 9 15 ];
+    %tmp.18 = getv function %tmp.17 :assert;
+    symbol [ Config %tmp.20 99 17 23 ];
+    %tmp.20 = getv ? :Config;
+    symbol [ isLoopback %tmp.21 99 24 34 ];
+    %tmp.21 = getv function %tmp.20 :isLoopback;
+    %tmp.22 = "ftp://127.0.0.1";
+    %tmp.23 = invoke %tmp.20 %tmp.21(%tmp.22);
+    %tmp.24 = not %tmp.23;
+    invoke %tmp.17 %tmp.18(%tmp.24);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 100 4 ]
+    %tmp.25 = true;
+    ret %tmp.25;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_94_74_101_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 106; test = true; @symbol_functiondef = [testAdaptiveFollowsTheServer,106,9,37]; @symbol_param<0> = [logger,106,38,44]; @symbol_param<0>_type<0> = [Test,106,48,52]; @symbol_param<0>_type<1> = [Logger,106,53,59]; @symbol_return<0> = [Boolean,106,64,71]; ]
+function testAdaptiveFollowsTheServer(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_106_72_114_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 107 4 ]
+    [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_106_72_114_0_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_106_72_114_0_stop" ]
+    %s.1 = local;
+    symbol [ s %s.1 107 8 9 ];
+    symbol [ Config %tmp.4 107 16 22 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ Settings %tmp.5 107 23 31 ];
+    %tmp.5 = getv function ? %tmp.4 :Settings;
+    %tmp.1 = newc %tmp.5 ();
+    lputv %s.1 %tmp.1;
+    symbol [ s %s.1 107 8 9 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 108 4 ]
+    %tmp.6 = lgetv %s.1;
+    symbol [ s %tmp.6 108 4 5 ];
+    symbol [ Config %tmp.8 108 17 23 ];
+    %tmp.8 = getv ? :Config;
+    symbol [ POLL_ADAPTIVE %tmp.9 108 24 37 ];
+    %tmp.9 = getv %tmp.8 :POLL_ADAPTIVE;
+    symbol [ pollMode ? 108 6 14 ];
+    putv %tmp.6 :pollMode %tmp.9;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 111 4 ]
+    symbol [ Test %tmp.10 111 4 8 ];
+    %tmp.10 = getm $.Toybox.Test;
+    symbol [ assertEqual %tmp.11 111 9 20 ];
+    %tmp.11 = getv function %tmp.10 :assertEqual;
+    symbol [ Config %tmp.13 111 21 27 ];
+    %tmp.13 = getv ? :Config;
+    symbol [ nextIntervalMs %tmp.14 111 28 42 ];
+    %tmp.14 = getv function %tmp.13 :nextIntervalMs;
+    %tmp.15 = lgetv %s.1;
+    symbol [ s %tmp.15 111 43 44 ];
+    %tmp.16 = 3;
+    %tmp.17 = invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16);
+    %tmp.18 = 3000;
+    invoke %tmp.10 %tmp.11(%tmp.17, %tmp.18);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 112 4 ]
+    symbol [ Test %tmp.19 112 4 8 ];
+    %tmp.19 = getm $.Toybox.Test;
+    symbol [ assertEqual %tmp.20 112 9 20 ];
+    %tmp.20 = getv function %tmp.19 :assertEqual;
+    symbol [ Config %tmp.22 112 21 27 ];
+    %tmp.22 = getv ? :Config;
+    symbol [ nextIntervalMs %tmp.23 112 28 42 ];
+    %tmp.23 = getv function %tmp.22 :nextIntervalMs;
+    %tmp.24 = lgetv %s.1;
+    symbol [ s %tmp.24 112 43 44 ];
+    %tmp.25 = 15;
+    %tmp.26 = invoke %tmp.22 %tmp.23(%tmp.24, %tmp.25);
+    %tmp.27 = 15000;
+    invoke %tmp.19 %tmp.20(%tmp.26, %tmp.27);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 113 4 ]
+    %tmp.28 = true;
+    ret %tmp.28;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_106_72_114_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 117; test = true; @symbol_functiondef = [testFixedModesIgnoreTheServer,117,9,38]; @symbol_param<0> = [logger,117,39,45]; @symbol_param<0>_type<0> = [Test,117,49,53]; @symbol_param<0>_type<1> = [Logger,117,54,60]; @symbol_return<0> = [Boolean,117,65,72]; ]
+function testFixedModesIgnoreTheServer(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_117_73_130_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 118 4 ]
+    [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_117_73_130_0_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_117_73_130_0_stop" ]
+    %s.1 = local;
+    symbol [ s %s.1 118 8 9 ];
+    symbol [ Config %tmp.4 118 16 22 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ Settings %tmp.5 118 23 31 ];
+    %tmp.5 = getv function ? %tmp.4 :Settings;
+    %tmp.1 = newc %tmp.5 ();
+    lputv %s.1 %tmp.1;
+    symbol [ s %s.1 118 8 9 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 120 4 ]
+    %tmp.6 = lgetv %s.1;
+    symbol [ s %tmp.6 120 4 5 ];
+    symbol [ Config %tmp.8 120 17 23 ];
+    %tmp.8 = getv ? :Config;
+    symbol [ POLL_FAST %tmp.9 120 24 33 ];
+    %tmp.9 = getv %tmp.8 :POLL_FAST;
+    symbol [ pollMode ? 120 6 14 ];
+    putv %tmp.6 :pollMode %tmp.9;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 121 4 ]
+    symbol [ Test %tmp.10 121 4 8 ];
+    %tmp.10 = getm $.Toybox.Test;
+    symbol [ assertEqual %tmp.11 121 9 20 ];
+    %tmp.11 = getv function %tmp.10 :assertEqual;
+    symbol [ Config %tmp.13 121 21 27 ];
+    %tmp.13 = getv ? :Config;
+    symbol [ nextIntervalMs %tmp.14 121 28 42 ];
+    %tmp.14 = getv function %tmp.13 :nextIntervalMs;
+    %tmp.15 = lgetv %s.1;
+    symbol [ s %tmp.15 121 43 44 ];
+    %tmp.16 = 99;
+    %tmp.17 = invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16);
+    symbol [ Config %tmp.19 121 51 57 ];
+    %tmp.19 = getv ? :Config;
+    symbol [ FAST_INTERVAL_S %tmp.20 121 58 73 ];
+    %tmp.20 = getv %tmp.19 :FAST_INTERVAL_S;
+    %tmp.21 = 1000;
+    %tmp.22 = mul %tmp.20 %tmp.21;
+    invoke %tmp.10 %tmp.11(%tmp.17, %tmp.22);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 123 4 ]
+    %tmp.23 = lgetv %s.1;
+    symbol [ s %tmp.23 123 4 5 ];
+    symbol [ Config %tmp.25 123 17 23 ];
+    %tmp.25 = getv ? :Config;
+    symbol [ POLL_SAVER %tmp.26 123 24 34 ];
+    %tmp.26 = getv %tmp.25 :POLL_SAVER;
+    symbol [ pollMode ? 123 6 14 ];
+    putv %tmp.23 :pollMode %tmp.26;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 124 4 ]
+    symbol [ Test %tmp.27 124 4 8 ];
+    %tmp.27 = getm $.Toybox.Test;
+    symbol [ assertEqual %tmp.28 124 9 20 ];
+    %tmp.28 = getv function %tmp.27 :assertEqual;
+    symbol [ Config %tmp.30 124 21 27 ];
+    %tmp.30 = getv ? :Config;
+    symbol [ nextIntervalMs %tmp.31 124 28 42 ];
+    %tmp.31 = getv function %tmp.30 :nextIntervalMs;
+    %tmp.32 = lgetv %s.1;
+    symbol [ s %tmp.32 124 43 44 ];
+    %tmp.33 = 1;
+    %tmp.34 = invoke %tmp.30 %tmp.31(%tmp.32, %tmp.33);
+    symbol [ Config %tmp.36 124 50 56 ];
+    %tmp.36 = getv ? :Config;
+    symbol [ SAVER_INTERVAL_S %tmp.37 124 57 73 ];
+    %tmp.37 = getv %tmp.36 :SAVER_INTERVAL_S;
+    %tmp.38 = 1000;
+    %tmp.39 = mul %tmp.37 %tmp.38;
+    invoke %tmp.27 %tmp.28(%tmp.34, %tmp.39);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 126 4 ]
+    %tmp.40 = lgetv %s.1;
+    symbol [ s %tmp.40 126 4 5 ];
+    symbol [ Config %tmp.42 126 17 23 ];
+    %tmp.42 = getv ? :Config;
+    symbol [ POLL_CUSTOM %tmp.43 126 24 35 ];
+    %tmp.43 = getv %tmp.42 :POLL_CUSTOM;
+    symbol [ pollMode ? 126 6 14 ];
+    putv %tmp.40 :pollMode %tmp.43;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 127 4 ]
+    %tmp.44 = lgetv %s.1;
+    symbol [ s %tmp.44 127 4 5 ];
+    %tmp.45 = 7;
+    symbol [ customIntervalS ? 127 6 21 ];
+    putv %tmp.44 :customIntervalS %tmp.45;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 128 4 ]
+    symbol [ Test %tmp.46 128 4 8 ];
+    %tmp.46 = getm $.Toybox.Test;
+    symbol [ assertEqual %tmp.47 128 9 20 ];
+    %tmp.47 = getv function %tmp.46 :assertEqual;
+    symbol [ Config %tmp.49 128 21 27 ];
+    %tmp.49 = getv ? :Config;
+    symbol [ nextIntervalMs %tmp.50 128 28 42 ];
+    %tmp.50 = getv function %tmp.49 :nextIntervalMs;
+    %tmp.51 = lgetv %s.1;
+    symbol [ s %tmp.51 128 43 44 ];
+    %tmp.52 = 99;
+    %tmp.53 = invoke %tmp.49 %tmp.50(%tmp.51, %tmp.52);
+    %tmp.54 = 7000;
+    invoke %tmp.46 %tmp.47(%tmp.53, %tmp.54);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 129 4 ]
+    %tmp.55 = true;
+    ret %tmp.55;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_117_73_130_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 133; test = true; @symbol_functiondef = [testServerCannotSetAnArbitraryRate,133,9,43]; @symbol_param<0> = [logger,133,44,50]; @symbol_param<0>_type<0> = [Test,133,54,58]; @symbol_param<0>_type<1> = [Logger,133,59,65]; @symbol_return<0> = [Boolean,133,70,77]; ]
+function testServerCannotSetAnArbitraryRate(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_133_78_155_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 134 4 ]
+    [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_133_78_155_0_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_133_78_155_0_stop" ]
+    %s.1 = local;
+    symbol [ s %s.1 134 8 9 ];
+    symbol [ Config %tmp.4 134 16 22 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ Settings %tmp.5 134 23 31 ];
+    %tmp.5 = getv function ? %tmp.4 :Settings;
+    %tmp.1 = newc %tmp.5 ();
+    lputv %s.1 %tmp.1;
+    symbol [ s %s.1 134 8 9 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 135 4 ]
+    %tmp.6 = lgetv %s.1;
+    symbol [ s %tmp.6 135 4 5 ];
+    symbol [ Config %tmp.8 135 17 23 ];
+    %tmp.8 = getv ? :Config;
+    symbol [ POLL_ADAPTIVE %tmp.9 135 24 37 ];
+    %tmp.9 = getv %tmp.8 :POLL_ADAPTIVE;
+    symbol [ pollMode ? 135 6 14 ];
+    putv %tmp.6 :pollMode %tmp.9;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 139 4 ]
+    symbol [ Test %tmp.10 139 4 8 ];
+    %tmp.10 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.11 139 9 27 ];
+    %tmp.11 = getv function %tmp.10 :assertEqualMessage;
+    symbol [ Config %tmp.13 140 8 14 ];
+    %tmp.13 = getv ? :Config;
+    symbol [ nextIntervalMs %tmp.14 140 15 29 ];
+    %tmp.14 = getv function %tmp.13 :nextIntervalMs;
+    %tmp.15 = lgetv %s.1;
+    symbol [ s %tmp.15 140 30 31 ];
+    %tmp.16 = 0;
+    %tmp.17 = invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16);
+    symbol [ Config %tmp.19 141 8 14 ];
+    %tmp.19 = getv ? :Config;
+    symbol [ MIN_INTERVAL_S %tmp.20 141 15 29 ];
+    %tmp.20 = getv %tmp.19 :MIN_INTERVAL_S;
+    %tmp.21 = 1000;
+    %tmp.22 = mul %tmp.20 %tmp.21;
+    %tmp.23 = "a zero interval was not clamped";
+    invoke %tmp.10 %tmp.11(%tmp.17, %tmp.22, %tmp.23);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 144 4 ]
+    symbol [ Test %tmp.24 144 4 8 ];
+    %tmp.24 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.25 144 9 27 ];
+    %tmp.25 = getv function %tmp.24 :assertEqualMessage;
+    symbol [ Config %tmp.27 145 8 14 ];
+    %tmp.27 = getv ? :Config;
+    symbol [ nextIntervalMs %tmp.28 145 15 29 ];
+    %tmp.28 = getv function %tmp.27 :nextIntervalMs;
+    %tmp.29 = lgetv %s.1;
+    symbol [ s %tmp.29 145 30 31 ];
+    %tmp.30 = -5;
+    %tmp.31 = invoke %tmp.27 %tmp.28(%tmp.29, %tmp.30);
+    symbol [ Config %tmp.33 146 8 14 ];
+    %tmp.33 = getv ? :Config;
+    symbol [ MIN_INTERVAL_S %tmp.34 146 15 29 ];
+    %tmp.34 = getv %tmp.33 :MIN_INTERVAL_S;
+    %tmp.35 = 1000;
+    %tmp.36 = mul %tmp.34 %tmp.35;
+    %tmp.37 = "a negative interval was not clamped";
+    invoke %tmp.24 %tmp.25(%tmp.31, %tmp.36, %tmp.37);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 149 4 ]
+    symbol [ Test %tmp.38 149 4 8 ];
+    %tmp.38 = getm $.Toybox.Test;
+    symbol [ assertEqualMessage %tmp.39 149 9 27 ];
+    %tmp.39 = getv function %tmp.38 :assertEqualMessage;
+    symbol [ Config %tmp.41 150 8 14 ];
+    %tmp.41 = getv ? :Config;
+    symbol [ nextIntervalMs %tmp.42 150 15 29 ];
+    %tmp.42 = getv function %tmp.41 :nextIntervalMs;
+    %tmp.43 = lgetv %s.1;
+    symbol [ s %tmp.43 150 30 31 ];
+    %tmp.44 = 99999;
+    %tmp.45 = invoke %tmp.41 %tmp.42(%tmp.43, %tmp.44);
+    symbol [ Config %tmp.47 151 8 14 ];
+    %tmp.47 = getv ? :Config;
+    symbol [ MAX_INTERVAL_S %tmp.48 151 15 29 ];
+    %tmp.48 = getv %tmp.47 :MAX_INTERVAL_S;
+    %tmp.49 = 1000;
+    %tmp.50 = mul %tmp.48 %tmp.49;
+    %tmp.51 = "an enormous interval was not clamped";
+    invoke %tmp.38 %tmp.39(%tmp.45, %tmp.50, %tmp.51);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 154 4 ]
+    %tmp.52 = true;
+    ret %tmp.52;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_133_78_155_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 158; test = true; @symbol_functiondef = [testCustomIntervalIsAlsoClamped,158,9,40]; @symbol_param<0> = [logger,158,41,47]; @symbol_param<0>_type<0> = [Test,158,51,55]; @symbol_param<0>_type<1> = [Logger,158,56,62]; @symbol_return<0> = [Boolean,158,67,74]; ]
+function testCustomIntervalIsAlsoClamped(logger as Test.Logger) as Boolean {
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_158_75_168_0_start:
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 159 4 ]
+    [ "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_158_75_168_0_start" "_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_158_75_168_0_stop" ]
+    %s.1 = local;
+    symbol [ s %s.1 159 8 9 ];
+    symbol [ Config %tmp.4 159 16 22 ];
+    %tmp.4 = getv ? :Config;
+    symbol [ Settings %tmp.5 159 23 31 ];
+    %tmp.5 = getv function ? %tmp.4 :Settings;
+    %tmp.1 = newc %tmp.5 ();
+    lputv %s.1 %tmp.1;
+    symbol [ s %s.1 159 8 9 ];
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 160 4 ]
+    %tmp.6 = lgetv %s.1;
+    symbol [ s %tmp.6 160 4 5 ];
+    symbol [ Config %tmp.8 160 17 23 ];
+    %tmp.8 = getv ? :Config;
+    symbol [ POLL_CUSTOM %tmp.9 160 24 35 ];
+    %tmp.9 = getv %tmp.8 :POLL_CUSTOM;
+    symbol [ pollMode ? 160 6 14 ];
+    putv %tmp.6 :pollMode %tmp.9;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 162 4 ]
+    %tmp.10 = lgetv %s.1;
+    symbol [ s %tmp.10 162 4 5 ];
+    %tmp.11 = 0;
+    symbol [ customIntervalS ? 162 6 21 ];
+    putv %tmp.10 :customIntervalS %tmp.11;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 163 4 ]
+    symbol [ Test %tmp.12 163 4 8 ];
+    %tmp.12 = getm $.Toybox.Test;
+    symbol [ assertEqual %tmp.13 163 9 20 ];
+    %tmp.13 = getv function %tmp.12 :assertEqual;
+    symbol [ Config %tmp.15 163 21 27 ];
+    %tmp.15 = getv ? :Config;
+    symbol [ nextIntervalMs %tmp.16 163 28 42 ];
+    %tmp.16 = getv function %tmp.15 :nextIntervalMs;
+    %tmp.17 = lgetv %s.1;
+    symbol [ s %tmp.17 163 43 44 ];
+    %tmp.18 = 5;
+    %tmp.19 = invoke %tmp.15 %tmp.16(%tmp.17, %tmp.18);
+    symbol [ Config %tmp.21 163 50 56 ];
+    %tmp.21 = getv ? :Config;
+    symbol [ MIN_INTERVAL_S %tmp.22 163 57 71 ];
+    %tmp.22 = getv %tmp.21 :MIN_INTERVAL_S;
+    %tmp.23 = 1000;
+    %tmp.24 = mul %tmp.22 %tmp.23;
+    invoke %tmp.12 %tmp.13(%tmp.19, %tmp.24);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 165 4 ]
+    %tmp.25 = lgetv %s.1;
+    symbol [ s %tmp.25 165 4 5 ];
+    %tmp.26 = 100000;
+    symbol [ customIntervalS ? 165 6 21 ];
+    putv %tmp.25 :customIntervalS %tmp.26;
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 166 4 ]
+    symbol [ Test %tmp.27 166 4 8 ];
+    %tmp.27 = getm $.Toybox.Test;
+    symbol [ assertEqual %tmp.28 166 9 20 ];
+    %tmp.28 = getv function %tmp.27 :assertEqual;
+    symbol [ Config %tmp.30 166 21 27 ];
+    %tmp.30 = getv ? :Config;
+    symbol [ nextIntervalMs %tmp.31 166 28 42 ];
+    %tmp.31 = getv function %tmp.30 :nextIntervalMs;
+    %tmp.32 = lgetv %s.1;
+    symbol [ s %tmp.32 166 43 44 ];
+    %tmp.33 = 5;
+    %tmp.34 = invoke %tmp.30 %tmp.31(%tmp.32, %tmp.33);
+    symbol [ Config %tmp.36 166 50 56 ];
+    %tmp.36 = getv ? :Config;
+    symbol [ MAX_INTERVAL_S %tmp.37 166 57 71 ];
+    %tmp.37 = getv %tmp.36 :MAX_INTERVAL_S;
+    %tmp.38 = 1000;
+    %tmp.39 = mul %tmp.37 %tmp.38;
+    invoke %tmp.27 %tmp.28(%tmp.34, %tmp.39);
+[ "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc" 167 4 ]
+    %tmp.40 = true;
+    ret %tmp.40;
+_Users_hegs_Downloads_helder_claude_edge_edge_app_source_tests_ConfigTest_mc_158_75_168_0_stop:
+}
+[ @file = "/Users/hegs/Downloads/helder/claude-edge/edge-app/source/tests/ConfigTest.mc"; @line = 1; ]
+<init> {
+}

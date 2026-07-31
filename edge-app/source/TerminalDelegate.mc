@@ -37,7 +37,18 @@ class TerminalDelegate extends WatchUi.BehaviorDelegate {
 
     // ------------------------------------------------------------ behaviours
 
-    //! Enter button, or a tap. Confirms the highlighted option.
+    //! Enter (right side of the device), or a tap. Confirms.
+    //!
+    //! The button layout this is written against, on an Edge 540:
+    //!
+    //!     up / down     left side    move the highlight, or scroll
+    //!     enter         right side   confirm
+    //!     esc           right side   back
+    //!     lap / start   bottom       jump to live / refresh
+    //!
+    //! That mapping is the device's own — up and down carry the
+    //! previousPage/nextPage behaviours, enter carries onSelect — so it matches
+    //! every other app on the unit and needs no explaining to the rider.
     public function onSelect() as Boolean {
         if (_pendingAction != null) {
             var action = _pendingAction as String;
@@ -46,13 +57,16 @@ class TerminalDelegate extends WatchUi.BehaviorDelegate {
             return true;
         }
 
-        // With a prompt on screen, select answers it. Without one, it is the
-        // natural "refresh now" gesture.
-        if (_view.getPrompt() != null) {
-            showPromptMenu();
-        } else {
-            _view.forceRefresh();
+        // With a prompt on screen, enter commits the highlighted option. The
+        // rider has already moved to it with up/down, so opening a menu here
+        // would add a second, redundant selection step.
+        var prompt = _view.getPrompt();
+        if (prompt != null) {
+            answerPrompt(_view.getHighlightedOption());
+            return true;
         }
+
+        _view.forceRefresh();
         return true;
     }
 
@@ -79,14 +93,28 @@ class TerminalDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
-    //! Down button, or a swipe up. Scrolls towards newer output.
+    //! Down button (left side of the device), or a swipe up.
+    //!
+    //! Moves the highlight when a prompt is waiting, scrolls otherwise. The
+    //! same physical button doing both is deliberate: when Claude is asking
+    //! something, choosing an answer is the only thing the rider wants to do,
+    //! and making them switch modes to reach it would be the wrong trade on a
+    //! device operated one-handed at speed.
     public function onNextPage() as Boolean {
+        if (_view.getPrompt() != null) {
+            _view.moveHighlight(1);
+            return true;
+        }
         _view.scrollDown();
         return true;
     }
 
-    //! Up button, or a swipe down. Scrolls back into history.
+    //! Up button (left side of the device), or a swipe down.
     public function onPreviousPage() as Boolean {
+        if (_view.getPrompt() != null) {
+            _view.moveHighlight(-1);
+            return true;
+        }
         _view.scrollUp();
         return true;
     }
@@ -121,6 +149,17 @@ class TerminalDelegate extends WatchUi.BehaviorDelegate {
         var menu = new WatchUi.Menu2({
             :title => WatchUi.loadResource(Rez.Strings.MenuTitle) as String
         });
+
+        // Typing comes first: it is the reason to open this menu deliberately,
+        // whereas refresh is also on the start button.
+        if (WatchUi has :TextPicker) {
+            menu.addItem(new WatchUi.MenuItem(
+                WatchUi.loadResource(Rez.Strings.MenuType) as String,
+                WatchUi.loadResource(Rez.Strings.MenuTypeSub) as String,
+                "type",
+                null
+            ));
+        }
 
         menu.addItem(new WatchUi.MenuItem(
             WatchUi.loadResource(Rez.Strings.MenuRefresh) as String,
@@ -205,6 +244,17 @@ class TerminalDelegate extends WatchUi.BehaviorDelegate {
             return;
         }
 
+        if (identifier.equals("type")) {
+            // Prefilled empty rather than with a canned phrase: a prefill the
+            // rider has to delete is worse than none, and the canned prompts
+            // are already separate menu entries.
+            var opened = $.promptForText("", method(:onTextEntered));
+            if (!opened) {
+                _view.setMessage("No keyboard on this device");
+            }
+            return;
+        }
+
         // "opt:N" answers the on-screen prompt by option index.
         if (identifier.length() > 4 && identifier.substring(0, 4).equals("opt:")) {
             var index = identifier.substring(4, identifier.length()).toNumber();
@@ -281,6 +331,24 @@ class TerminalDelegate extends WatchUi.BehaviorDelegate {
         var expect = _view.getHash();
 
         var sent = client.sendAction(actionId, nonce, expect, method(:onActionResult));
+        if (!sent) {
+            _view.setMessage("Busy");
+        }
+    }
+
+    //! Send text the rider typed on the device keyboard.
+    public function onTextEntered(text as String) as Void {
+        var client = _view.getClient();
+        if (client == null) {
+            return;
+        }
+
+        _nonceCounter += 1;
+        var nonce = System.getTimer().toString() + "-" + _nonceCounter.toString();
+
+        _view.setMessage("Sending…");
+
+        var sent = client.sendText(text, nonce, method(:onActionResult));
         if (!sent) {
             _view.setMessage("Busy");
         }

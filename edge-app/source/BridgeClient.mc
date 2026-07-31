@@ -163,6 +163,55 @@ class BridgeClient {
         return true;
     }
 
+    //! Send free text typed on the device keyboard.
+    //!
+    //! Goes to /text rather than /action because the two are different
+    //! capabilities: /action can only trigger entries from a fixed allowlist,
+    //! while this carries arbitrary content and is disabled by default on the
+    //! server. A deployment can therefore allow approvals from the handlebars
+    //! while refusing free text, which is the sensible default pairing.
+    public function sendText(
+        text as String,
+        nonce as String,
+        callback as Method(success as Boolean, message as String?) as Void
+    ) as Boolean {
+        if (_inFlight) {
+            return false;
+        }
+        if (!_settings.isUsable()) {
+            callback.invoke(false, _settings.error);
+            return false;
+        }
+
+        var body = {
+            "text" => text,
+            "nonce" => nonce,
+            "submit" => true
+        };
+        if (_settings.sessionName.length() > 0) {
+            body["session"] = _settings.sessionName;
+        }
+
+        var options = {
+            :method => Communications.HTTP_REQUEST_METHOD_POST,
+            :headers => {
+                "Authorization" => "Bearer " + _settings.authToken,
+                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON
+            },
+            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+        };
+
+        _actionCallback = callback;
+        _inFlight = true;
+        Communications.makeWebRequest(
+            _settings.serverUrl + "/api/v1/text",
+            body,
+            options,
+            method(:onActionResponse)
+        );
+        return true;
+    }
+
     private var _actionCallback as Method(success as Boolean, message as String?) as Void or Null;
 
     public function onSessionResponse(code as Number, data as Dictionary or String or Null) as Void {
@@ -196,6 +245,16 @@ class BridgeClient {
         if (code == 200) {
             callback.invoke(true, null);
             return;
+        }
+
+        // The server refuses free text unless the operator enabled it. Saying
+        // which setting is at fault is far more use than "403".
+        if (code == 403 && data instanceof Dictionary) {
+            var errCode = (data as Dictionary).get("code");
+            if (errCode instanceof String && (errCode as String).equals("FREE_TEXT_DISABLED")) {
+                callback.invoke(false, WatchUi.loadResource(Rez.Strings.ErrTextDisabled) as String);
+                return;
+            }
         }
 
         // 409 carries a specific, actionable meaning: the screen moved, or the

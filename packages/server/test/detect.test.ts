@@ -117,6 +117,81 @@ describe('detectState — permission prompts', () => {
     assert.equal(detectState({ lines: bashPermission }).prompt?.d, undefined);
   });
 
+  it('flags every lasting-permission wording Claude Code 2.x actually uses', () => {
+    // Transcribed from a live Claude Code 2.1 session, not invented. The
+    // "allow all edits during this session" variant was missed by the original
+    // list — it grants a capability for the remainder of the session, which is
+    // exactly what this flag exists to catch, and it was being presented to the
+    // rider as an ordinary choice.
+    //
+    // This list is a record of observed wording rather than a prediction of it,
+    // so it grows whenever a real session shows something new.
+    const lastingGrants = [
+      'Yes, allow all edits during this session (shift+tab)',
+      "Yes, and don't ask again",
+      "Yes, and don't ask again for bash commands in /repo",
+      'Yes, allow all',
+      'Yes to all',
+      'Always allow',
+      'Yes, auto-accept edits',
+      'Accept edits for the rest of this session',
+    ];
+
+    for (const label of lastingGrants) {
+      const lines = [
+        'Do you want to make this edit to app.ts?',
+        `${CURSOR} 1. Yes`,
+        `  2. ${label}`,
+        '  3. No',
+        '  Esc to cancel',
+      ];
+      assert.equal(
+        detectState({ lines }).prompt?.d,
+        true,
+        `"${label}" was not flagged as granting lasting permission`,
+      );
+    }
+  });
+
+  it('does not flag ordinary affirmatives as lasting grants', () => {
+    // The inverse matters just as much: over-flagging would make every prompt
+    // require a second confirmation, and riders would stop reading them.
+    const ordinary = ['Yes', 'Yes, proceed', 'No', 'No, tell Claude what to do differently'];
+
+    for (const label of ordinary) {
+      const lines = [
+        'Do you want to proceed?',
+        `${CURSOR} 1. ${label}`,
+        '  2. Cancel',
+        '  Esc to cancel',
+      ];
+      assert.notEqual(
+        detectState({ lines }).prompt?.d,
+        true,
+        `"${label}" was wrongly flagged as granting lasting permission`,
+      );
+    }
+  });
+
+  it('parses the real folder-trust prompt', () => {
+    // Claude Code shows this on first entering a directory. Transcribed from a
+    // live session; note it carries no question mark above the cursor, which
+    // the question extractor has to cope with.
+    const lines = [
+      ' Security guide',
+      '',
+      `${CURSOR} 1. Yes, I trust this folder`,
+      '   2. No, exit',
+      '',
+      ' Enter to confirm · Esc to cancel',
+    ];
+
+    const r = detectState({ lines });
+    assert.ok(r.state === 'awaiting_input' || r.state === 'awaiting_permission');
+    assert.deepEqual(r.prompt?.o.map((o) => o.l), ['Yes, I trust this folder', 'No, exit']);
+    assert.equal(r.verticalOptions, true);
+  });
+
   it('flags destructive labels regardless of apostrophe style', () => {
     // Claude Code renders a typographic apostrophe depending on font and
     // locale. Missing the match here would present a permanent permission
