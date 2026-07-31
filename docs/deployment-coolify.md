@@ -3,6 +3,23 @@
 How `edge.heldergoncalves.io` is deployed on the Coolify server, and how to
 update it.
 
+## Registered in Coolify
+
+Project **Claude Edge** → application **claude-edge-web**, visible in the
+dashboard with its environment variables managed there.
+
+One caveat worth knowing. The containers were started over SSH before the
+application was registered, so Coolify adopted a deployment it did not create.
+Everything works and appears in the UI, but the first deploy triggered *from*
+Coolify will rebuild from the repository — expect a short restart the first
+time you press Deploy.
+
+Registration was done through Coolify's own Eloquent models rather than raw
+SQL, so its UUID format and relationships stayed its concern. Two schema
+surprises found along the way, in case a future version moves them again:
+tokens are scoped to a team, and environment variables are polymorphic
+(`resourceable_type` / `resourceable_id`, not `application_id`).
+
 ## What is running
 
 | | |
