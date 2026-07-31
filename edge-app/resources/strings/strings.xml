@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string id="AppName">Claude Edge</string>
+
+    <!-- Settings, as shown in Garmin Connect Mobile. -->
+    <string id="SettingsServerUrl">Server URL</string>
+    <string id="SettingsServerUrlPrompt">https://your-domain.example</string>
+    <string id="SettingsToken">Access token</string>
+    <string id="SettingsSession">tmux session</string>
+    <string id="SettingsPollMode">Refresh rate</string>
+    <string id="SettingsPollAdaptive">Adaptive (recommended)</string>
+    <string id="SettingsPollFast">Always fast</string>
+    <string id="SettingsPollSlow">Battery saver</string>
+    <string id="SettingsPollCustom">Custom interval</string>
+    <string id="SettingsPollSeconds">Custom interval (seconds)</string>
+    <string id="SettingsFontSize">Text size</string>
+    <string id="SettingsFontXTiny">Smallest (most text)</string>
+    <string id="SettingsFontTiny">Small</string>
+    <string id="SettingsFontSmall">Medium</string>
+    <string id="SettingsConfirmDestructive">Confirm risky actions</string>
+    <string id="SettingsVibrate">Vibrate when input needed</string>
+
+    <!-- On-screen status. Kept short: these are read at a glance, outdoors,
+         on a 246 pixel wide screen, by someone who is cycling. -->
+    <string id="StateWorking">Working</string>
+    <string id="StateIdle">Idle</string>
+    <string id="StateWaiting">Needs you</string>
+    <string id="StateNoSession">No session</string>
+    <string id="StateUnknown">Unknown</string>
+
+    <string id="ErrNoConfig">Set the server URL in the Connect IQ app settings.</string>
+    <string id="ErrNoPhone">No phone connection.</string>
+    <string id="ErrHttps">Server must use HTTPS.</string>
+    <string id="ErrAuth">Token rejected.</string>
+    <string id="ErrTooBig">Response too large. Reduce text size.</string>
+    <string id="ErrStale">Screen changed. Look again.</string>
+    <string id="ErrServer">Server error.</string>
+    <string id="ErrTimeout">Timed out.</string>
+
+    <string id="MenuTitle">Actions</string>
+    <string id="MenuRefresh">Refresh now</string>
+    <string id="MenuSession">Switch session</string>
+    <string id="MenuAbout">About</string>
+    <string id="Connecting">Connecting…</string>
+    <string id="ConfirmTitle">Are you sure?</string>
+</resources>

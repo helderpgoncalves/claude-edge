@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    // Node's type stripping executes .ts files directly and requires imports to
+    // carry the real extension. `rewriteRelativeImportExtensions` lets tsc emit
+    // .js in the compiled output, so the same source runs under `node --watch`
+    // in development and as plain JavaScript in the container.
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true
+  },
+  "include": ["src/**/*.ts"],
+  "references": [{ "path": "../shared" }]
+}

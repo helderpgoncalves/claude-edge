@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!--
+  Connect IQ application manifest.
+
+  type="watch-app" despite the name: "device app" is the correct type for an
+  interactive full-screen app on an Edge cycling computer. The alternatives do
+  not work here — widgets time out after a period of inactivity and their base
+  view never receives up/down events, and data fields get an eighth of the
+  memory, render inside an activity's field grid, and cannot use Toybox.Timer.
+
+  minApiLevel 3.2.0 rather than something newer: it is the lowest level that
+  still provides Application.Storage, Application.Properties and the settings
+  resource, and it reaches the Edge 530/830/1030 generation. Nothing in this app
+  needs a later API, so there is no reason to exclude those devices.
+
+  The only permission requested is Communications. The app reads a terminal and
+  posts key actions; it has no business touching position, sensors, or the
+  activity recorder, and asking for more would rightly make a reviewer suspicious.
+-->
+<iq:manifest version="3" xmlns:iq="http://www.garmin.com/xml/connectiq">
+    <iq:application
+        id="35b8f23405074512ae3d041efbb5c27a"
+        type="watch-app"
+        name="@Strings.AppName"
+        entry="ClaudeEdgeApp"
+        launcherIcon="@Drawables.LauncherIcon"
+        minApiLevel="3.2.0">
+
+        <iq:products>
+            <!-- Button-driven Edges. The Edge 540 is the primary target. -->
+            <iq:product id="edge540"/>
+            <iq:product id="edge550"/>
+            <iq:product id="edge530"/>
+            <iq:product id="edgemtb"/>
+
+            <!-- Touch Edges sharing the 246x322 panel. -->
+            <iq:product id="edge840"/>
+            <iq:product id="edge850"/>
+            <iq:product id="edge830"/>
+
+            <!-- Larger touch Edges. These have only start/lap as physical
+                 buttons, which is why the delegate is behaviour-based. -->
+            <iq:product id="edge1040"/>
+            <iq:product id="edge1050"/>
+            <iq:product id="edge1030"/>
+            <iq:product id="edge1030plus"/>
+            <iq:product id="edgeexplore2"/>
+        </iq:products>
+
+        <iq:permissions>
+            <iq:uses-permission id="Communications"/>
+        </iq:permissions>
+
+        <iq:languages>
+            <iq:language>eng</iq:language>
+        </iq:languages>
+
+        <iq:barrels/>
+    </iq:application>
+</iq:manifest>

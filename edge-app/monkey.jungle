@@ -1,0 +1,21 @@
+# Connect IQ build configuration.
+#
+# The base configuration applies to every product. Per-product overrides below
+# exist only where a device genuinely differs — a larger screen that can afford
+# a bigger default font, or the absence of a touchscreen.
+
+project.manifest = manifest.xml
+
+base.sourcePath = source
+base.resourcePath = resources
+
+# Larger-screened Edges get their own resource layer so defaults can differ
+# without a second source tree. The 1050 in particular is 480x800, more than
+# three times the pixel count of the 540, and the smallest font there would be
+# unreadably tiny.
+edge1050.resourcePath = $(edge1050.resourcePath);resources-large
+edge1040.resourcePath = $(edge1040.resourcePath);resources-large
+edge1030.resourcePath = $(edge1030.resourcePath);resources-large
+edge1030plus.resourcePath = $(edge1030plus.resourcePath);resources-large
+edge550.resourcePath = $(edge550.resourcePath);resources-large
+edge850.resourcePath = $(edge850.resourcePath);resources-large

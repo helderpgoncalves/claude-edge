@@ -1,0 +1,16 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+
+# Connect IQ build output
+*.prg
+*.prg.debug.xml
+*.iq
+bin/
+gen/
+
+.DS_Store
+*.log
