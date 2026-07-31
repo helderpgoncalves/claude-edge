@@ -4,9 +4,13 @@ Three things have to be linked to one account: the user's machine, their phone,
 and their Edge. Each has different input capabilities, and the Edge has almost
 none.
 
-The constraint that shapes everything: **the Edge has no camera and no
-keyboard.** It cannot scan a QR code and it cannot have a token typed into it.
-So the Edge is never paired directly — it is paired *through* the phone.
+The constraint that shapes everything: **the Edge has no camera and no usable
+keyboard.** It cannot scan anything, and typing a 43-character token with seven
+buttons is not a real option.
+
+The way out is to reverse the direction: **the Edge displays a QR code and the
+phone scans it.** Drawing is something the Edge can do, and the phone already
+has a camera. Verified working — see below.
 
 ## The flow
 
@@ -14,10 +18,11 @@ So the Edge is never paired directly — it is paired *through* the phone.
 1. machine     claude-edge login          →  device-code flow in a browser
 2. phone       open the PWA, sign in      →  ordinary web login
 3. phone+machine  set a session passphrase →  derives Ks on both, never sent
-4. Edge        Garmin Connect app settings →  paste from the phone's clipboard
+4. Edge        shows a QR code             →  phone scans it, pairing done
 ```
 
-Steps 1–3 establish the account and the encryption. Step 4 is the awkward one.
+Steps 1–3 establish the account and the encryption. Step 4 used to be the
+awkward one and no longer is.
 
 ## 1. The machine — device code
 
@@ -82,8 +87,74 @@ camera, no keyboard, and no clipboard of its own.
 
 ### Options considered
 
-**QR code.** The obvious idea, and it does not work: the Edge has no camera.
-Nothing on the device can read one.
+**QR code, scanned *by* the Edge.** Does not work: no camera.
+
+**QR code, displayed *by* the Edge and scanned by the phone.** Inverting the
+direction removes the problem entirely — the Edge only has to draw pixels.
+
+**This is the design, and it is verified working**, not merely plausible:
+
+- **Generation is native.** `Toybox.ScanCode.createQrCodeImage()` is part of the
+  API on Edge 540, 550, 840, 850, 1040, 1050 and MTB. No encoder to write, no
+  Reed-Solomon implementation, no server round trip. Confirmed by inspecting the
+  device's own API surface and by running it.
+- **It costs almost nothing.** A 34-character payload renders at 200×200 for
+  **144 bytes**. The whole pairing screen runs in 20.9 KB of a 1 MB budget.
+- **The rendered output is a valid QR.** The simulator screenshot was decoded
+  with CoreImage — the same engine an iPhone camera uses — and returned
+  `https://claude-edge.dev/p#BQTK3H9F` exactly.
+
+### Scannability off a memory-in-pixel display
+
+This was the risk worth taking seriously. The Edge screen is transflective and
+matte, built for sunlight rather than contrast, and nothing like the backlit
+screens QR scanning is normally tested against.
+
+The evidence says it works. parkrun runners have scanned QR codes off Garmin
+watch screens for years, now with a phone camera rather than a laser scanner —
+tens of thousands of people, routinely. Reported failures trace to module size
+on small watch screens, not to the display technology. An Edge 540 at 246×322 is
+considerably larger than the watches in those reports.
+
+Four things are done to buy margin anyway:
+
+| | Why |
+|---|---|
+| Largest square the screen allows | Module size is what actually decides readability |
+| Quartile error correction (25%) | Absorbs glare, an awkward angle, a scratched screen |
+| Black on white, forced explicitly | A dark theme would render an unreadable code |
+| Backlight on while displayed | The difference between instant and never, indoors |
+
+### The payload must stay short, and nothing enforces that but us
+
+The encoder does **not** error on an oversized payload. Given 400 characters it
+silently selects a denser QR version and returns a perfectly valid image whose
+modules are far too small to read off a matte screen.
+
+That is the sharp edge here: the failure is invisible at generation time and
+only appears when someone cannot scan it. The app therefore caps the payload
+itself, which is the reason the link carries a short code rather than a token.
+
+The code rides in the URL fragment (`#BQTK3H9F`), which browsers do not send to
+the server — one fewer place for a short-lived credential to be logged.
+
+### What the rider sees
+
+```
+┌────────────────────────────┐
+│ ████ ▄▄▄ █▀ ▄█ ▄▄▄ ████    │
+│ ████ ███ █ ▀▄▀█ ███ ████   │   scan with the phone,
+│ ████▄▄▄▄▄█▄█▄█▄▄▄▄▄████    │   which opens the PWA
+│ ██▄▄ ▄▀▄▀▄ ▄▀▀▄▄▀ ▄▄██     │   straight onto pairing
+│ ████ ▄▄▄ █▄▀ █▄▀▄▀▄████    │
+│                            │
+│        BQTK-3H9F           │  ← fallback, always shown
+└────────────────────────────┘
+```
+
+The typed code stays visible even when the QR renders. Scanning fails often
+enough — bright sun, a scratched screen, a phone that will not focus — that a
+readable fallback is worth the space.
 
 **Bluetooth pairing from the phone.** Connect IQ has no API for an app to write
 its own settings from a paired phone. Settings are owned by Garmin Connect

@@ -58,8 +58,10 @@ Now the relay carries something worth reading.
 
 - Session view with client-side decryption
 - Typing, with the existing hash-bound approval flow
-- Device pairing, including the Edge's short-code exchange
-  ([pairing.md](pairing.md))
+- Device pairing. The Edge displays a QR code that the phone scans —
+  **already verified working** on an Edge 540 using the native
+  `Toybox.ScanCode` API, with the rendered output decoded by CoreImage. See
+  [pairing.md](pairing.md).
 - Installable, offline shell, Web Push when a session blocks
 
 At the end of this, the product is **useful and free**. Worth releasing here

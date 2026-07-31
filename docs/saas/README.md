@@ -10,6 +10,7 @@ Read in this order:
 |---|---|---|
 | 1 | [Product brief](../product-brief.md) | What was asked for, and the open questions |
 | 2 | [Connectivity](connectivity.md) | How our servers reach a machine behind NAT — the decision everything else rests on |
+| 2b | [Pairing](pairing.md) | Linking machine, phone and Edge to an account. The Edge shows a QR; verified working |
 | 3 | [Security model](security-model.md) | Multi-tenant threat model; how end-to-end encryption is actually achieved |
 | 4 | [Voice input](voice.md) | Transcription options, real costs, and what €5/month can buy |
 | 5 | [Accounts and billing](billing.md) | Plans, the pricing constraint, and the legal problem with it |
