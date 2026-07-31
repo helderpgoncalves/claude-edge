@@ -16,7 +16,8 @@ Read in this order:
 | 5 | [Accounts and billing](billing.md) | Plans, the pricing constraint, and the legal problem with it |
 | 6 | [Web app](web-app.md) | Marketing site, SEO, authentication, credential management |
 | 7 | [Licence](licence.md) | Why AGPL-3.0 rather than MIT |
-| 8 | [Phased plan](plan.md) | What to build, in what order, and what to defer |
+| 8 | [Coach mode](coach.md) | The second product: effort read aloud. Designed, not built |
+| 9 | [Phased plan](plan.md) | What to build, in what order, and what to defer |
 
 ## The shape of it
 
@@ -55,6 +56,18 @@ never sent to us. We route ciphertext. This is what makes a relay defensible.
 to disclose usage or margin. Metered billing without visible usage is legally
 awkward in the EU, and a flat plan achieves the same goal — the customer sees a
 price, not our costs. See [billing.md](billing.md).
+
+## The second mode
+
+Everything above describes **Dev mode** — the terminal on the handlebars. The
+product has a second half, [Coach](coach.md), which points the same
+architecture at the ride itself: effort against what is left, the climb before
+you reach it, fuelling timed to work done, spoken into the rider's headphones.
+
+It is designed and not built, and one finding from designing it changed a
+decision here: a coach must speak without being asked, browsers do not allow
+that, and so a native app is now planned where the documents above said a PWA
+was sufficient. See [ADR-0007](../adr/0007-native-app-for-audio.md).
 
 ## What stays free
 

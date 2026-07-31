@@ -115,10 +115,56 @@ Last, deliberately. A site marketing a product that does not exist is wasted
 work, and the honest technical content that will actually rank can only be
 written once the thing is real.
 
+**Partially done, ahead of sequence.** The landing page exists in three
+languages with hreflang, per-locale metadata and structured data, and a
+waitlist for Coach mode. That was pulled forward to have somewhere to collect
+Coach interest before building it — validating demand is cheaper than building
+on an assumption.
+
+What is still outstanding from this phase: the docs rendered from the
+repository, the device compatibility page, and analytics. The trademark
+question below still argues for not investing further in SEO until the name is
+settled.
+
+## Phase 7 — Coach mode
+
+The second product. Designed in [coach.md](coach.md), and deliberately last
+because it depends on everything above and on answers that do not exist yet.
+
+- Native app ([ADR-0007](../adr/0007-native-app-for-audio.md)) — required
+  because a web page cannot speak unprompted, and Coach is nothing without that
+- Route source resolved: reading the loaded course from the device, or
+  selecting it in the app
+- Ride history, which means a Garmin Connect or Strava integration
+- Cue logic, and the restraint to stay quiet
+
+**Three things to settle before starting, not during:**
+
+1. **The route.** The climb warning is the most compelling thing in the design
+   and it is the part most likely to be impossible. Prototype it first.
+2. **The per-ride cost.** Unlike transcription, where the arithmetic in
+   [billing.md](billing.md) shows the API cost is a rounding error, a coach
+   speaking 40 times over four hours is a real cost that scales with
+   engagement. It needs its own numbers before a price is set.
+3. **Whether it is the same product.** Dev sells to developers who cycle;
+   Coach sells to cyclists. Bundling them at €5 is convenient for us and may
+   confuse both.
+
+The waitlist on the landing page exists to answer a fourth question — whether
+anyone wants it — before any of the above is worth doing.
+
 ## Deliberately out of scope
 
-**A native mobile app.** The PWA does everything needed, and it must exist
-anyway because the phone holds the decryption key for the Edge.
+**~~A native mobile app.~~** *Reversed.* The reasoning — that the PWA does
+everything needed and must exist anyway, because the phone holds the decryption
+key for the Edge — held for Dev mode and still does. Coach mode broke it: the
+coach has to speak while the phone is locked in a pocket and the rider has
+touched nothing, and the web platform does not permit audio to start without a
+user gesture. Verified rather than assumed; see
+[ADR-0007](../adr/0007-native-app-for-audio.md).
+
+The PWA is not replaced. It remains the zero-install way to use Dev mode, and
+the app is added for Coach.
 
 **Self-hosted Whisper.** Saves cents per user per month while costing accuracy
 and VPS capacity. Revisit only if users demand that audio never leave our

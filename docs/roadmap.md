@@ -11,6 +11,23 @@ one-word answer. If you are away from the keyboard, that pause costs you the
 whole gap until you next look at a screen. On a two-hour ride, a permission
 prompt asked at minute five wastes an hour and fifty-five minutes.
 
+## Two modes
+
+The product has grown a second half. Both come from the same observation — the
+Edge is already on the handlebars and almost nothing is built for it — but they
+sell to different people and only one of them exists.
+
+| | | |
+|---|---|---|
+| **Dev** | Train without stopping work | Built, working |
+| **Coach** | Real-time effort analysis, spoken into your headphones | [Designed](saas/coach.md), not built |
+
+Dev is everything below. Coach is a separate design document, and the two
+things worth knowing about it here are that it needs
+[a native app](adr/0007-native-app-for-audio.md) — because a web page cannot
+speak without being asked first — and that it is sequenced after the relay
+rather than before it.
+
 The Edge is already on the handlebars, already paired to the phone, already
 being glanced at every few minutes. It is the right screen for this and the
 wrong screen for almost everything else — which is the design constraint, not a
@@ -98,10 +115,18 @@ text — and reduction is what makes it readable on a 246-pixel screen at speed.
 one request, one parsed response. Not a trade-off; simply unavailable.
 
 **A companion phone app for Bluetooth.** Would require a native iOS and Android
-app, an App Store presence, and a developer account. Unnecessary: Connect IQ
-already proxies HTTP through Garmin Connect Mobile, which every Garmin owner
-has installed. Building one would add cost and maintenance for capability that
-already exists.
+app, an App Store presence, and a developer account. Unnecessary *for this*:
+Connect IQ already proxies HTTP through Garmin Connect Mobile, which every
+Garmin owner has installed, so building one adds cost and maintenance for
+capability that already exists.
+
+Still true for Dev mode. **No longer true for the product as a whole** — Coach
+mode needs to speak without the rider touching anything, which the web platform
+does not permit, so a native app is now planned for that reason and only that
+reason. The premise that changed is documented in
+[ADR-0007](adr/0007-native-app-for-audio.md); this entry is left in place
+because the reasoning was correct when written and the distinction between
+"unnecessary for Bluetooth" and "necessary for audio" is the useful part.
 
 **Arbitrary key passthrough** (`POST /send-keys {"keys": "..."}`). This is the
 decision the whole security model turns on. The bridge types into a terminal

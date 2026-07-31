@@ -35,7 +35,9 @@ app is installed by sideloading (see [docs/installation.md](docs/installation.md
 | Bridge server | Working — 127 tests, including integration against real tmux |
 | Connect IQ app | Builds clean for 12 Edge models, 115–122 KB of a 1 MB budget |
 | Docker deployment | Working — dev stack with hot reload, production stack with automatic TLS |
+| Marketing site | Working — landing page in English, Portuguese and Spanish |
 | Phone PWA | Planned — see [the roadmap](docs/roadmap.md) |
+| Coach mode | [Designed](docs/saas/coach.md), not built. Waitlist on the site |
 
 ## What it looks like
 
@@ -106,6 +108,7 @@ and a tunnel for trying it without one.
 | [Deployment](docs/deployment.md) | VPS, domain, TLS, Docker, systemd |
 | [Security](docs/security.md) | Threat model and the reasoning behind each control |
 | [Development](docs/development.md) | Repository layout, testing, adding an action |
+| [Voice](docs/voice.md) | Speaking to a session: the flow, what is kept, what to do when it fails |
 | [Roadmap](docs/roadmap.md) | What is planned, and what was deliberately left out |
 | [Decisions](docs/adr/) | Architecture decision records |
 | [Troubleshooting](docs/troubleshooting.md) | Error codes and what they mean |
@@ -113,9 +116,18 @@ and a tunnel for trying it without one.
 ### Design notes for a hosted version
 
 A hosted service is being designed — accounts, a relay so no tunnel setup is
-needed, and voice input. **None of it is built**, and self-hosting will stay
-free and complete regardless. The documents are in
-[docs/saas/](docs/saas/README.md) and are written to be argued with.
+needed, voice input, and a second mode that coaches the ride itself. **None of
+it is built**, and self-hosting will stay free and complete regardless. The
+documents are in [docs/saas/](docs/saas/README.md) and are written to be argued
+with.
+
+Two worth reading on their own:
+
+- [Coach mode](docs/saas/coach.md) — effort read in real time and spoken into
+  your headphones. The design, and the six questions it does not yet answer.
+- [ADR-0007](docs/adr/0007-native-app-for-audio.md) — why a coach that speaks
+  unprompted needs a native app, and why that is not a reason to change the
+  server.
 
 ## Supported devices
 

@@ -16,6 +16,7 @@ differently.
 | [0004](0004-behaviour-based-input.md) | Connect IQ behaviours rather than key codes | Accepted |
 | [0005](0005-typescript-monorepo.md) | TypeScript monorepo with a shared contract | Accepted |
 | [0006](0006-screen-scraping.md) | Screen-scraping as the authority, hooks as an accelerant | Accepted |
+| [0007](0007-native-app-for-audio.md) | A native app, because the coach has to speak unprompted | Accepted |
 
 ## Format
 
