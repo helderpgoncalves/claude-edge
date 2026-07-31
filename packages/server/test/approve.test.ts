@@ -47,17 +47,58 @@ async function capture(): Promise<string> {
 }
 
 /**
+ * Waits until the pane contains `needle`.
+ *
+ * These tests drive a real tmux and then assert on what the pane shows. Fixed
+ * sleeps between the two are a guess about how fast a shell repaints, and the
+ * guess is wrong often enough to matter. Polling replaces the guess: it
+ * returns as soon as the text lands — usually far sooner than the sleep it
+ * replaced — and only takes the full timeout when something is genuinely
+ * wrong.
+ *
+ * KNOWN ISSUE, NOT FIXED BY THIS
+ * ------------------------------
+ * The suite is flaky when the three tmux-backed files run in parallel:
+ * measured at 4 runs in 8 before this helper existed and roughly the same
+ * after, so this is an improvement to the *shape* of the waiting rather than a
+ * cure. The residual failures come from test-to-test state inside a file — a
+ * previous test's `cat -v` still holding the pane when the next one starts —
+ * which needs the pane reset between tests, not a longer wait. Worth doing;
+ * out of scope for the change that added this comment.
+ */
+async function waitForPane(needle: string, timeoutMs = 5_000): Promise<string> {
+  const deadline = Date.now() + timeoutMs;
+  let text = '';
+
+  for (;;) {
+    text = await capture();
+    if (text.includes(needle)) return text;
+    if (Date.now() >= deadline) return text;
+    await new Promise((r) => setTimeout(r, 25));
+  }
+}
+
+/**
  * Paint a prompt into the pane, then start `cat -v` so subsequent keystrokes
  * are echoed as visible escape sequences rather than being interpreted.
+ *
+ * Waits for the last painted line to actually appear before returning, so a
+ * caller can assert immediately without a sleep of its own. The last line is
+ * the right one to wait for: `printf` writes them in order, so seeing it means
+ * the whole block has been drawn.
  */
 async function paintPrompt(lines: string[]): Promise<void> {
   await tmuxRaw(['send-keys', '-t', SESSION, 'C-c']);
-  await new Promise((r) => setTimeout(r, 150));
 
   const script = `clear; printf '%s\\n' ${lines.map((l) => `'${l.replace(/'/g, "'\\''")}'`).join(' ')}; cat -v`;
   await tmuxRaw(['send-keys', '-t', SESSION, '-l', '--', script]);
   await tmuxRaw(['send-keys', '-t', SESSION, 'Enter']);
-  await new Promise((r) => setTimeout(r, 500));
+
+  // Wait for the last non-empty line, which is the last thing printf emits.
+  // An all-empty `lines` would have nothing to wait for, so fall back to the
+  // shell having echoed the command itself.
+  const marker = [...lines].reverse().find((l) => l.trim() !== '') ?? 'cat -v';
+  await waitForPane(marker);
 }
 
 const CURSOR = '❯';

@@ -38,6 +38,40 @@ async function tmuxRaw(args: string[]): Promise<string> {
   return stdout;
 }
 
+/**
+ * Waits for text to appear in the pane.
+ *
+ * WHY THIS EXISTS
+ * ---------------
+ * These tests type into a real tmux and then assert on what the pane contains.
+ * The obvious way to bridge the two is `await sleep(300)`, which is what this
+ * file used to do — and it failed roughly one run in six on a loaded machine,
+ * because 300ms is a guess about how long a shell takes to echo a line rather
+ * than a fact about it.
+ *
+ * A flaky test is worse than no test: it trains everyone to re-run CI instead
+ * of reading it. Polling removes the guess entirely — the fast path returns as
+ * soon as the text lands (usually well under the old sleep), and the slow path
+ * has a generous ceiling that only matters when the machine is genuinely busy.
+ *
+ * Returns the captured lines so the caller can assert against them and get a
+ * useful message on timeout.
+ */
+async function waitForPane(
+  needle: string,
+  { timeoutMs = 5_000, intervalMs = 25 } = {},
+): Promise<string[]> {
+  const deadline = Date.now() + timeoutMs;
+  let lines: string[] = [];
+
+  for (;;) {
+    ({ lines } = await capturePane({ session: SESSION, socket: SOCKET }));
+    if (lines.join('\n').includes(needle)) return lines;
+    if (Date.now() >= deadline) return lines;
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+}
+
 let tmuxAvailable = false;
 
 before(async () => {
@@ -151,9 +185,8 @@ describe('tmux integration', { skip: !process.env['CI'] && false }, () => {
     if (!tmuxAvailable) return t.skip('tmux not available');
     await tmuxRaw(['send-keys', '-t', SESSION, '-l', '--', 'echo CAPTURE_MARKER']);
     await tmuxRaw(['send-keys', '-t', SESSION, 'Enter']);
-    await new Promise((r) => setTimeout(r, 400));
 
-    const { lines } = await capturePane({ session: SESSION, socket: SOCKET });
+    const lines = await waitForPane('CAPTURE_MARKER');
     assert.ok(
       lines.some((l) => l.includes('CAPTURE_MARKER')),
       `marker not found in: ${JSON.stringify(lines.slice(-5))}`,
@@ -205,9 +238,7 @@ describe('tmux integration', { skip: !process.env['CI'] && false }, () => {
       literal: true,
       socket: SOCKET,
     });
-    await new Promise((r) => setTimeout(r, 300));
-
-    const { lines } = await capturePane({ session: SESSION, socket: SOCKET });
+    const lines = await waitForPane('LITERAL Enter Escape C-c DONE');
     const text = lines.join('\n');
     assert.ok(
       text.includes('LITERAL Enter Escape C-c DONE'),
@@ -228,10 +259,11 @@ describe('tmux integration', { skip: !process.env['CI'] && false }, () => {
       literal: true,
       socket: SOCKET,
     });
-    await new Promise((r) => setTimeout(r, 300));
-
-    const { lines } = await capturePane({ session: SESSION, socket: SOCKET });
-    assert.ok(lines.join('\n').includes('-not-a-flag-value'));
+    const lines = await waitForPane('-not-a-flag-value');
+    assert.ok(
+      lines.join('\n').includes('-not-a-flag-value'),
+      `dash payload not found in: ${JSON.stringify(lines.slice(-3))}`,
+    );
     await sendKeys({ session: SESSION, keys: ['C-u'], socket: SOCKET });
   });
 
