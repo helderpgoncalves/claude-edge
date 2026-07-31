@@ -111,6 +111,34 @@ someone's handlebars.
   the old shape for one release, and update `docs/api.md`, which is normative
   for the device implementation.
 
+## Never put fabricated content on the device screen
+
+The Edge is a **mirror of a real tmux pane**. Every line it renders must have
+come from `capture-pane` on an actual session.
+
+This sounds obvious and is easy to violate. During development a layout was
+tested by hardcoding plausible terminal lines into the view — a diff, a
+question, three options — and the resulting screenshot was indistinguishable
+from the real thing. It looked correct precisely because it was invented to
+look correct.
+
+Why it matters more here than in most UIs: a rider approves a permission prompt
+based on what this screen shows. Text that did not come from the session is not
+a cosmetic defect — it is the app misrepresenting what an agent is asking to do.
+
+The rules:
+
+- **Terminal lines enter the view through exactly one path**, the bridge
+  response handler. There is no other setter, and there should never be one.
+- **Absence is rendered as absence.** No data yet shows "Connecting…", not
+  filler. An empty pane and an unreachable bridge must look different.
+- **Ride metrics are separate and separately sourced.** They come from
+  `Activity.getActivityInfo()` and show `--` when a sensor is missing. They are
+  never mixed into the terminal text.
+- **To test a layout, use a real session.** `./scripts/demo-session.sh` paints
+  a realistic screen into a real tmux pane, so the data path is exercised
+  end to end rather than bypassed.
+
 ## Working on detection
 
 `detect.ts` is screen-scraping, and the rules that keep it honest are:

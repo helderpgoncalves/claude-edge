@@ -51,6 +51,11 @@ class TerminalView extends WatchUi.View {
     private var _message as String? = null;
     private var _sessionName as String? = null;
 
+    //! Optional metrics strip. When set, ride data is drawn alongside the
+    //! terminal; the terminal content itself is untouched and still comes
+    //! solely from the bridge.
+    private var _overlay as OverlayView?;
+
     // --- Layout, measured once per onLayout.
     private var _font as Graphics.FontType = Graphics.FONT_XTINY;
     private var _lineHeight as Number = 12;
@@ -121,6 +126,16 @@ class TerminalView extends WatchUi.View {
 
     public function onHide() as Void {
         stopPolling();
+    }
+
+    //! Turn the ride-metrics strip on or off.
+    //!
+    //! This only adds a strip of sensor readings. It never touches the terminal
+    //! text, which continues to come solely from the bridge's capture of the
+    //! real tmux pane.
+    public function useOverlay(enabled as Boolean) as Void {
+        _overlay = enabled ? new OverlayView() : null;
+        WatchUi.requestUpdate();
     }
 
     //! Re-read settings after Garmin Connect Mobile pushes a change.
@@ -402,6 +417,14 @@ class TerminalView extends WatchUi.View {
         dc.clear();
 
         drawHeader(dc);
+
+        var overlay = _overlay;
+        if (overlay != null && _everConnected) {
+            // Hand the overlay the very lines the bridge delivered, so both
+            // paths render identical content from one source.
+            overlay.setLines(_lines);
+            overlay.drawMetricsStrip(dc);
+        }
 
         if (_message != null && !_everConnected) {
             drawCentredMessage(dc, _message as String);
