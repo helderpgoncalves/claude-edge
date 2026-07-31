@@ -145,6 +145,7 @@
   "languages" : {
     "valyrian" : {
       "SettingsVibrate" : "Vibrate when input needed",
+      "MenuType" : "Type a message",
       "SettingsSession" : "tmux session",
       "StateWorking" : "Working",
       "MenuTitle" : "Actions",
@@ -159,9 +160,11 @@
       "StateNoSession" : "No session",
       "ErrStale" : "Screen changed. Look again.",
       "ErrTooBig" : "Response too large. Reduce text size.",
+      "MenuTypeSub" : "Use the keyboard",
       "SettingsFontSize" : "Text size",
       "SettingsFontTiny" : "Small",
       "ErrNoPhone" : "No phone connection.",
+      "ErrTextDisabled" : "Typing is disabled on the server.",
       "SettingsPollMode" : "Refresh rate",
       "SettingsConfirmDestructive" : "Confirm risky actions",
       "MenuRefresh" : "Refresh now",

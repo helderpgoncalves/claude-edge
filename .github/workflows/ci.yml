@@ -1,0 +1,183 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  server:
+    name: Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # The test suite drives a real tmux server rather than a mock, because
+      # the value of the tmux wrapper is entirely in how it behaves against the
+      # actual binary. Two real bugs were found this way that a mock would have
+      # confirmed as working.
+      - name: Install tmux
+        run: sudo apt-get update && sudo apt-get install -y tmux
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build production image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: false
+          load: true
+          tags: claude-edge-bridge:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Verify the image
+        run: |
+          # It must run as a non-root user: this service types into a terminal
+          # running an agent with tool access, and root is never warranted.
+          uid="$(docker run --rm claude-edge-bridge:ci id -u)"
+          if [ "$uid" = "0" ]; then
+            echo "::error::the image runs as root"
+            exit 1
+          fi
+          echo "runs as uid $uid"
+
+          # tmux must be present, or the bridge fails its own health check.
+          docker run --rm claude-edge-bridge:ci tmux -V
+
+      - name: Start it and check health
+        run: |
+          docker run -d --name bridge -p 8787:8787 \
+            -e READ_TOKEN=citokencitokencitokencitokencitoken \
+            -e WRITE_TOKEN=citokencitokencitokencitokencitoke2 \
+            -e HOST=0.0.0.0 \
+            claude-edge-bridge:ci
+
+          for _ in $(seq 1 30); do
+            if curl -fsS http://localhost:8787/health >/dev/null 2>&1; then
+              echo "healthy"
+              break
+            fi
+            sleep 1
+          done
+
+          curl -fsS http://localhost:8787/health
+
+          # An unauthenticated request must be rejected. This is the single
+          # most important property of the service; if it ever regresses, the
+          # build should fail rather than ship.
+          code="$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8787/api/v1/session)"
+          if [ "$code" != "401" ]; then
+            echo "::error::unauthenticated request returned $code, expected 401"
+            docker logs bridge
+            exit 1
+          fi
+          echo "unauthenticated request correctly rejected"
+
+          docker rm -f bridge
+
+  edge-app:
+    name: Connect IQ app
+    runs-on: ubuntu-latest
+    # The SDK requires accepting Garmin's licence and is not redistributable,
+    # so CI cannot build the device app. It is built and size-checked locally
+    # against all twelve devices before release; this job checks what it can
+    # without the toolchain.
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Manifest and jungle agree on the device list
+        run: |
+          # A product added to the manifest but missing from the build script
+          # would silently never be built or size-checked.
+          manifest_devices="$(grep -oE 'iq:product id="[a-z0-9_]+"' edge-app/manifest.xml \
+            | sed 's/.*id="//; s/"//' | sort -u)"
+          script_devices="$(sed -n '/^ALL_DEVICES=(/,/^)/p' scripts/build-edge.sh \
+            | tr ' ' '\n' | grep -E '^edge' | sort -u)"
+
+          if [ "$manifest_devices" != "$script_devices" ]; then
+            echo "::error::manifest.xml and scripts/build-edge.sh disagree"
+            diff <(echo "$manifest_devices") <(echo "$script_devices") || true
+            exit 1
+          fi
+          echo "$(echo "$manifest_devices" | wc -l) devices, consistent"
+
+      - name: Every product has a launcher icon layer
+        run: |
+          # Each Edge declares an exact launcher size; a product with no icon
+          # layer falls back to a rescaled bitmap and a build warning.
+          missing=0
+          for device in $(grep -oE 'iq:product id="[a-z0-9_]+"' edge-app/manifest.xml \
+            | sed 's/.*id="//; s/"//'); do
+            if ! grep -q "^${device}\.resourcePath" edge-app/monkey.jungle; then
+              echo "::error::$device has no resourcePath in monkey.jungle"
+              missing=1
+            fi
+          done
+          exit $missing
+
+  security:
+    name: Security checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: No secrets committed
+        run: |
+          # The development tokens in compose.dev.yaml and resources-dev are
+          # deliberate and well-known; anything else that looks like a real
+          # credential is not.
+          if grep -rIn --exclude-dir=.git --exclude-dir=node_modules \
+               -E '(READ_TOKEN|WRITE_TOKEN|authToken)\s*[:=]\s*["'"'"']?[A-Za-z0-9_-]{20,}' . \
+             | grep -v '\.env\.example' \
+             | grep -v 'compose\.dev\.yaml' \
+             | grep -v 'resources-dev' \
+             | grep -v 'test/' \
+             | grep -v '\.github/workflows'; then
+            echo "::error::something that looks like a real token is committed"
+            exit 1
+          fi
+          echo "no unexpected credentials"
+
+      - name: No developer key committed
+        run: |
+          # The Connect IQ signing key cannot be regenerated, and an app
+          # published with it can only be updated by whoever holds it.
+          if find . -name '*.der' -o -name 'developer_key*' | grep -q .; then
+            echo "::error::a signing key is committed"
+            exit 1
+          fi
+          echo "no signing keys"

@@ -5,7 +5,7 @@
   "description": "Monitor and control a Claude Code session from a Garmin Edge cycling computer",
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.11.0"
   },
   "packageManager": "pnpm@10.15.0",
   "scripts": {
@@ -13,12 +13,16 @@
     "dev": "pnpm --filter @claude-edge/server dev",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
-    "lint": "pnpm -r lint",
-    "check": "pnpm typecheck && pnpm lint && pnpm test"
+    "lint": "eslint .",
+    "check": "pnpm typecheck && pnpm lint && pnpm test",
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "typescript-eslint": "^8.19.0"
   },
   "license": "MIT"
 }

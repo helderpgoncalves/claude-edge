@@ -17,13 +17,26 @@
  * terminated by BEL or ST, and we bound it so a truncated sequence at a capture
  * boundary cannot swallow the rest of the screen.
  */
-// eslint-disable-next-line no-control-regex
-const ANSI_PATTERN =
-  /(?:\x1b\[[0-?]*[ -\/]*[@-~]|\x1b\][^]{0,512}?(?:\x07|\x1b\\)|\x1b[@-Z\\-_])/g;
 
-/** Zero-width and bidi control characters that would corrupt column maths. */
-// eslint-disable-next-line no-misleading-character-class
-const ZERO_WIDTH = /[​-‏‪-‮⁠﻿]/g;
+const ANSI_PATTERN =
+  // eslint-disable-next-line no-control-regex
+  /(?:\x1b\[[0-?]*[ -/]*[@-~]|\x1b\][^]{0,512}?(?:\x07|\x1b\\)|\x1b[@-Z\\-_])/g;
+
+/**
+ * Zero-width and bidirectional formatting characters.
+ *
+ * These occupy no column but are still characters, so leaving them in makes
+ * width calculations disagree with what the terminal actually drew.
+ *
+ * Written as escapes rather than literals on purpose: the characters are by
+ * definition invisible in an editor, so a literal class here is unreviewable
+ * and is silently mangled by copy-paste and by tools that normalise whitespace.
+ *   U+200B..U+200F  zero-width space/joiners, LTR/RTL marks
+ *   U+202A..U+202E  bidi embedding and override
+ *   U+2060          word joiner
+ *   U+FEFF          zero-width no-break space (BOM)
+ */
+const ZERO_WIDTH = /[\u200B-\u200F\u202A-\u202E\u2060\uFEFF]/g;
 
 /**
  * Remaining C0/C1 control characters left behind by malformed or truncated
