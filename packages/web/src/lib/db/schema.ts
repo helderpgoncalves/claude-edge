@@ -13,14 +13,21 @@ import {
  *
  * WHAT IS DELIBERATELY ABSENT
  * ---------------------------
- * There is no table for terminal content, prompts, or anything captured from a
- * session — and there never should be. Each user's bridge runs on their own
- * machine, and their browser talks to it directly. We store the address of
- * that bridge and nothing that passes through it.
+ * Two things, and their absence is the security model rather than an oversight:
  *
- * That is not a policy applied on top of the schema; it is the schema. A
- * database dump reveals who has an account and where their bridge lives. It
- * cannot reveal what they were working on, because that data never arrives.
+ *   1. **No terminal content.** No prompts, no captured panes, nothing from a
+ *      session. Each user's bridge runs on their own machine and their browser
+ *      talks to it directly, so that data never arrives here to be stored.
+ *
+ *   2. **No bridge tokens.** The credential that grants access to a user's
+ *      bridge lives in their browser, encrypted with a passphrase we never
+ *      see. Storing it would mean a database dump handed an attacker working
+ *      access to every user's terminal.
+ *
+ * A full dump of this database reveals who has an account and the address of
+ * their bridge. It does not reveal what they were working on, and it does not
+ * grant access to anything. That is a property of the schema, not a promise
+ * layered on top of it.
  */
 
 /**
@@ -114,17 +121,24 @@ export const sessions = pgTable(
 /**
  * A bridge a user has registered — the address of *their* server.
  *
- * The token is stored because the browser needs it to talk to the bridge, and
- * a user should not have to paste it on every visit. That is a real trade:
- * a database compromise would expose these tokens, and each one grants access
- * to that user's own bridge.
+ * WHY THERE IS NO TOKEN COLUMN
+ * ----------------------------
+ * The obvious design stores the bridge token here so the browser does not have
+ * to ask for it again. That was the first version, and it was wrong: a database
+ * dump would then hand an attacker working credentials to every user's bridge,
+ * and a bridge types into a terminal running an agent with shell access.
  *
- * Two things make it defensible. The token only ever reaches the user's own
- * machine — we never call their bridge from our servers. And a read-scoped
- * token, which is what most people will store, cannot type into a session.
+ * So the token never reaches our servers. It is held in the browser, encrypted
+ * with a passphrase only the user knows, and sent directly to their own bridge
+ * — which is the only party that needs it.
  *
- * Encrypting it at rest is a stated open question rather than a decision; it
- * would need a key we hold, which moves the problem rather than solving it.
+ * What a full database dump reveals: who has an account, and the address of
+ * their bridge. Not the token, and therefore not access. That distinction is
+ * the difference between an embarrassing leak and a catastrophic one.
+ *
+ * The cost is real and worth stating: the user enters their passphrase once per
+ * device. That is the price of the guarantee, and it is cheaper than the
+ * alternative.
  */
 export const bridges = pgTable(
   'bridges',
@@ -141,7 +155,7 @@ export const bridges = pgTable(
     // application, because Connect IQ rejects anything else anyway.
     url: text('url').notNull(),
 
-    token: text('token').notNull(),
+    // Deliberately absent: `token`. See the note above.
 
     // tmux session name. Empty means the bridge's own default.
     sessionName: text('session_name').notNull().default(''),
