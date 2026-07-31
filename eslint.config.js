@@ -14,7 +14,20 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['**/dist/**', '**/node_modules/**', 'build/**', '**/*.d.ts'],
+    // Generated output, none of it hand-written and none of it ours to fix.
+    // `.next/` matters as much as `dist/`: it is git-ignored, so it is absent
+    // in CI and present the moment anyone builds locally — which made `pnpm
+    // lint` fail with thousands of errors on a developer's machine and pass on
+    // the runner. A discrepancy like that teaches people to distrust the lint
+    // step, which is worse than the errors.
+    ignores: [
+      '**/dist/**',
+      '**/node_modules/**',
+      'build/**',
+      '**/.next/**',
+      '**/next-env.d.ts',
+      '**/*.d.ts',
+    ],
   },
 
   js.configs.recommended,
