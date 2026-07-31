@@ -73,18 +73,19 @@ export const BRAND = {
   MODES: {
     dev: {
       name: 'Dev',
-      tagline: 'Your terminal, on the bars',
+      tagline: 'Keep shipping while you train',
       description:
-        'See what Claude Code is doing and answer its permission prompts from ' +
-        'your Edge, without stopping.',
+        'See what your session is doing and answer it from the handlebars — by ' +
+        'button, or by speaking. You stop choosing between the ride and the work.',
       available: true,
     },
     coach: {
       name: 'Coach',
-      tagline: 'Your effort, read in real time',
+      tagline: 'A riding buddy who actually watches',
       description:
-        'Claude watches your ride as it happens — effort against what is left, ' +
-        'against your history — and tells you what to change.',
+        'Reads your effort against what is still ahead and against your history, ' +
+        'and talks to you through your headphones: the climb before you reach it, ' +
+        'when to eat, and when you have more left than you think.',
       available: false,
     },
   },

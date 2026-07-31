@@ -1,0 +1,1166 @@
+/*
+ * Landing page styles.
+ *
+ * The structure is taken from the Payway template — pill badges above section
+ * headings, a metrics row, gradient feature cards, sticky stacking cards, a
+ * billing toggle, an accordion FAQ, an oversized wordmark in the footer. What
+ * changed is the palette and the density: the template is a consumer fintech
+ * page and this is read by developers, so the type is smaller, the spacing is
+ * tighter and the accent is used once per section rather than everywhere.
+ *
+ * Colours come from globals.css and are never hardcoded here, so light and
+ * dark both work and a palette change is one file.
+ *
+ * MOTION
+ * ------
+ * Every animation is a transform or an opacity — never width, height, top or
+ * left — so none of it triggers layout during a scroll. All of it sits behind
+ * `prefers-reduced-motion`, which globals.css already honours globally; the
+ * scroll-driven reveals additionally check it in JS, because an IntersectionObserver
+ * adding a class is not something a media query can undo.
+ */
+
+/* ---------------------------------------------------------------- shell */
+
+.page {
+  overflow-x: clip; /* Sticky cards and oversized type must not create a scrollbar. */
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-inline: 1.25rem;
+  }
+}
+
+.section {
+  padding-block: clamp(4rem, 10vw, 7rem);
+}
+
+.sectionAlt {
+  padding-block: clamp(4rem, 10vw, 7rem);
+  background: var(--bg-subtle);
+  border-block: 1px solid var(--border);
+}
+
+/* ------------------------------------------------------------------ nav */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.navInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: 60px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 620;
+  font-size: 0.975rem;
+  letter-spacing: -0.015em;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.navLinks a {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.navLinks a:hover {
+  color: var(--text);
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .navLinks {
+    display: none;
+  }
+}
+
+/* ----------------------------------------------------------- lang switch */
+
+.langWrap {
+  position: relative;
+}
+
+.langButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.langButton:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.langMenu {
+  position: absolute;
+  top: calc(100% + 0.375rem);
+  right: 0;
+  min-width: 9rem;
+  padding: 0.25rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  list-style: none;
+  margin: 0;
+}
+
+.langMenu a {
+  display: block;
+  padding: 0.5rem 0.625rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.langMenu a:hover {
+  background: var(--bg-inset);
+  color: var(--text);
+}
+
+.langCurrent {
+  color: var(--text) !important;
+  font-weight: 560;
+}
+
+/* --------------------------------------------------------------- badges */
+
+/*
+ * The template's pill badge above every section heading. It is a small thing
+ * that does a lot of work: it labels the section without spending a heading
+ * level on it, which keeps the document outline correct for screen readers
+ * and for search engines.
+ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 520;
+  letter-spacing: 0.01em;
+  color: var(--accent);
+  background: var(--accent-subtle);
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  border-radius: 999px;
+}
+
+.tag svg {
+  width: 13px;
+  height: 13px;
+}
+
+.badgeLive,
+.badgeSoon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.badgeLive {
+  color: var(--status-idle);
+  background: color-mix(in srgb, var(--status-idle) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--status-idle) 30%, transparent);
+}
+
+.badgeSoon {
+  color: var(--status-waiting);
+  background: color-mix(in srgb, var(--status-waiting) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--status-waiting) 32%, transparent);
+}
+
+/* ---------------------------------------------------------------- hero */
+
+.hero {
+  position: relative;
+  padding-block: clamp(3.5rem, 9vw, 6.5rem) clamp(3rem, 8vw, 5rem);
+  overflow: hidden;
+}
+
+/*
+ * The template used a looping video behind the hero. A video costs several
+ * megabytes on a mobile connection to convey "movement", and this audience is
+ * unusually likely to be on a metered connection or to notice the wasted
+ * bytes. A CSS gradient reads the same at a fraction of the cost and does not
+ * need a decode.
+ */
+.heroGlow {
+  position: absolute;
+  inset: -30% -10% auto;
+  height: 60rem;
+  background:
+    radial-gradient(
+      42rem 26rem at 22% 12%,
+      color-mix(in srgb, var(--accent) 13%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      34rem 22rem at 82% 4%,
+      color-mix(in srgb, var(--status-idle) 10%, transparent),
+      transparent 70%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.eyebrow {
+  font-size: 0.82rem;
+  font-weight: 520;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin-bottom: 1rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.25rem, 5.6vw, 3.75rem);
+  font-weight: 660;
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+  margin-bottom: 1.25rem;
+  text-wrap: balance;
+}
+
+.lede {
+  font-size: clamp(1.02rem, 1.9vw, 1.18rem);
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 34rem;
+  margin-bottom: 2rem;
+  text-wrap: pretty;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.note {
+  font-size: 0.86rem;
+  color: var(--text-subtle);
+  max-width: 32rem;
+}
+
+/* -------------------------------------------------------------- buttons */
+
+/*
+ * The template's button animates an arrow from the right of the label to the
+ * left on hover, swapping the flex direction. It is a genuinely nice detail
+ * and it survives the transplant, done with a transform so it stays cheap.
+ */
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.7rem 1.1rem;
+  font-size: 0.94rem;
+  font-weight: 550;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.secondary {
+  background: var(--bg);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.secondary:hover {
+  background: var(--bg-subtle);
+  transform: translateY(-1px);
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #fff 22%, transparent);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.secondary .arrow {
+  background: var(--bg-inset);
+}
+
+.primary:hover .arrow,
+.secondary:hover .arrow {
+  transform: translateX(3px) rotate(45deg);
+}
+
+.arrow svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* --------------------------------------------------------------- device */
+
+/*
+ * A mock of the device screen, drawn in CSS at the Edge 540's real 246×322
+ * aspect. Labelled as a mock in the caption: the product mirrors a live tmux
+ * pane, and illustrating that with invented terminal content presented as a
+ * screenshot would misrepresent it.
+ */
+.device {
+  margin: 0;
+  justify-self: center;
+  width: min(100%, 21rem);
+}
+
+.deviceFrame {
+  aspect-ratio: 246 / 322;
+  display: flex;
+  flex-direction: column;
+  background: #0b0d11;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  padding: 0.5rem;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.deviceHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  background: var(--status-waiting);
+  color: #1a1205;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.deviceBody {
+  flex: 1;
+  margin: 0.5rem 0;
+  padding: 0 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  line-height: 1.45;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  overflow: hidden;
+}
+
+.deviceAdd {
+  color: #56d364;
+}
+
+.deviceDel {
+  color: #f85149;
+}
+
+.deviceOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.option,
+.optionSelected {
+  padding: 0.3rem 0.45rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #8b949e;
+}
+
+.optionSelected {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.device figcaption {
+  margin-top: 0.625rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+}
+
+/* --------------------------------------------------------------- proof */
+
+/*
+ * The template's metrics row. Every number here is checkable in the
+ * repository — there are no customers yet, so there are no customer counts.
+ */
+.proofGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 3rem;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+@media (max-width: 780px) {
+  .proofGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.stat {
+  padding: 1.5rem 1.25rem;
+  background: var(--bg);
+}
+
+.statValue {
+  display: block;
+  font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+  font-weight: 640;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.statLabel {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* -------------------------------------------------------- section heads */
+
+.head {
+  max-width: 42rem;
+}
+
+.headCentered {
+  max-width: 42rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.head h2,
+.headCentered h2 {
+  font-size: clamp(1.7rem, 3.6vw, 2.5rem);
+  font-weight: 640;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  margin-block: 1rem 0.875rem;
+  text-wrap: balance;
+}
+
+.body {
+  font-size: 1rem;
+  line-height: 1.62;
+  color: var(--text-muted);
+  text-wrap: pretty;
+}
+
+/* --------------------------------------------------------------- modes */
+
+/*
+ * The template stacked its feature cards with `position: sticky`, so each one
+ * pins under the previous as you scroll. Kept, because it suits two modes
+ * being compared: the first stays on screen while the second arrives.
+ *
+ * Sticky is disabled below 900px. On a short viewport the cards are taller
+ * than the screen, and a sticky element taller than its scrollport simply
+ * never unsticks — it looks broken rather than clever.
+ */
+.modeStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.modeCard {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+@media (min-width: 901px) {
+  .modeCard {
+    position: sticky;
+    top: 5rem;
+  }
+}
+
+/* Each card gets its own tint, so the pinned stack reads as two things. */
+.modeDev {
+  background: linear-gradient(
+    168deg,
+    color-mix(in srgb, var(--accent) 7%, var(--bg)) 0%,
+    var(--bg) 62%
+  );
+}
+
+.modeCoach {
+  background: linear-gradient(
+    168deg,
+    color-mix(in srgb, var(--status-waiting) 8%, var(--bg)) 0%,
+    var(--bg) 62%
+  );
+}
+
+.modeHead {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.modeHead h3 {
+  font-size: clamp(1.4rem, 2.8vw, 1.9rem);
+  font-weight: 640;
+  letter-spacing: -0.025em;
+}
+
+.modeTagline {
+  font-size: 1.05rem;
+  font-weight: 540;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.modeBody {
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 40rem;
+  margin-bottom: 1.75rem;
+}
+
+.modePoints {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.25rem;
+  list-style: none;
+  padding: 0;
+}
+
+.modePoint h4 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.94rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.3rem;
+}
+
+.modePoint p {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.pointMark {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.modeCoach .pointMark {
+  color: var(--status-waiting);
+}
+
+/* ------------------------------------------------------------- waitlist */
+
+.waitlist {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--bg-subtle) 70%, transparent);
+}
+
+.waitlist h4 {
+  font-size: 1.02rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.waitlist p {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  max-width: 34rem;
+}
+
+.waitlistForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.waitlistForm input {
+  flex: 1 1 15rem;
+  min-width: 0;
+  padding: 0.65rem 0.85rem;
+  font: inherit;
+  font-size: 0.92rem;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+
+.waitlistForm input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.waitlistNote {
+  margin-top: 0.625rem;
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+}
+
+.formMessage {
+  margin-top: 0.75rem;
+  font-size: 0.88rem;
+  font-weight: 520;
+}
+
+.formOk {
+  color: var(--status-idle);
+}
+
+.formError {
+  color: var(--status-waiting);
+}
+
+/* ----------------------------------------------------------------- how */
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.25rem;
+  margin-block: 2.5rem 1.75rem;
+  counter-reset: step;
+}
+
+.step {
+  position: relative;
+  padding: 1.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  margin-bottom: 0.875rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-subtle);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  border-radius: 999px;
+}
+
+.step h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.step p {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* -------------------------------------------------------------- limits */
+
+.limits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.limit {
+  padding: 1.35rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--status-waiting);
+  border-radius: var(--radius);
+}
+
+.limit strong {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 620;
+  margin-bottom: 0.3rem;
+}
+
+.limit p {
+  font-size: 0.89rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+/* ------------------------------------------------------------- pricing */
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 2rem auto 0;
+  padding: 0.25rem;
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.toggleButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1.1rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 540;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.toggleActive {
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+.savePill {
+  padding: 0.1rem 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 650;
+  color: var(--status-idle);
+  background: color-mix(in srgb, var(--status-idle) 15%, transparent);
+  border-radius: 999px;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+  align-items: start;
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.planFeatured {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow);
+}
+
+.plan h3 {
+  font-size: 1.2rem;
+  font-weight: 640;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+}
+
+.planDescription {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.planPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin-bottom: 1.5rem;
+}
+
+.planAmount {
+  font-size: clamp(2.1rem, 4.5vw, 2.75rem);
+  font-weight: 660;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.planPeriod {
+  font-size: 0.9rem;
+  color: var(--text-subtle);
+}
+
+.planFeatures {
+  list-style: none;
+  padding: 0;
+  margin-block: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.planFeatures li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.check {
+  flex-shrink: 0;
+  margin-top: 0.22rem;
+  color: var(--status-idle);
+}
+
+.check svg {
+  width: 13px;
+  height: 13px;
+  display: block;
+}
+
+.planCta {
+  width: 100%;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.featuresLabel {
+  font-size: 0.75rem;
+  font-weight: 640;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+/* ------------------------------------------------------------------ faq */
+
+.faq {
+  max-width: 46rem;
+  margin: 2.5rem auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+/*
+ * A real <details>/<summary> accordion.
+ *
+ * The template used React state and a motion height animation. Native
+ * disclosure is keyboard accessible for free, is announced correctly by
+ * screen readers, works before hydration, and — the reason that matters for
+ * SEO — its content is in the DOM and indexable whether open or closed.
+ */
+.faqItem {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.faqItem[open] {
+  border-color: var(--border-strong);
+}
+
+.faqItem summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.98rem;
+  font-weight: 560;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem summary:hover {
+  background: var(--bg-subtle);
+}
+
+.faqMark {
+  flex-shrink: 0;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--bg-inset);
+  color: var(--text-muted);
+  transition: transform 0.22s ease;
+}
+
+.faqItem[open] .faqMark {
+  transform: rotate(45deg);
+  background: var(--accent);
+  color: #fff;
+}
+
+.faqAnswer {
+  padding: 0 1.25rem 1.15rem;
+  font-size: 0.93rem;
+  line-height: 1.62;
+  color: var(--text-muted);
+  max-width: 42rem;
+}
+
+/* ------------------------------------------------------------------ cta */
+
+.cta {
+  position: relative;
+  padding-block: clamp(4.5rem, 11vw, 7.5rem);
+  text-align: center;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      38rem 22rem at 50% 0%,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      transparent 72%
+    ),
+    var(--bg-subtle);
+  border-top: 1px solid var(--border);
+}
+
+.cta h2 {
+  font-size: clamp(1.9rem, 4.4vw, 3rem);
+  font-weight: 660;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  margin-bottom: 1rem;
+  text-wrap: balance;
+}
+
+.cta .body {
+  max-width: 34rem;
+  margin-inline: auto;
+  margin-bottom: 2rem;
+}
+
+.cta .actions {
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------- footer */
+
+.footer {
+  padding-block: 3rem 2rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+/*
+ * The template's oversized wordmark, fading into the background. Purely
+ * decorative, so it is hidden from assistive technology — a screen reader
+ * announcing the brand name a second time at the end of the page is noise.
+ */
+.wordmark {
+  display: block;
+  margin-bottom: 2rem;
+  font-size: clamp(3.5rem, 17vw, 11rem);
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--text) 16%, transparent) 0%,
+    transparent 82%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.footerInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.footerInner nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.footerInner a {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.footerInner a:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+.footerBrand {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.disclaimer {
+  margin-top: 1.25rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--text-subtle);
+  max-width: 46rem;
+}
+
+/* --------------------------------------------------------------- reveal */
+
+/*
+ * Scroll reveal, replacing the template's framer-motion variants.
+ *
+ * The template pulled in an animation library for what is one transform and
+ * one opacity. This does the same with an IntersectionObserver and two
+ * classes — no dependency, no hydration cost, and it degrades to "visible"
+ * if the script never runs, which is the important property. Content that is
+ * invisible without JavaScript is content a crawler may not credit.
+ */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

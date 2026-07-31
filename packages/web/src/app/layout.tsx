@@ -4,13 +4,23 @@ import { BRAND, origin, url } from '@claude-edge/shared';
 import './globals.css';
 
 /**
- * Root metadata.
+ * Root layout.
  *
- * The realistic search traffic for this is long-tail and technical — "claude
- * code garmin edge", "approve claude code prompts remotely", "monitor tmux
- * from phone". Nobody searches for the product by name, because nobody knows
- * it exists. So the metadata is written to answer a question rather than to
- * announce a brand.
+ * WHY THIS RENDERS NO <html> TAG
+ * -----------------------------
+ * `<html lang>` has to be the page's actual language, and the language lives in
+ * the `[locale]` segment below this one — which a root layout cannot read from
+ * params. The obvious workaround is `headers()`, but calling it here opts the
+ * entire route tree into dynamic rendering, and that silently un-statics every
+ * marketing page. The build output says so plainly: `ƒ` rather than `○`.
+ *
+ * So `[locale]/layout.tsx` renders `<html>` and `<body>` itself, and this file
+ * is a pass-through that exists only to hold the shared metadata and to import
+ * the stylesheet once. Next permits exactly one layout in the chain to emit
+ * those tags, and pushing it down one level is what keeps the pages static.
+ *
+ * The metadata below is what does not vary by language. Per-locale titles,
+ * descriptions and hreflang alternates are set in `[locale]/layout.tsx`.
  *
  * Everything user-visible comes from BRAND, so a rename does not mean editing
  * the head of every page.
@@ -35,33 +45,18 @@ export const metadata: Metadata = {
     'cycling computer',
     'remote terminal',
     'monkey c',
+    'voice control',
+    'cycling coach',
   ],
 
-  authors: [{ name: 'Helder Gonçalves', url: BRAND.REPO }],
-  creator: 'Helder Gonçalves',
-
-  openGraph: {
-    type: 'website',
-    locale: 'en',
-    url: origin(),
-    siteName: BRAND.NAME,
-    title: `${BRAND.NAME} — ${BRAND.TAGLINE}`,
-    description: BRAND.DESCRIPTION,
-  },
-
-  twitter: {
-    card: 'summary_large_image',
-    title: `${BRAND.NAME} — ${BRAND.TAGLINE}`,
-    description: BRAND.DESCRIPTION,
-  },
+  authors: [{ name: 'Hélder Gonçalves', url: BRAND.REPO }],
+  creator: 'Hélder Gonçalves',
 
   robots: {
     index: true,
     follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large' },
   },
-
-  alternates: { canonical: origin() },
 
   // A PWA manifest, because the phone side is installed to the home screen and
   // has to be usable one-handed while stopped at a junction.
@@ -80,47 +75,7 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        {/*
-          Structured data. SoftwareApplication is what produces a rich result
-          for a tool like this, and it is one of the few schema types Google
-          reliably acts on.
-        */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'SoftwareApplication',
-              name: BRAND.NAME,
-              description: BRAND.DESCRIPTION,
-              applicationCategory: 'DeveloperApplication',
-              operatingSystem: 'Garmin Connect IQ, Linux, macOS',
-              url: origin(),
-              codeRepository: BRAND.REPO,
-              license: 'https://opensource.org/licenses/MIT',
-              offers: {
-                '@type': 'Offer',
-                price: '0',
-                priceCurrency: 'EUR',
-                description: 'Free and open source. Self-host it yourself.',
-              },
-              author: { '@type': 'Person', name: 'Helder Gonçalves' },
-            }),
-          }}
-        />
-      </head>
-      <body>
-        {/* Keyboard users should not have to tab through the nav on every page. */}
-        <a href="#main" className="sr-only">
-          Skip to content
-        </a>
-        {children}
-      </body>
-    </html>
-  );
+  return children;
 }
 
 export { url };
