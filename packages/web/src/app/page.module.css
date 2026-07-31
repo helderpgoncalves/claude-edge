@@ -1,0 +1,425 @@
+/* Landing page. Tokens come from globals.css; nothing here invents a colour. */
+
+/* ------------------------------------------------------------------- nav */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.navInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  height: 3.5rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+}
+
+.brand svg {
+  color: var(--accent);
+}
+
+.navInner nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 0.9375rem;
+}
+
+.navInner nav a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.navInner nav a:hover {
+  color: var(--text);
+}
+
+.navCta {
+  padding: 0.4rem 0.9rem;
+  background: var(--accent);
+  color: #fff !important;
+  border-radius: var(--radius);
+  font-weight: 550;
+}
+
+.navCta:hover {
+  background: var(--accent-hover);
+}
+
+/* Below 640px the nav links would wrap into the logo. Drop the secondary ones
+   and keep the action, which is the only thing that matters on a phone. */
+@media (max-width: 640px) {
+  .navInner nav a:not(.navCta) {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  padding: clamp(3rem, 10vw, 6rem) 0 clamp(2rem, 6vw, 4rem);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-subtle);
+  margin-bottom: 1rem;
+}
+
+.hero h1 {
+  max-width: 16ch;
+  margin-bottom: 1.5rem;
+}
+
+.lede {
+  max-width: 54ch;
+  font-size: clamp(1.0625rem, 2vw, 1.1875rem);
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.65rem 1.35rem;
+  border-radius: var(--radius);
+  font-weight: 550;
+  text-decoration: none;
+}
+
+.primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.primary:hover {
+  background: var(--accent-hover);
+  color: #fff;
+}
+
+.secondary {
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+}
+
+.secondary:hover {
+  background: var(--bg-subtle);
+  color: var(--text);
+}
+
+.note {
+  font-size: 0.9375rem;
+  color: var(--text-subtle);
+  max-width: 56ch;
+}
+
+/* -------------------------------------------------------------- sections */
+
+.section,
+.sectionAlt {
+  padding: clamp(3rem, 8vw, 5rem) 0;
+}
+
+.sectionAlt {
+  background: var(--bg-subtle);
+  border-block: 1px solid var(--border);
+}
+
+.section h2,
+.sectionAlt h2 {
+  margin-bottom: 1rem;
+}
+
+.body {
+  max-width: 62ch;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+/* -------------------------------------------------------------- showcase */
+
+.showcase {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+@media (min-width: 860px) {
+  .showcase {
+    grid-template-columns: 1fr auto;
+    gap: 4rem;
+  }
+}
+
+/* ---------------------------------------------------------------- device */
+
+.device {
+  margin: 0;
+}
+
+.deviceScreen {
+  width: 246px;
+  background: #000;
+  border: 3px solid #2a2a2a;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.35;
+  box-shadow: var(--shadow);
+}
+
+.deviceHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 6px;
+  /* Amber, matching the device: this is the state that demands attention. */
+  background: #b45309;
+  color: #000;
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.deviceBody {
+  margin: 0;
+  padding: 6px;
+  background: #000;
+  border: 0;
+  border-radius: 0;
+  color: #c8ccd4;
+  white-space: pre;
+  overflow: hidden;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.devicePrompt {
+  background: #10239e;
+  padding: 2px 0 4px;
+}
+
+.option,
+.optionSelected {
+  padding: 1px 6px;
+  font-size: 10px;
+}
+
+.option {
+  color: #ffd666;
+}
+
+.optionSelected {
+  background: #fff;
+  color: #000;
+  font-weight: 700;
+}
+
+.device figcaption {
+  margin-top: 0.6rem;
+  font-size: 0.8125rem;
+  color: var(--text-subtle);
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------ flow */
+
+.flow {
+  display: grid;
+  gap: 1.25rem;
+  margin: 2rem 0 1.5rem;
+}
+
+@media (min-width: 720px) {
+  .flow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.step {
+  padding: 1.25rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-bottom: 0.75rem;
+  background: var(--accent-subtle);
+  color: var(--accent);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.step h3 {
+  margin-bottom: 0.4rem;
+}
+
+.step p {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+/* ----------------------------------------------------------------- modes */
+
+.modes {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 720px) {
+  .modes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.mode {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.modeHead {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.modeTagline {
+  color: var(--text);
+  font-weight: 520;
+  margin-bottom: 0.5rem;
+}
+
+.mode p:last-child {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+}
+
+.badgeLive,
+.badgeSoon {
+  padding: 0.15rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 550;
+  white-space: nowrap;
+}
+
+.badgeLive {
+  background: color-mix(in srgb, var(--status-idle) 15%, transparent);
+  color: var(--status-idle);
+}
+
+.badgeSoon {
+  background: var(--bg-inset);
+  color: var(--text-subtle);
+}
+
+/* ---------------------------------------------------------------- limits */
+
+.limits {
+  max-width: 68ch;
+  margin-top: 1.5rem;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1rem;
+}
+
+.limits li {
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--border-strong);
+  color: var(--text-muted);
+}
+
+.limits strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------- cta */
+
+.cta {
+  padding: clamp(3rem, 8vw, 5rem) 0;
+  text-align: center;
+}
+
+.cta .body {
+  margin-inline: auto;
+}
+
+.cta .actions {
+  justify-content: center;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.footer {
+  padding: 2rem 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+  color: var(--text-subtle);
+}
+
+.footerInner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.footerInner nav {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.footerInner nav a {
+  color: var(--text-subtle);
+  text-decoration: none;
+}
+
+.footerInner nav a:hover {
+  color: var(--text);
+}
+
+.disclaimer {
+  max-width: 70ch;
+  font-size: 0.8125rem;
+  color: var(--text-subtle);
+  opacity: 0.8;
+}

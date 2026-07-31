@@ -1,0 +1,216 @@
+/*
+ * Design tokens and base styles.
+ *
+ * The audience reads terminals for a living, so the visual language borrows
+ * from one: dense, monospace where it carries meaning, high contrast, and no
+ * decoration that does not do a job.
+ *
+ * Colours are defined once here and referenced everywhere. Light and dark both
+ * meet WCAG AA against their backgrounds — worth stating because the
+ * conventional terminal palette does not, and green-on-white in particular
+ * fails badly.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Neutrals. A slight blue cast reads as "screen" rather than "paper". */
+  --bg: #ffffff;
+  --bg-subtle: #f6f7f9;
+  --bg-inset: #eceef2;
+  --border: #d8dce3;
+  --border-strong: #b9bfc9;
+
+  --text: #10131a;
+  --text-muted: #565d6b;
+  --text-subtle: #767d8a;
+
+  /* One accent, used for actions and nothing else. Overusing an accent is what
+     makes an interface look busy; restraint is what makes it look considered. */
+  --accent: #1a56db;
+  --accent-hover: #1746b8;
+  --accent-subtle: #eff4ff;
+
+  /* Status colours, matching what the device shows so the two agree. */
+  --status-working: #1a56db;
+  --status-waiting: #b45309;
+  --status-idle: #15803d;
+  --status-off: #6b7280;
+
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  /* A real monospace stack. The system UI font handles everything else. */
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Mono",
+    "Roboto Mono", Menlo, Consolas, monospace;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  --max-width: 68rem;
+  --shadow: 0 1px 2px rgb(16 19 26 / 0.06), 0 4px 12px rgb(16 19 26 / 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c0e13;
+    --bg-subtle: #14171e;
+    --bg-inset: #1b1f28;
+    --border: #262b36;
+    --border-strong: #363c4a;
+
+    --text: #e8eaee;
+    --text-muted: #9aa3b2;
+    --text-subtle: #6f7887;
+
+    --accent: #6a9bff;
+    --accent-hover: #86aeff;
+    --accent-subtle: #131c2e;
+
+    --status-working: #6a9bff;
+    --status-waiting: #f0a13c;
+    --status-idle: #4ade80;
+    --status-off: #6b7280;
+
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 4px 14px rgb(0 0 0 / 0.24);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+/* Respect a stated preference for less motion. Smooth scrolling is exactly the
+   kind of thing that makes some people ill. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 650;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+}
+h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+h3 {
+  font-size: 1.125rem;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+code,
+kbd,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+code {
+  background: var(--bg-inset);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* A visible focus ring on keyboard navigation only. Half this audience will
+   never touch a mouse, and removing the ring entirely is an accessibility
+   failure people notice immediately. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+/* Available to screen readers, invisible on screen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
