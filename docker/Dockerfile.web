@@ -1,0 +1,82 @@
+# syntax=docker/dockerfile:1.7
+
+# The web app.
+#
+# Next's standalone output traces the modules actually reached and copies only
+# those, so the runtime stage carries no compiler, no dev dependencies, and no
+# node_modules tree — a few hundred megabytes saved over the naive approach.
+
+FROM node:22-alpine AS base
+RUN corepack enable
+WORKDIR /app
+
+# ------------------------------------------------------------------ deps
+# Lockfile-only inputs, so this layer survives source edits and a rebuild after
+# changing a component takes seconds rather than a minute.
+FROM base AS deps
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/shared/package.json packages/shared/
+COPY packages/web/package.json packages/web/
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm config set store-dir /pnpm/store && \
+    pnpm install --frozen-lockfile --filter @claude-edge/web... --filter @claude-edge/shared
+
+# ----------------------------------------------------------------- build
+FROM base AS build
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
+COPY --from=deps /app/packages/web/node_modules ./packages/web/node_modules
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
+COPY packages/shared packages/shared
+COPY packages/web packages/web
+
+# The web app imports the shared package's built output, so it has to exist
+# before Next traces the module graph.
+RUN pnpm --filter @claude-edge/shared build
+
+# Next reads DATABASE_URL at module load, and the build renders pages. A
+# throwaway value keeps the build from failing on a connection it never makes;
+# the real one arrives at runtime.
+ENV DATABASE_URL=postgres://build:build@localhost:5432/build
+ENV AUTH_SECRET=build-time-placeholder-not-used-at-runtime
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN pnpm --filter @claude-edge/web build
+
+# --------------------------------------------------------------- runtime
+FROM node:22-alpine AS runtime
+
+RUN apk add --no-cache tini
+
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOSTNAME=0.0.0.0 \
+    NEXT_TELEMETRY_DISABLED=1
+
+WORKDIR /app
+
+# Non-root. This process holds session tokens and the addresses of users'
+# bridges; there is no version of this where root is warranted.
+RUN addgroup -g 10001 -S web && adduser -u 10001 -S web -G web
+
+# Standalone output, plus the two directories it deliberately excludes:
+# static assets are served by the app itself here rather than by a CDN.
+COPY --from=build --chown=web:web /app/packages/web/.next/standalone ./
+COPY --from=build --chown=web:web /app/packages/web/.next/static ./packages/web/.next/static
+COPY --from=build --chown=web:web /app/packages/web/public ./packages/web/public
+
+USER web
+
+EXPOSE 3000
+
+ENTRYPOINT ["/sbin/tini", "--"]
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD node -e "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
+# The standalone server sits at the workspace path Next traced it from.
+CMD ["node", "packages/web/server.js"]

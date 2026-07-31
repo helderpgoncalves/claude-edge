@@ -1,0 +1,102 @@
+# The web app and its database.
+#
+# Deployed through Coolify, which supplies the reverse proxy and TLS — the
+# existing projects on that server use Traefik with Let's Encrypt, and this
+# follows the same pattern rather than inventing another.
+#
+#   docker compose -f docker/compose.web.yaml up -d
+#
+# Kept separate from compose.yaml (the bridge) because they are different
+# things with different lifecycles. The bridge runs on the *user's* machine
+# next to their tmux session; this runs on ours and holds accounts. Someone
+# self-hosting needs one and not the other.
+
+name: claude-edge-web
+
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.web
+    restart: unless-stopped
+    init: true
+
+    # No published port. Coolify's proxy reaches this over the shared network
+    # and terminates TLS, so nothing here should be directly addressable.
+    expose:
+      - '3000'
+
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+
+      DATABASE_URL: postgres://${POSTGRES_USER:-claude_edge}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}@postgres:5432/${POSTGRES_DB:-claude_edge}
+
+      # The public origin, used for OAuth redirect URIs and canonical URLs.
+      # Wrong here means Google rejects the callback with a mismatch.
+      APP_URL: ${APP_URL:?APP_URL must be set, e.g. https://edge.heldergoncalves.io}
+
+      # Google sign-in. Absent is fine — the button is hidden rather than shown
+      # and broken, so a deployment without them looks deliberate.
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+
+      # Signs OAuth state parameters. Generate with:
+      #   openssl rand -base64 32
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET must be set}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+  postgres:
+    # Pinned to a major version. Postgres does not upgrade its data directory
+    # automatically, so an unpinned tag turns a routine pull into an outage.
+    image: postgres:17-alpine
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-claude_edge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      POSTGRES_DB: ${POSTGRES_DB:-claude_edge}
+      # scram-sha-256 rather than the md5 default.
+      POSTGRES_INITDB_ARGS: '--auth-host=scram-sha-256'
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    healthcheck:
+      # -U matters: without it pg_isready checks the root user, which does not
+      # exist here, and the check passes while the database is still starting.
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-claude_edge} -d ${POSTGRES_DB:-claude_edge}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+volumes:
+  postgres-data:

@@ -12,8 +12,11 @@
   "dependencies": {
     "@auth/core": "^0.41.3",
     "@claude-edge/shared": "workspace:*",
+    "@node-rs/argon2": "^2.0.2",
+    "drizzle-orm": "^0.45.2",
     "next": "^16.2.12",
     "next-auth": "5.0.0-beta.32",
+    "postgres": "^3.4.9",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "zod": "^3.25.76"
@@ -22,6 +25,7 @@
     "@types/node": "^22.20.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
+    "drizzle-kit": "^0.31.10",
     "typescript": "^5.9.3"
   }
 }
