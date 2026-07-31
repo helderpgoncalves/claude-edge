@@ -4,7 +4,7 @@
 # existing projects on that server use Traefik with Let's Encrypt, and this
 # follows the same pattern rather than inventing another.
 #
-#   docker compose -f docker/compose.web.yaml up -d
+#   docker compose -f compose.web.yaml up -d
 #
 # Kept separate from compose.yaml (the bridge) because they are different
 # things with different lifecycles. The bridge runs on the *user's* machine
@@ -16,7 +16,11 @@ name: claude-edge-web
 services:
   web:
     build:
-      context: ..
+      # The repository root. This file lives at the root rather than under
+      # docker/ for exactly this reason: Coolify copies the compose file's
+      # directory as the build context, so a `context: ..` that climbs above it
+      # resolves to nothing and the build fails with a bare lstat error.
+      context: .
       dockerfile: docker/Dockerfile.web
     restart: unless-stopped
     init: true

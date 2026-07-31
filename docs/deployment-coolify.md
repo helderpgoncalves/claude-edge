@@ -56,7 +56,7 @@ ssh root@91.98.22.239
 cd /data/claude-edge/repo
 git fetch origin main && git reset --hard origin/main
 cp ../.env .env
-docker compose -f docker/compose.web.yaml -f docker-compose.override.yaml \
+docker compose -f compose.web.yaml -f docker-compose.override.yaml \
   --env-file .env up -d --build
 ```
 
@@ -74,7 +74,7 @@ same pattern as the other applications on this server.
 ```bash
 curl -sI https://edge.heldergoncalves.io | head -1     # HTTP/2 200
 curl -s  https://edge.heldergoncalves.io/api/health    # {"ok":true}
-docker compose -f docker/compose.web.yaml ps           # both healthy
+docker compose -f compose.web.yaml ps           # both healthy
 ```
 
 The health check deliberately does not touch Postgres. A database blip should
