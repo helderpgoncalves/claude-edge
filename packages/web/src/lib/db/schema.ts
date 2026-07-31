@@ -228,9 +228,54 @@ export const preferences = pgTable('preferences', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/**
+ * An address waiting to hear that Coach mode exists.
+ *
+ * Separate from `users` on purpose. Most of these people do not have an account
+ * and should not be given one implicitly — a row in `users` created from a
+ * marketing form is an account nobody asked for, and it makes "delete my
+ * account" ambiguous about whether the address stays on the list.
+ *
+ * WHAT IS NOT HERE
+ * ----------------
+ * No name, no IP, no referrer, no UTM parameters. The form promises one email
+ * and nothing else, and a schema that cannot hold tracking data is a stronger
+ * guarantee than a policy saying we will not look at it.
+ */
+export const waitlist = pgTable(
+  'waitlist',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+
+    // Lowercased by the route that writes it, matching `users.email`.
+    email: text('email').notNull(),
+
+    // Which unbuilt thing they are waiting for. One column now, because a
+    // second waitlist is more likely than not and a table per feature is not.
+    interest: text('interest').notNull().default('coach'),
+
+    // The locale they were reading when they signed up, so the announcement
+    // arrives in the language they chose rather than in English by default.
+    locale: text('locale').notNull().default('en'),
+
+    // Set when the announcement goes out, so a resend does not double-mail
+    // people who already heard.
+    notifiedAt: timestamp('notified_at', { withTimezone: true }),
+
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    // One row per address per interest. A second submission updates rather
+    // than duplicating, so a user who signs up twice is not mailed twice.
+    uniqueIndex('waitlist_email_interest_idx').on(table.email, table.interest),
+  ],
+);
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type Session = typeof sessions.$inferSelect;
 export type Bridge = typeof bridges.$inferSelect;
 export type NewBridge = typeof bridges.$inferInsert;
 export type Preferences = typeof preferences.$inferSelect;
+export type WaitlistEntry = typeof waitlist.$inferSelect;
+export type NewWaitlistEntry = typeof waitlist.$inferInsert;
