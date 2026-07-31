@@ -110,6 +110,13 @@ and a tunnel for trying it without one.
 | [Decisions](docs/adr/) | Architecture decision records |
 | [Troubleshooting](docs/troubleshooting.md) | Error codes and what they mean |
 
+### Design notes for a hosted version
+
+A hosted service is being designed — accounts, a relay so no tunnel setup is
+needed, and voice input. **None of it is built**, and self-hosting will stay
+free and complete regardless. The documents are in
+[docs/saas/](docs/saas/README.md) and are written to be argued with.
+
 ## Supported devices
 
 Every Edge running Connect IQ 3.2 or later. Built and size-checked for all of
