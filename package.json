@@ -9,7 +9,7 @@
   },
   "packageManager": "pnpm@10.15.0",
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm --filter @claude-edge/shared build && pnpm --filter @claude-edge/server build",
     "dev": "pnpm --filter @claude-edge/server dev",
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",

@@ -11,7 +11,9 @@
     "dev": "node --watch --experimental-strip-types src/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "node --test --experimental-strip-types test/*.test.ts",
-    "clean": "rm -rf dist *.tsbuildinfo"
+    "clean": "rm -rf dist *.tsbuildinfo",
+    "pretest": "pnpm --filter @claude-edge/shared build",
+    "pretypecheck": "pnpm --filter @claude-edge/shared build"
   },
   "dependencies": {
     "@claude-edge/shared": "workspace:*",
