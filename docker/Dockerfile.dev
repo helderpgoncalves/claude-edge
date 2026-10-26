@@ -9,7 +9,7 @@
 # workspace; the production one deliberately has none of that — and expressing
 # both in one file makes each harder to read and easier to get wrong.
 
-FROM node:22-alpine
+FROM node:26-alpine
 
 # tmux to host the demo session, bash for the helper scripts, git because the
 # workspace is a repository and some tooling looks for it.
