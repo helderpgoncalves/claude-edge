@@ -74,7 +74,7 @@ services:
   postgres:
     # Pinned to a major version. Postgres does not upgrade its data directory
     # automatically, so an unpinned tag turns a routine pull into an outage.
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     restart: unless-stopped
 
     environment:
