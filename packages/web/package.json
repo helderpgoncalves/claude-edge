@@ -15,12 +15,12 @@
     "@claude-edge/shared": "workspace:*",
     "@node-rs/argon2": "^2.0.2",
     "drizzle-orm": "^0.45.2",
-    "next": "^16.2.12",
+    "next": "^16.4.1",
     "next-auth": "5.0.0-beta.32",
     "postgres": "^3.4.9",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "zod": "^3.25.76"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
