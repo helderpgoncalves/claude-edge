@@ -66,13 +66,17 @@ async function capture(): Promise<string> {
  * which needs the pane reset between tests, not a longer wait. Worth doing;
  * out of scope for the change that added this comment.
  */
-async function waitForPane(needle: string, timeoutMs = 5_000): Promise<string> {
+async function waitForPane(
+  needle: string,
+  timeoutMs = 5_000,
+  ready: (pane: string) => boolean = () => true,
+): Promise<string> {
   const deadline = Date.now() + timeoutMs;
   let text = '';
 
   for (;;) {
     text = await capture();
-    if (text.includes(needle)) return text;
+    if (text.includes(needle) && ready(text)) return text;
     if (Date.now() >= deadline) return text;
     await new Promise((r) => setTimeout(r, 25));
   }
@@ -98,7 +102,13 @@ async function paintPrompt(lines: string[]): Promise<void> {
   // An all-empty `lines` would have nothing to wait for, so fall back to the
   // shell having echoed the command itself.
   const marker = [...lines].reverse().find((l) => l.trim() !== '') ?? 'cat -v';
-  await waitForPane(marker);
+  // The typed command line itself contains every painted line, so the marker
+  // shows up as soon as the shell echoes it — BEFORE `clear` and `printf` run.
+  // Returning then let the test read the half-painted pane (the intermittent
+  // "detects the prompt and its options" failure). Only accept the pane once
+  // the echoed command is gone, i.e. `clear` has run and printf has drawn.
+  const echoed = "printf '%s";
+  await waitForPane(marker, 5_000, (pane) => lines.every((l) => l.trim() === '') || !pane.includes(echoed));
 }
 
 const CURSOR = '❯';
