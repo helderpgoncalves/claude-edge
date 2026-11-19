@@ -12,7 +12,7 @@
     "build": "pnpm --filter @claude-edge/shared build && pnpm --filter @claude-edge/server build",
     "dev": "pnpm --filter @claude-edge/server dev",
     "test": "pnpm -r test",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm --filter @claude-edge/shared build && pnpm -r typecheck",
     "lint": "eslint .",
     "check": "pnpm typecheck && pnpm lint && pnpm test",
     "lint:fix": "eslint . --fix"
