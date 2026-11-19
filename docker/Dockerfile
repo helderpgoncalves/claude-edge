@@ -12,7 +12,7 @@
 # container does not run Claude Code itself.
 
 # ------------------------------------------------------------------ base
-FROM node:22-alpine AS base
+FROM node:26-alpine AS base
 
 # corepack ships with Node and pins pnpm to the version in package.json, so the
 # image cannot silently build with a different package manager than the repo.
@@ -55,7 +55,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
     pnpm install --frozen-lockfile --prod
 
 # --------------------------------------------------------------- runtime
-FROM node:22-alpine AS runtime
+FROM node:26-alpine AS runtime
 
 # tmux is the whole point of this service; without it the bridge starts and
 # then fails its own health check.
