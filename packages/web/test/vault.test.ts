@@ -175,13 +175,18 @@ describe('a wrong passphrase', () => {
 describe('tampering', () => {
   beforeEach(() => storage.clear());
 
+  // Flip the FIRST base64url character. The last one is not safe to touch: the
+  // values are unpadded, so when the byte length is not a multiple of 3 its low
+  // bits are padding the decoder throws away, and an A<->B swap there changes
+  // nothing (the test then failed at random, depending on the ciphertext length).
+  const flipFirst = (s: string) => (s[0] === 'A' ? 'B' : 'A') + s.slice(1);
+
   it('is rejected when the ciphertext is modified', async () => {
     const vault = await Vault.create(PASSPHRASE);
     await vault.set(BRIDGE_ID, TOKEN);
 
     const stored = JSON.parse(storage.raw('ce.vault.v1') as string);
-    // Flip one character of the ciphertext.
-    stored.data = stored.data.slice(0, -1) + (stored.data.at(-1) === 'A' ? 'B' : 'A');
+    stored.data = flipFirst(stored.data);
     storage.setItem('ce.vault.v1', JSON.stringify(stored));
 
     assert.equal(await Vault.unlock(PASSPHRASE), null);
@@ -192,7 +197,7 @@ describe('tampering', () => {
     await vault.set(BRIDGE_ID, TOKEN);
 
     const stored = JSON.parse(storage.raw('ce.vault.v1') as string);
-    stored.iv = stored.iv.slice(0, -1) + (stored.iv.at(-1) === 'A' ? 'B' : 'A');
+    stored.iv = flipFirst(stored.iv);
     storage.setItem('ce.vault.v1', JSON.stringify(stored));
 
     assert.equal(await Vault.unlock(PASSPHRASE), null);
